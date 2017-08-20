@@ -1,0 +1,17 @@
+{
+  "name": "2darenagame",
+  "version": "1.0.0",
+  "description": "2D Arena Game",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.15.4",
+    "globals": "^10.1.0",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kevin Xu",
+  "license": "ISC"
+}
