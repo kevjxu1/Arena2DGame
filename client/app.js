@@ -1,8 +1,6 @@
 'use strict'; 
 
-const PLAYER_SIZE = 10;
-const CANVAS_WIDTH = window.innerWidth * 0.7;
-const CANVAS_HEIGHT = window.innerHeight * 0.7;
+const PLAYER_SIZE = 20;
 
 var IO = {
 	init: function() {
@@ -20,24 +18,28 @@ var IO = {
 };
 
 var Canvas = {
+    CANVAS_WIDTH: window.innerWidth * 0.7,
+    CANVAS_HEIGHT: window.innerHeight * 0.7,
+
+    getCenter: function() {
+        return { x: Canvas.CANVAS_WIDTH / 2, y: Canvas.CANVAS_HEIGHT / 2 };
+    },
 
     visiblePlayers: [],
 
     clear: function(context) {
         context.beginPath();
         context.fillStyle = '#CCCFD3';
-        context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        context.fillRect(0, 0, Canvas.CANVAS_WIDTH, Canvas.CANVAS_HEIGHT);
         context.closePath;
     },
 
     drawPlayer: function(player, context) {
         context.beginPath();
-        let centerX = CANVAS_WIDTH / 2;
-        let centerY = CANVAS_HEIGHT / 2;
-        context.rect(centerX, centerY, PLAYER_SIZE, PLAYER_SIZE);
-		ctx.fillStyle = 'red';
-        ctx.fill();
-        ctx.closePath();
+        context.rect(player.pos.x, player.pos.y, PLAYER_SIZE, PLAYER_SIZE);
+		context.fillStyle = player.color;
+        context.fill();
+        context.closePath();
     },
 
     drawPlayers: function() {
@@ -45,10 +47,25 @@ var Canvas = {
     }
 }
 
+class Player {
+    constructor(name='', color='red', pos) {
+        this.name = name;
+        if (!pos)
+            this.pos = Canvas.getCenter();
+        else
+            this.pos = pos;
+        this.color = color;
+    }
+}
+
+IO.init();
+
 var canvas = document.getElementById("canvas");
-canvas.width = CANVAS_WIDTH;
-canvas.height = CANVAS_HEIGHT;
+canvas.width = Canvas.CANVAS_WIDTH;
+canvas.height = Canvas.CANVAS_HEIGHT;
 var context = canvas.getContext("2d");
 Canvas.clear(context);
 
-IO.init();
+var player = new Player('', 'red', Canvas.getCenter());
+Canvas.drawPlayer(player, context);
+
