@@ -22,5 +22,10 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket) {
     console.log('client connected');
     game.initGame(io, socket);
+    game.addPlayer(socket);
+
+    socket.on('addPlayer', game.addPlayer);
 });
+
+
 

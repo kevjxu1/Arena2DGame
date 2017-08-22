@@ -1,36 +1,13 @@
 'use strict'; 
 
+var Globals = requre('/../globals');
+
 var IO = {
 	init: function() {
 		IO.socket = io.connect();
 		//IO.bindEvents();
 	},
 
-	//bindEvents: function() {
-	//	IO.socket.on('connected', IO.onConnected);
-	//},
-	//
-	//onConnected: function(data) {
-    //    
-	//}	
-};
-
-var Globals = { 
-    CANVAS_WIDTH: window.innerWidth * 0.7,
-    CANVAS_HEIGHT: window.innerHeight * 0.7,
-
-	PLAYER_SIZE: 20,
-	PLAYER_SPEED: 2,
-
-	KEY_ENTER: 13,
-	KEY_LEFT: 37,
-    KEY_UP: 38,
-    KEY_RIGHT: 39,
-    KEY_DOWN: 40,
-	KEY_SPACE: 32,
-	
-	KEY_UNPRESSED: -1  // user definition
-	
 };
 
 var Input = {
