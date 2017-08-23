@@ -1,6 +1,5 @@
 'use strict'; 
 
-var player;
 var visiblePlayers = [];
 var socketId;
 
@@ -20,11 +19,30 @@ var Globals = {
     KEY_DOWN: 40
 };
 
-player = {};
-player.name = '';
-player.color = 'red';
-player.x = Globals.SCREEN_WIDTH / 2;
-player.y = Globals.SCREEN_HEIGHT / 2;
+var Player =  {
+    player: {
+        name: '',
+        color: 'red',
+        x: Globals.SCREEN_WIDTH / 2,
+        y: Globals.SCREEN_HEIGHT / 2
+    }
+};
+
+//player = {};
+//player.name = '';
+//player.color = 'red';
+//player.x = Globals.SCREEN_WIDTH / 2;
+//player.y = Globals.SCREEN_HEIGHT / 2;
+
+//var socket;
+//function initIO() {
+//    socket = io.connect();
+//    bindEvents();
+//}
+//
+//function bindEvents() {
+//    socket.on('connection
+//}
 
 var IO = {
 	init: function() {
@@ -34,23 +52,15 @@ var IO = {
 
     bindEvents: function() {
         //IO.socket.on('createPlayer', IO.createPlayer);
-        IO.socket.on('connect', function() {
-            socketId = IO.socket.socket.sessionid;
+        IO.socket.on('connection', function() {
+            //socketId = IO.socket.socket.sessionid;
+            socketId = io.socket.sessionid;
         });
         IO.socket.on("updatePlayer", IO.updatePlayer);
     },
 
-    //createPlayer: function() {
-    //    player = {
-    //        name: '',
-    //        color:  'red',
-    //        x: SCREEN_WIDTH / 2,
-    //        y: SCREEN_HEIGHT / 2
-    //    };
-    //},
-    
     updatePlayer: function(player) {
-        player = player;
+        Player.player = player;
     }
 
 };
@@ -63,7 +73,7 @@ var Input = {
 	},
 
 	onKeydown: function(e) {
-        IO.socket.emit('movePlayer', { socket: socketId, key: e.keyCode, speed: Globals.PLAYER_SPEED });
+        IO.socket.emit('movePlayer', { player: Player.player, keyPressed: e.keyCode, speed: Globals.PLAYER_SPEED });
 	},
 	
 	//onKeyup: function(e) {
@@ -86,8 +96,8 @@ function clearCanvas(context) {
 
 function displayPlayer(context, player) {
     context.beginPath();
-    context.rect(player.x, player.y, Globals.PLAYER_SIZE, Globals.PLAYER_SIZE);
-    context.fillStyle = player.color;
+    context.rect(Player.player.x, Player.player.y, Globals.PLAYER_SIZE, Globals.PLAYER_SIZE);
+    context.fillStyle = Player.player.color;
     context.fill();
     context.closePath();
 };
@@ -97,7 +107,7 @@ function displayPlayer(context, player) {
 
 function loopDisplay(context) {
     clearCanvas(context);
-    displayPlayer(context, player);
+    displayPlayer(context, Player.player);
     requestAnimationFrame(function () {
         loopDisplay(context);
     });
@@ -116,7 +126,7 @@ function initCanvas(canvas) {
 function createPlayer() {
     //if (!IO.sockId)
     //    return;
-    IO.socket.emit('addPlayer', { socketId: socketId, player: player });
+    IO.socket.emit('addPlayer', { player: Player.player });
 }
 
 function sendGlobals() {
