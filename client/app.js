@@ -2,14 +2,15 @@
 
 var visiblePlayers = [];
 var socketId;
-
+    
 var Globals = {
     // game parameters
-    PLAYER_SIZE:  20,
-    PLAYER_SPEED: 2,
+	DEFAULT_PLAYER_SIZE: 28, 
+    DEFAULT_PLAYER_SPEED: 4,                                                     
+    DEFAULT_PLAYER_VISION: 100,
+
     SCREEN_WIDTH: window.innerWidth * 0.7,
     SCREEN_HEIGHT: window.innerHeight * 0.7,
-    PLAYER_VISION_RANGE: 100,
 
     // input constants
     KEY_UNPRESSED: -1,
@@ -25,16 +26,13 @@ var Player =  {
     player: {
         name: '',
         color: 'red',
-        x: Globals.SCREEN_WIDTH / 2,
+        size: Globals.DEFAULT_PLAYER_SIZE,
+        speed: Globals.DEFAULT_PLAYER_SPEED,
+        vision: Globals.DEFAULT_PLAYER_VISION,
+        x: Globals.SCREEN_WIDTH / 2,  
         y: Globals.SCREEN_HEIGHT / 2
     }
 };
-
-//player = {};
-//player.name = '';
-//player.color = 'red';
-//player.x = Globals.SCREEN_WIDTH / 2;
-//player.y = Globals.SCREEN_HEIGHT / 2;
 
 //var socket;
 //function initIO() {
@@ -79,7 +77,7 @@ var Input = {
 	},
 
 	onKeydown: function(e) {
-        IO.socket.emit('movePlayer', { player: Player.player, keyPressed: e.keyCode, speed: Globals.PLAYER_SPEED });
+        IO.socket.emit('movePlayer', { keyPressed: e.keyCode });
 	},
 	
 	//onKeyup: function(e) {
@@ -102,7 +100,7 @@ function clearCanvas(context) {
 
 function displayPlayer(context, player) {
     context.beginPath();
-    context.rect(player.x, player.y, Globals.PLAYER_SIZE, Globals.PLAYER_SIZE);
+    context.rect(player.x, player.y, player.size, player.size);
     context.fillStyle = player.color;
     context.fill();
     context.closePath();

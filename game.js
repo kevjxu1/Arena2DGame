@@ -6,6 +6,28 @@ Player = require('./player');
 var players = {};
 var sockets = {};
 
+//var Globals = {
+//    // game parameters
+//
+//    // player
+//    DEFAULT_PLAYER_SIZE: 40,
+//    DEFAULT_PLAYER_SPEED: 4,
+//    DEFAULT_PLAYER_VISION: 200,
+//
+//    // screen
+//    SCREEN_WIDTH: null,  // defined by browser
+//    SCREEN_HEIGHT:, null, // defined by browser
+//
+//    // input
+//    KEY_UNPRESSED: -1,  // dev-defined
+//    KEY_ENTER: 13,
+//    KEY_LEFT: 37,
+//    KEY_UP: 38,
+//    KEY_RIGHT: 39,
+//    KEY_DOWN: 40
+//};
+
+
 module.exports = {
 
     initGame: function(io, socket) {
@@ -34,31 +56,24 @@ module.exports = {
         //socket.on('movePlayer', movePlayer);
         socket.on('movePlayer', function(msg) {
             //console.log('movePlayer callback');
-            let player = msg.player;
             let key = msg.keyPressed;
+            let player = players[socket.id];
             switch (key) {
                 case Globals.KEY_UP:
-                    players[socket.id].y -= Globals.PLAYER_SPEED;
-                    player.y -= Globals.PLAYER_SPEED;
+                    player.y -= player.speed;
                     break;
                 case Globals.KEY_RIGHT:
-                    players[socket.id].x += Globals.PLAYER_SPEED;
-                    player.x += Globals.PLAYER_SPEED;
+                    player.x += player.speed;
                     break;
                 case Globals.KEY_DOWN:
-                    players[socket.id].y += Globals.PLAYER_SPEED;
-                    player.y += Globals.PLAYER_SPEED;
+                    player.y += player.speed;
                     break;
                 case Globals.KEY_LEFT:
-                    players[socket.id].x -= Globals.PLAYER_SPEED;
-                    player.x -= Globals.PLAYER_SPEED;
+                    player.x -= player.speed;
                     break;
                 default:
-                    //console.log('invalid move key: ' + key);
                     break;
             }
-            //console.log('player: ');
-            //console.log(player);
             socket.emit('updatePlayer', player);
         });
 
@@ -68,7 +83,7 @@ module.exports = {
             let player = msg.player;
             for (let playerId in players) {
                 let p = players[playerId];
-                if (getL1Distance(player, p) <= Globals.PLAYER_VISION_RANGE) {
+                if (getL2Distance(player, p) <= player.vision) {
                     visiblePlayers.push(p);
                 }
             }
@@ -80,10 +95,10 @@ module.exports = {
     },
 };
 
-function getL1Distance(p1, p2) {
+function getL2Distance(p1, p2) {
     let xdist = Math.abs(p2.x - p1.x);
-    let ydist = Math.abs(p2.x - p1.x)
-    return xdist + ydist;
+    let ydist = Math.abs(p2.y - p1.y)
+    return Math.sqrt((xdist * xdist) + (ydist * ydist));
 }
 
 function updateGlobals(data) {
@@ -92,18 +107,4 @@ function updateGlobals(data) {
 	console.log(data);
 	Globals = data;
 }
-
-//function addPlayer(msg) {
-//	console.log('addPlayer');
-//	console.log('msg: ');
-//	console.log(msg);
-//	let socketId = msg.socketId;
-//	let player = msg.player;
-//    //player = new Player('', 'red', Globals.CANVAS_WIDTH / 2, Globals.CANVAS_HEIGHT / 2);
-//    players[socketId] = player;
-//    console.log('player count: ' + Object.keys(players).length);
-//    io.sockets.connected[socketId].emit('updatePlayer');
-//	//sockets[socketId].emit('updatePlayer');
-//}
-
 
