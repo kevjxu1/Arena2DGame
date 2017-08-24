@@ -39,9 +39,9 @@ module.exports = {
 		//gameSocket.on('updateGlobals', updateGlobals);
 		socket.on('updateGlobals', function(msg) {
             console.log('updateGlobals callback');
-            console.log('msg: ' + msg);
-            console.log('Globals: ' + Globals);
             Globals = msg;
+            console.log('Globals: ');
+            console.log(Globals);
         });
 
         //gameSocket.on('addPlayer', addPlayer);
@@ -87,11 +87,10 @@ module.exports = {
                     visiblePlayers.push(p);
                 }
             }
-            console.log(visiblePlayers);
             socket.emit('updateVisiblePlayers', { visiblePlayers: visiblePlayers });
         });
 
-        console.log('game inited');
+        console.log('game initialized');
     },
 };
 
@@ -101,10 +100,10 @@ function getL2Distance(p1, p2) {
     return Math.sqrt((xdist * xdist) + (ydist * ydist));
 }
 
-function updateGlobals(data) {
-	console.log('updateGlobals');
-	console.log('data: ');
-	console.log(data);
-	Globals = data;
-}
+//function updateGlobals(data) {
+//	console.log('updateGlobals');
+//	console.log('data: ');
+//	console.log(data);
+//	Globals = data;
+//}
 

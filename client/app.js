@@ -7,7 +7,8 @@ var Globals = {
     // game parameters
 	DEFAULT_PLAYER_SIZE: 28, 
     DEFAULT_PLAYER_SPEED: 4,                                                     
-    DEFAULT_PLAYER_VISION: 100,
+    //DEFAULT_PLAYER_VISION: 100,
+    DEFAULT_PLAYER_VISION: 1e10,
 
     SCREEN_WIDTH: window.innerWidth * 0.7,
     SCREEN_HEIGHT: window.innerHeight * 0.7,
@@ -109,9 +110,6 @@ function displayPlayer(context, player) {
 function displayVisiblePlayers(context) {
     for (let i = 0; i < visiblePlayers.length; i++) {
         let p = visiblePlayers[i];
-        console.log('displaying player: ');
-        console.log(p);
-
         displayPlayer(context, p);
     }
 }
