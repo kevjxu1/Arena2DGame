@@ -102,15 +102,18 @@ function clearCanvas(context) {
 
 function displayPlayer(context, player) {
     context.beginPath();
-    context.rect(Player.player.x, Player.player.y, Globals.PLAYER_SIZE, Globals.PLAYER_SIZE);
-    context.fillStyle = Player.player.color;
+    context.rect(player.x, player.y, Globals.PLAYER_SIZE, Globals.PLAYER_SIZE);
+    context.fillStyle = player.color;
     context.fill();
     context.closePath();
 }
 
-function displayVisiblePlayers(context, player) {
+function displayVisiblePlayers(context) {
     for (let i = 0; i < visiblePlayers.length; i++) {
         let p = visiblePlayers[i];
+        console.log('displaying player: ');
+        console.log(p);
+
         displayPlayer(context, p);
     }
 }
@@ -122,7 +125,7 @@ function loopDisplay(context) {
     clearCanvas(context);
     //displayPlayer(context, Player.player);
     updateVisiblePlayers();
-    displayVisiblePlayers(context, Player.player);
+    displayVisiblePlayers(context);
     requestAnimationFrame(function () {
         loopDisplay(context);
     });

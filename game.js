@@ -71,8 +71,9 @@ module.exports = {
                 if (getL1Distance(player, p) <= Globals.PLAYER_VISION_RANGE) {
                     visiblePlayers.push(p);
                 }
-                socket.emit('updateVisiblePlayers', { visiblePlayers: visiblePlayers });
             }
+            console.log(visiblePlayers);
+            socket.emit('updateVisiblePlayers', { visiblePlayers: visiblePlayers });
         });
 
         console.log('game inited');
