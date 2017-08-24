@@ -26,12 +26,14 @@ module.exports = {
         socket.on('addPlayer', function(msg) {
             console.log('addPlayer callback');
             players[socket.id] = msg.player;
+            console.log('player count: ' + Object.keys(players).length);
+            console.log(players);
             //players[msg.socketId] = msg.player;
         });
 
         //socket.on('movePlayer', movePlayer);
         socket.on('movePlayer', function(msg) {
-            console.log('movePlayer callback');
+            //console.log('movePlayer callback');
             let player = msg.player;
             let key = msg.keyPressed;
             switch (key) {
@@ -52,17 +54,36 @@ module.exports = {
                     player.x -= Globals.PLAYER_SPEED;
                     break;
                 default:
-                    console.log('invalid move key: ' + key);
+                    //console.log('invalid move key: ' + key);
                     break;
             }
-            console.log('player: ');
-            console.log(player);
+            //console.log('player: ');
+            //console.log(player);
             socket.emit('updatePlayer', player);
+        });
+
+        // give client visible players
+        socket.on('getVisiblePlayers', function(msg) {
+            let visiblePlayers = [];
+            let player = msg.player;
+            for (let playerId in players) {
+                let p = players[playerId];
+                if (getL1Distance(player, p) <= Globals.PLAYER_VISION_RANGE) {
+                    visiblePlayers.push(p);
+                }
+                socket.emit('updateVisiblePlayers', { visiblePlayers: visiblePlayers });
+            }
         });
 
         console.log('game inited');
     },
 };
+
+function getL1Distance(p1, p2) {
+    let xdist = Math.abs(p2.x - p1.x);
+    let ydist = Math.abs(p2.x - p1.x)
+    return xdist + ydist;
+}
 
 function updateGlobals(data) {
 	console.log('updateGlobals');
@@ -71,43 +92,17 @@ function updateGlobals(data) {
 	Globals = data;
 }
 
-function addPlayer(msg) {
-	console.log('addPlayer');
-	console.log('msg: ');
-	console.log(msg);
-	let socketId = msg.socketId;
-	let player = msg.player;
-    //player = new Player('', 'red', Globals.CANVAS_WIDTH / 2, Globals.CANVAS_HEIGHT / 2);
-    player[socketId] = player;
-    io.sockets.connected[socketId].emit('updatePlayer');
-	//sockets[socketId].emit('updatePlayer');
-}
-
-//function movePlayer(data) {
-//	console.log('movePlayer callback');
-//	console.log('data: ');
-//	console.log(data);
-//    socketId = data.socketId;
-//    dir = data.dir;
-//    player = players[socketId];
-//	switch (dir) {                                                         
-//		case Globals.KEY_UP:                                               
-//			player.y -= Globals.PLAYER_SPEED;                                
-//			break;                                                         
-//		case Globals.KEY_RIGHT:                                            
-//			player.x += Globals.PLAYER_SPEED;                                
-//			break;                                                         
-//		case Globals.KEY_DOWN:                                             
-//			player.y += Globals.PLAYER_SPEED;                                
-//			break;                                                         
-//		case Globals.KEY_LEFT:                                             
-//			player.x -= Globals.PLAYER_SPEED;                                
-//			break;                                                         
-//		default:                                                           
-//			break;                                                         
-//	} 
-//	//socket.emit('updatePlayer', player);
-//    io.sockets.connected[socketId].emit('updatePlayer', player);
+//function addPlayer(msg) {
+//	console.log('addPlayer');
+//	console.log('msg: ');
+//	console.log(msg);
+//	let socketId = msg.socketId;
+//	let player = msg.player;
+//    //player = new Player('', 'red', Globals.CANVAS_WIDTH / 2, Globals.CANVAS_HEIGHT / 2);
+//    players[socketId] = player;
+//    console.log('player count: ' + Object.keys(players).length);
+//    io.sockets.connected[socketId].emit('updatePlayer');
+//	//sockets[socketId].emit('updatePlayer');
 //}
 
 

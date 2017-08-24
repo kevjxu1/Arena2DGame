@@ -9,6 +9,7 @@ var Globals = {
     PLAYER_SPEED: 2,
     SCREEN_WIDTH: window.innerWidth * 0.7,
     SCREEN_HEIGHT: window.innerHeight * 0.7,
+    PLAYER_VISION_RANGE: 100,
 
     // input constants
     KEY_UNPRESSED: -1,
@@ -17,6 +18,7 @@ var Globals = {
     KEY_UP: 38,
     KEY_RIGHT: 39,
     KEY_DOWN: 40
+
 };
 
 var Player =  {
@@ -57,6 +59,10 @@ var IO = {
             socketId = io.socket.sessionid;
         });
         IO.socket.on("updatePlayer", IO.updatePlayer);
+
+        IO.socket.on('updateVisiblePlayers', function(msg) {
+            visiblePlayers = msg.visiblePlayers;
+        });
     },
 
     updatePlayer: function(player) {
@@ -100,14 +106,23 @@ function displayPlayer(context, player) {
     context.fillStyle = Player.player.color;
     context.fill();
     context.closePath();
-};
+}
+
+function displayVisiblePlayers(context, player) {
+    for (let i = 0; i < visiblePlayers.length; i++) {
+        let p = visiblePlayers[i];
+        displayPlayer(context, p);
+    }
+}
 
 
 // top modules
 
 function loopDisplay(context) {
     clearCanvas(context);
-    displayPlayer(context, Player.player);
+    //displayPlayer(context, Player.player);
+    updateVisiblePlayers();
+    displayVisiblePlayers(context, Player.player);
     requestAnimationFrame(function () {
         loopDisplay(context);
     });
@@ -122,6 +137,9 @@ function initCanvas(canvas) {
 
 ////////////////////////////////////////////////////
 
+function updateVisiblePlayers() {
+    IO.socket.emit('getVisiblePlayers', { player: Player.player });
+}
 
 function createPlayer() {
     //if (!IO.sockId)
