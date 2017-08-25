@@ -13,7 +13,12 @@ module.exports = {
         console.log('socket.id: ' + socket.id);
 		sockets[socket.id] = socket;
 
-        socket.on('submitForm', function(msg) {
+        socket.on('disconnect', function() {
+            console.log('deleting player[' + socket.id + ']');
+            delete players[socket.id];
+        });
+
+        socket.on('addPlayer', function(msg) {
             let player = msg.player;
             console.log('submitForm callback');
             console.log('player name: ' + player.name);
@@ -84,11 +89,4 @@ function getL2Distance(p1, p2) {
     let ydist = Math.abs(p2.y - p1.y)
     return Math.sqrt((xdist * xdist) + (ydist * ydist));
 }
-
-//function updateGlobals(data) {
-//	console.log('updateGlobals');
-//	console.log('data: ');
-//	console.log(data);
-//	Globals = data;
-//}
 

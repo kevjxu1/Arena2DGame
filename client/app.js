@@ -72,16 +72,16 @@ function clearForm() {
     form.style.display = 'none';
 }
 
-//bindSubmit();
 $(document).ready(function() {
     $('#submit').on('click', function(e) {
         //alert('submit callback');
         let nameInput = $('#nameInput').val();
         alert(nameInput);
         Player.player.name = nameInput;
-        IO.socket.emit('submitForm', { player: Player.player });
         $('#form').hide();
+        IO.socket.emit('addPlayer', { player: Player.player });
     })
 });
+
 IO.init();
 sendGlobals(Globals);
