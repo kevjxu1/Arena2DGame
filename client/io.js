@@ -5,7 +5,6 @@ var IO = {
 	},
 
     bindEvents: function() {
-        //IO.socket.on('createPlayer', IO.createPlayer);
         IO.socket.on('connection', function() {
             //socketId = IO.socket.socket.sessionid;
             socketId = io.socket.sessionid;

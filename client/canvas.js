@@ -10,11 +10,19 @@ var Canvas = {
     },
 
     displayPlayer: function(context, player) {
+        // draw player icon
         context.beginPath();
         context.rect(player.x, player.y, player.size, player.size);
         context.fillStyle = player.color;
         context.fill();
         context.closePath();
+
+        // draw player name
+        context.font = '12px Arial';
+        context.fillStyle = 'black';
+        context.textAlign = 'center';
+        //context.textBaseline = 'middle';
+        context.fillText(player.name, player.x + (player.size / 2), player.y);
     },
 
     displayVisiblePlayers: function(context, visiblePlayers) {
