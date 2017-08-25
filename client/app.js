@@ -73,15 +73,19 @@ function clearForm() {
 }
 
 $(document).ready(function() {
+    // process form input on submit
     $('#submit').on('click', function(e) {
-        //alert('submit callback');
         let nameInput = $('#nameInput').val();
-        alert(nameInput);
+        let colorInput = $('.colorInput:checked').val();
         Player.player.name = nameInput;
+        Player.player.color = colorInput;
         $('#form').hide();
         IO.socket.emit('addPlayer', { player: Player.player });
     })
 });
 
+// initialize socket.io socket
 IO.init();
+
+// sync globals with server
 sendGlobals(Globals);
