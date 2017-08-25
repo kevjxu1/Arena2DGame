@@ -36,6 +36,12 @@ module.exports = {
         console.log('socket.id: ' + socket.id);
 		sockets[socket.id] = socket;
 
+        socket.on('submitForm', function(msg) {
+            console.log('submitForm callback');
+            players[socket.id] = player;
+            socket.emit('startGame');
+        });
+
 		//gameSocket.on('updateGlobals', updateGlobals);
 		socket.on('updateGlobals', function(msg) {
             console.log('updateGlobals callback');

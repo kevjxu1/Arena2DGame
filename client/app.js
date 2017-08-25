@@ -10,6 +10,8 @@ var Globals = {
     //DEFAULT_PLAYER_VISION: 100,
     DEFAULT_PLAYER_VISION: 1e10,
 
+    DEFAULT_BACKGROUND_COLOR: '#CCCFD3',  // light gray
+
     SCREEN_WIDTH: window.innerWidth * 0.7,
     SCREEN_HEIGHT: window.innerHeight * 0.7,
 
@@ -57,6 +59,16 @@ var IO = {
             //socketId = IO.socket.socket.sessionid;
             socketId = io.socket.sessionid;
         });
+
+        IO.socket.on('startGame', function() {
+            console.log('startGame callback');
+            clearForm();
+            Input.addEventListeners();
+            initCanvas(canvas);
+            loopDisplay(context);
+
+        });
+
         IO.socket.on("updatePlayer", IO.updatePlayer);
 
         IO.socket.on('updateVisiblePlayers', function(msg) {
@@ -94,7 +106,7 @@ var Input = {
 
 function clearCanvas(context) {
     context.beginPath();
-    context.fillStyle = '#CCCFD3';  // light gray
+    context.fillStyle = Globals.DEFAULT_BACKGROUND_COLOR;
     context.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
     context.closePath;
 }
@@ -113,7 +125,6 @@ function displayVisiblePlayers(context) {
         displayPlayer(context, p);
     }
 }
-
 
 // top modules
 
@@ -150,14 +161,39 @@ function sendGlobals() {
     IO.socket.emit('updateGlobals', Globals);
 }
 
-IO.init();
-sendGlobals(Globals);
+function onSubmit() {
+    console.log('onSubmit callback');
+    form = document.getElementById('form');
+    for (let i = 0; i < form.length; i++) {
+        if (form.elements[i].id == 'nameInput') {
+            let nameInput = form.elements[i].value;
+            Player.player.name = nameInput;
+            IO.socket.emit('submitForm', { player: Player.player });
+            break;
+        }
+    }
+}
 
-Input.addEventListeners();
-createPlayer();
+function bindSubmit() {
+    let form = document.getElementById('form');
+    for (let i = 0; i < form.length; i++) {
+        if (form.elements[i].id == 'submit') {
+            //form.elements[i].onclick='onSubmit();';
+            form.elements[i].addEventListener('click', onSubmit);
+            console.log(form.elements[i].value + ' binded');
+            break;
+        }
+    }
+}
+
+function clearForm() {
+    let form = document.getElementById('form');
+    form.style.display = 'none';
+}
 
 var canvas,
     context;
-initCanvas(canvas);
-loopDisplay(context);
 
+bindSubmit();
+IO.init();
+sendGlobals(Globals);

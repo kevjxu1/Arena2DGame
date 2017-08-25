@@ -1,12 +1,35 @@
 <!DOCTYPE html>
 <head>
     <meta charset="utf-8"/>
-
     <!-- Ensure that everything scales appropriately on a mobile device -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<style>
+    #canvas {
+		/* center the canvas */
+   		padding: 0;
+		margin: auto;
+		display: block;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+    }
+
+	#form {
+		display: inline-block;
+		text-align: center;
+	}
+	</style>
+
 </head>
 
 <body>
+	<form id='form'>
+		<label for="nameInput">First Name</label>
+		<input type="text" id="nameInput" placeholder="Enter your name here.">
+		<input type="submit" id="submit" value="Submit" onclick="onSubmit()">
+	</form>
     <canvas id="canvas"></canvas>
     <!-- If Socket.IO is used with Express, then the /socket.io/ path will
         serve the proper Socket.IO javascript files used by the browser -->
@@ -17,3 +40,4 @@
 
 </body>
 </html>
+
