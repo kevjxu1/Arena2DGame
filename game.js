@@ -37,7 +37,9 @@ module.exports = {
 		sockets[socket.id] = socket;
 
         socket.on('submitForm', function(msg) {
+            let player = msg.player;
             console.log('submitForm callback');
+            console.log('player name: ' + player.name);
             players[socket.id] = player;
             socket.emit('startGame');
         });
