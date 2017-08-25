@@ -2,31 +2,8 @@ var io;
 var gameSocket;
 var Globals;
 
-Player = require('./player');
 var players = {};
 var sockets = {};
-
-//var Globals = {
-//    // game parameters
-//
-//    // player
-//    DEFAULT_PLAYER_SIZE: 40,
-//    DEFAULT_PLAYER_SPEED: 4,
-//    DEFAULT_PLAYER_VISION: 200,
-//
-//    // screen
-//    SCREEN_WIDTH: null,  // defined by browser
-//    SCREEN_HEIGHT:, null, // defined by browser
-//
-//    // input
-//    KEY_UNPRESSED: -1,  // dev-defined
-//    KEY_ENTER: 13,
-//    KEY_LEFT: 37,
-//    KEY_UP: 38,
-//    KEY_RIGHT: 39,
-//    KEY_DOWN: 40
-//};
-
 
 module.exports = {
 
@@ -82,7 +59,7 @@ module.exports = {
                 default:
                     break;
             }
-            socket.emit('updatePlayer', player);
+            socket.emit('updatePlayer', { player: player});
         });
 
         // give client visible players
