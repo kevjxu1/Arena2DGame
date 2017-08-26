@@ -21,6 +21,7 @@ function gameLoop(context) {
     //displayPlayer(context, Player.player);
     updateVisiblePlayers();
     Canvas.displayVisiblePlayers(context, visiblePlayers);
+    Canvas.displayPlayer(context, Player.player);
     requestAnimationFrame(function () {
         gameLoop(context);
     });

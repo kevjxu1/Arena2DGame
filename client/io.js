@@ -10,8 +10,10 @@ var IO = {
             socketId = io.socket.sessionid;
         });
 
-        IO.socket.on('startGame', function() {
-            console.log('startGame callback');
+        IO.socket.on('startGame', function(msg) {
+            // give player unique id
+            Player.player = msg.player
+
             clearForm();
             Input.addEventListeners();
             Canvas.initCanvas(canvas);
@@ -26,10 +28,6 @@ var IO = {
         IO.socket.on('updateVisiblePlayers', function(msg) {
             visiblePlayers = msg.visiblePlayers;
         });
-    },
-
-    updatePlayer: function(player) {
-        Player.player = player;
     }
 
 };

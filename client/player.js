@@ -1,5 +1,6 @@
 var Player = {
     player: {
+        id: null,
         name: '',
         color: 'red',
         size: Globals.DEFAULT_PLAYER_SIZE,

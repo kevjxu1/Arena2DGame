@@ -18,14 +18,6 @@ module.exports = {
             delete players[socket.id];
         });
 
-        socket.on('addPlayer', function(msg) {
-            let player = msg.player;
-            console.log('submitForm callback');
-            console.log('player name: ' + player.name);
-            players[socket.id] = player;
-            socket.emit('startGame');
-        });
-
 		//gameSocket.on('updateGlobals', updateGlobals);
 		socket.on('updateGlobals', function(msg) {
             console.log('updateGlobals callback');
@@ -36,11 +28,11 @@ module.exports = {
 
         //gameSocket.on('addPlayer', addPlayer);
         socket.on('addPlayer', function(msg) {
-            console.log('addPlayer callback');
-            players[socket.id] = msg.player;
-            console.log('player count: ' + Object.keys(players).length);
-            console.log(players);
-            //players[msg.socketId] = msg.player;
+            let player = msg.player;
+            player.id = socket.id;
+            players[socket.id] = player;
+            socket.emit('updatePlayer', { player: player });
+            socket.emit('startGame', { player: player });
         });
 
         socket.on('movePlayer', function(msg) {
@@ -67,14 +59,16 @@ module.exports = {
                 default:
                     break;
             }
-            socket.emit('updatePlayer', { player: player});
+            socket.emit('updatePlayer', { player: player });
         });
 
         // give client visible players
         socket.on('getVisiblePlayers', function(msg) {
-            let visiblePlayers = [];
+            let visiblePlayers = [];  // excluding main player
             let player = msg.player;
             for (let playerId in players) {
+                if (playerId == player.id)
+                    continue;
                 let p = players[playerId];
                 if (getL2Distance(player, p) <= player.vision) {
                     visiblePlayers.push(p);
