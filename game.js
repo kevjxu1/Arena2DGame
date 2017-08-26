@@ -43,7 +43,6 @@ module.exports = {
             //players[msg.socketId] = msg.player;
         });
 
-        //socket.on('movePlayer', movePlayer);
         socket.on('movePlayer', function(msg) {
             //console.log('movePlayer callback');
             let key = msg.keyPressed;
@@ -51,15 +50,19 @@ module.exports = {
             switch (key) {
                 case Globals.KEY_UP:
                     player.y -= player.speed;
+                    player.dir = Globals.UP;
                     break;
                 case Globals.KEY_RIGHT:
                     player.x += player.speed;
+                    player.dir = Globals.RIGHT;
                     break;
                 case Globals.KEY_DOWN:
                     player.y += player.speed;
+                    player.dir = Globals.DOWN;
                     break;
                 case Globals.KEY_LEFT:
                     player.x -= player.speed;
+                    player.dir = Globals.LEFT;
                     break;
                 default:
                     break;

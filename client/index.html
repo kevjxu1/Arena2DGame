@@ -17,8 +17,13 @@
     }
 
 	#form {
+		/* display: inline-block;
+		text-align: center; */
+		background-color: #D3D3D3;
 		display: inline-block;
-		text-align: center;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: left;
 	}
 
     .colorInput {
@@ -31,6 +36,7 @@
 </head>
 
 <body>
+	<center>
 	<form id='form' action="javascript:void(0);">
 		<label for="nameInput">Name</label><br>
 		<input type="text" id="nameInput" placeholder="Enter your name here."><br><br>
@@ -38,7 +44,7 @@
         <!-- radio buttons with the same name are mutually exclusive -->
         <label for="colorSelection">Color</label><br>
         <div id="colorSelection">
-            <input type="radio" class="colorInput" name="colorRadio" id="redRadio" value="red">
+            <input type="radio" class="colorInput" name="colorRadio" id="redRadio" value="red" checked="checked">
             <label for="redRadio">red</label><br>
             <input type="radio" class="colorInput" name="colorRadio" id="greenRadio" value="green">
             <label for="greenRadio">green</label><br>
@@ -54,6 +60,7 @@
 
 		<input type="submit" id="submit" value="Submit"><br>
 	</form>
+	</center>
     <canvas id="canvas"></canvas>
     <!-- If Socket.IO is used with Express, then the /socket.io/ path will
         serve the proper Socket.IO javascript files used by the browser -->

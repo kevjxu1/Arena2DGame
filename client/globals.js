@@ -5,10 +5,14 @@ var Globals = {
     //DEFAULT_PLAYER_VISION: 100,
     DEFAULT_PLAYER_VISION: 1e10,
 
-    DEFAULT_BACKGROUND_COLOR: '#CCCFD3',  // light gray
+    //DEFAULT_BACKGROUND_COLOR: '#CCCFD3',  // light gray
+    DEFAULT_BACKGROUND_COLOR: '#D3D3D3',  // light gray
 
     SCREEN_WIDTH: window.innerWidth * 0.7,
     SCREEN_HEIGHT: window.innerHeight * 0.7,
+
+    // directions
+    LEFT: 0, UP: 1, RIGHT: 2, DOWN: 3,
 
     // input constants
     KEY_UNPRESSED: -1,
