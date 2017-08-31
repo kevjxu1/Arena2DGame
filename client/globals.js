@@ -1,7 +1,7 @@
 var Globals = {
     // game parameters
 	DEFAULT_PLAYER_SIZE: 28, 
-    DEFAULT_PLAYER_SPEED: 4,                                                     
+    DEFAULT_PLAYER_SPEED: 8,
     //DEFAULT_PLAYER_VISION: 100,
     DEFAULT_PLAYER_VISION: 1e10,
 

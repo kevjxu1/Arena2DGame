@@ -65,22 +65,34 @@ module.exports = {
             //console.log('movePlayer callback');
             let key = msg.keyPressed;
             let player = players[socket.id];
+            let oldX = player.x;
+            let oldY = player.y;
             switch (key) {
                 case Globals.KEY_UP:
                     player.y -= player.speed;
                     player.dir = Globals.UP;
+                    if (checkCollisions(player)) {
+                        player.y = oldY;
+                        console.log('collision detected');
+                    }
                     break;
                 case Globals.KEY_RIGHT:
                     player.x += player.speed;
                     player.dir = Globals.RIGHT;
+                    if (checkCollisions(player))
+                        player.x = oldX;
                     break;
                 case Globals.KEY_DOWN:
                     player.y += player.speed;
                     player.dir = Globals.DOWN;
+                    if (checkCollisions(player))
+                        player.y = oldY;
                     break;
                 case Globals.KEY_LEFT:
                     player.x -= player.speed;
                     player.dir = Globals.LEFT;
+                    if (checkCollisions(player))
+                        player.x = oldX;
                     break;
                 default:
                     break;
@@ -115,10 +127,15 @@ function checkCollisionSquares(sq1, sq2) {
             && sq1.y + sq1.size >= sq2.y);
 }
 
-function checkCollisions(sq) {
+function checkCollisions(player) {
+    console.log('checkCollisions');
     for (id in players) {
+        if (id == player.id)
+            continue;
         let p = players[id];
-        if (checkCollisionSquares(sq, p)) {
+        console.log('checking player: ');
+        console.log(p);
+        if (checkCollisionSquares(player, p)) {
             return true;
         }
     }
