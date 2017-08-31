@@ -25,8 +25,8 @@ var IO = {
             Player.player = msg.player;
         });
 
-        IO.socket.on('updateVisiblePlayers', function(msg) {
-            visiblePlayers = msg.visiblePlayers;
+        IO.socket.on('updateVisibleOthers', function(msg) {
+            visibleOthers = msg.visibleOthers;
         });
     }
 

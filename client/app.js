@@ -1,6 +1,6 @@
 'use strict'; 
 
-var visiblePlayers = [];
+var visibleOthers = [];
 var socketId;
     
 var Input = {
@@ -19,8 +19,8 @@ var Input = {
 function gameLoop(context) {
     Canvas.clearCanvas(context);
     //displayPlayer(context, Player.player);
-    updateVisiblePlayers();
-    Canvas.displayVisiblePlayers(context, visiblePlayers);
+    updateVisibleOthers();
+    Canvas.displayVisibleOthers(context, visibleOthers);
     Canvas.displayPlayer(context, Player.player);
     requestAnimationFrame(function () {
         gameLoop(context);
@@ -29,14 +29,8 @@ function gameLoop(context) {
 
 ////////////////////////////////////////////////////
 
-function updateVisiblePlayers() {
-    IO.socket.emit('getVisiblePlayers', { player: Player.player });
-}
-
-function createPlayer() {
-    //if (!IO.sockId)
-    //    return;
-    IO.socket.emit('addPlayer', { player: Player.player });
+function updateVisibleOthers() {
+    IO.socket.emit('getVisibleOthers', { player: Player.player });
 }
 
 function sendGlobals() {

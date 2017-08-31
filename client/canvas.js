@@ -29,9 +29,9 @@ var Canvas = {
         context.fillText(player.name, player.x + (player.size / 2), player.y);
     },
 
-    displayVisiblePlayers: function(context, visiblePlayers) {
-        for (let i = 0; i < visiblePlayers.length; i++) {
-            let p = visiblePlayers[i];
+    displayVisibleOthers: function(context, visibleOthers) {
+        for (let i = 0; i < visibleOthers.length; i++) {
+            let p = visibleOthers[i];
             Canvas.displayPlayer(context, p);
         }
     },
