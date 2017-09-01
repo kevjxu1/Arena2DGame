@@ -1,3 +1,6 @@
+var canvas,
+    context;
+
 var Globals = {
     // game parameters
 	DEFAULT_PLAYER_RADIUS: 14, 

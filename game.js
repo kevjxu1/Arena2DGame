@@ -21,17 +21,19 @@ module.exports = {
 
 		//gameSocket.on('updateGlobals', updateGlobals);
 		socket.on('updateGlobals', function(msg) {
-            console.log('updateGlobals callback');
             Globals = msg;
         });
 
         //gameSocket.on('addPlayer', addPlayer);
         socket.on('addPlayer', function(msg) {
+            console.log('addPlayer callback');
+
             let player = msg.player;
             player.id = socket.id;
 
             // spawn player at random noncolliding position
             while (true) {
+                console.log('randomizing');
                 let x = Math.floor((Math.random() * Globals.SCREEN_WIDTH - player.radius) + 1) 
                 let y = Math.floor((Math.random() * Globals.SCREEN_HEIGHT - player.radius) + 1)
                 player.x = x;

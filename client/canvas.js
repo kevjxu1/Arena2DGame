@@ -1,6 +1,3 @@
-var canvas,
-    context;
-
 var Canvas = { 
 
     clearCanvas: function(context) {
@@ -53,8 +50,10 @@ var Canvas = {
         }
     },
 
-    initCanvas: function(canvas) {
+    initCanvas: function() {
         canvas = document.getElementById("canvas");
+        console.log('canvas: ');
+        console.log(canvas);
         canvas.width = Globals.SCREEN_WIDTH;
         canvas.height = Globals.SCREEN_HEIGHT;
         context = canvas.getContext("2d");

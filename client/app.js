@@ -7,7 +7,6 @@ var projectiles;
 var Input = {
 	addEventListeners: function() {
 		document.addEventListener("keydown", Input.onKeydown, false);
-		//document.addEventListener("keyup", Input.onKeyup, false);
 	},
 
 	onKeydown: function(e) {
@@ -24,6 +23,7 @@ var Input = {
             IO.socket.emit('addProjectile', { proj: proj });
         }
 	},
+
 };
 
 
@@ -80,6 +80,8 @@ function clearForm() {
     form.style.display = 'none';
 }
 
+// initialize socket.io socket
+IO.init();
 $(document).ready(function() {
     // process form input on submit
     $('#submit').on('click', function(e) {
@@ -92,8 +94,6 @@ $(document).ready(function() {
     })
 });
 
-// initialize socket.io socket
-IO.init();
 
 // sync globals with server
 sendGlobals(Globals);

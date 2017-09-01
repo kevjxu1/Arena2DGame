@@ -11,17 +11,27 @@ var IO = {
         });
 
         IO.socket.on('startGame', function(msg) {
+            console.log('startGame callback');
+
             // give player unique id
             Player.player = msg.player
 
             clearForm();
             Input.addEventListeners();
-            Canvas.initCanvas(canvas);
+            Canvas.initCanvas();
+            canvas.addEventListener('mousemove', function(e) {
+                var rect = canvas.getBoundingClientRect();
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+                console.log('(x,y): (' + x + ',' + y);
+            });
+
             gameLoop(context);
 
         });
 
         IO.socket.on("updatePlayer", function(msg) {
+            console.log('updatePlayer callback');
             Player.player = msg.player;
         });
 
