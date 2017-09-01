@@ -107,18 +107,21 @@ module.exports = {
         socket.on('addProjectile', function(msg) {
             let key = msg.keyPressed;
             let proj = msg.proj;
+            if (!proj.dir) {
+                // if direction not initialized, don't add the projectile
+                return;
+            }
             projectiles[proj.id] = proj;
             socket.emit('updateProjectiles', { projectiles: projectiles });
         });
         
         function gameLoop() {
+            deleteOutOfRangeProjectiles();
             for (id in projectiles) {
                 let proj = projectiles[id];
                 switch(proj.dir) {
                 case Globals.UP:
                     proj.y -= proj.speed;
-                    //if (proj.y < proj.startY - proj.range)
-
                     break;
                 case Globals.LEFT:
                     proj.x -= proj.speed;
@@ -140,6 +143,18 @@ module.exports = {
         console.log('game initialized');
     },
 };
+
+function deleteOutOfRangeProjectiles() {
+    for (id in projectiles) {
+        let proj = projectiles[id];
+        let xdiff = proj.x - proj.startX;
+        let ydiff = proj.y - proj.startY;
+        let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
+        if (dist > proj.range) {
+           delete projectiles[id]; 
+        }
+    }
+}
 
 function checkCollisions(player) {
     for (id in players) {

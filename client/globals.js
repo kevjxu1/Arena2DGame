@@ -11,15 +11,15 @@ var Globals = {
     //DEFAULT_BACKGROUND_COLOR: '#CCCFD3',  // light gray
     DEFAULT_BACKGROUND_COLOR: '#D3D3D3',  // light gray
 
-    DEFAULT_PROJECTILE_SPEED: 5,
+    DEFAULT_PROJECTILE_SPEED: 20,
     DEFAULT_PROJECTILE_THICKNESS: 5,
-    DEFAULT_PROJECTILE_RANGE: 200,
+    DEFAULT_PROJECTILE_RANGE: 250,
 
     SCREEN_WIDTH: window.innerWidth * 0.7,
     SCREEN_HEIGHT: window.innerHeight * 0.7,
 
     // directions
-    LEFT: 0, UP: 1, RIGHT: 2, DOWN: 3,
+    UP: 1, LEFT: 2, RIGHT: 3, DOWN: 4,
 
     // input constants
     KEY_UNPRESSED: -1,

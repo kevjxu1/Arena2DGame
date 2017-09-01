@@ -39,11 +39,11 @@ var Canvas = {
         }
     },
 
-    displayProjectiles: function(context, projectiles) {
+    drawProjectiles: function(context, projectiles) {
         for (id in projectiles) {
             let proj = projectiles[id];
             context.beginPath();
-            context.rect(proj.x, proj.y, proj.thickness, proj.thickness);
+            context.arc(proj.x, proj.y, proj.radius, 0, 2 * Math.PI, true);
             context.fillStyle = 'black';
             context.fill();
             context.closePath();

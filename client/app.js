@@ -34,7 +34,7 @@ function gameLoop(context) {
     updateVisibleOthers();
     Canvas.displayVisibleOthers(context, visibleOthers);
     Canvas.drawPlayer(context, Player.player);
-    Canvas.displayProjectiles(context, projectiles);
+    Canvas.drawProjectiles(context, projectiles);
     requestAnimationFrame(function () {
         gameLoop(context);
     });
