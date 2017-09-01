@@ -10,29 +10,35 @@ var Canvas = {
         context.closePath;
     },
 
-    displayPlayer: function(context, player) {
+    drawPlayer: function(context, player) {
         // draw player icon
         context.beginPath();
-        context.rect(player.x, player.y, player.size, player.size);
+
+        context.arc(player.x, player.y, player.radius, 0, 2 * Math.PI, true);
         context.fillStyle = player.color;
         context.fill();
+        context.lineWidth = player.radius * 0.1;
+
+        context.strokeStyle = 'black';
+        context.stroke();
+
         context.closePath();
 
-        // draw pointer
-        Canvas._displayPointer(context, player);
+        //// draw pointer
+        //Canvas._displayPointer(context, player);
 
         // draw player name
         context.font = '12px Arial';
         context.fillStyle = 'black';
         context.textAlign = 'center';
         //context.textBaseline = 'middle';
-        context.fillText(player.name, player.x + (player.size / 2), player.y);
+        context.fillText(player.name, player.x, player.y - player.radius);
     },
 
     displayVisibleOthers: function(context, visibleOthers) {
         for (let i = 0; i < visibleOthers.length; i++) {
             let p = visibleOthers[i];
-            Canvas.displayPlayer(context, p);
+            Canvas.drawPlayer(context, p);
         }
     },
 

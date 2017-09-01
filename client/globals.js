@@ -1,8 +1,8 @@
 var Globals = {
     // game parameters
-	DEFAULT_PLAYER_SIZE: 28, 
+	DEFAULT_PLAYER_RADIUS: 14, 
+    DEFAULT_PLAYER_COLOR: 'red',
     DEFAULT_PLAYER_SPEED: 8,
-    //DEFAULT_PLAYER_VISION: 100,
     DEFAULT_PLAYER_VISION: 1e10,
 
     //DEFAULT_BACKGROUND_COLOR: '#CCCFD3',  // light gray

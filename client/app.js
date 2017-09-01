@@ -30,10 +30,10 @@ var Input = {
 ////////////////////////////////////////////////////
 function gameLoop(context) {
     Canvas.clearCanvas(context);
-    //displayPlayer(context, Player.player);
+    //drawPlayer(context, Player.player);
     updateVisibleOthers();
     Canvas.displayVisibleOthers(context, visibleOthers);
-    Canvas.displayPlayer(context, Player.player);
+    Canvas.drawPlayer(context, Player.player);
     Canvas.displayProjectiles(context, projectiles);
     requestAnimationFrame(function () {
         gameLoop(context);

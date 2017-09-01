@@ -2,9 +2,8 @@ var Player = {
     player: {
         id: null,
         name: '',
-        color: 'red',
-        size: Globals.DEFAULT_PLAYER_SIZE,
-        dir: Globals.UP,
+        color: Globals.DEFAULT_PLAYER_COLOR,
+        radius: Globals.DEFAULT_PLAYER_RADIUS,
         speed: Globals.DEFAULT_PLAYER_SPEED,
         vision: Globals.DEFAULT_PLAYER_VISION,
         x: Globals.SCREEN_WIDTH / 2,  

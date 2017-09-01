@@ -23,8 +23,6 @@ module.exports = {
 		socket.on('updateGlobals', function(msg) {
             console.log('updateGlobals callback');
             Globals = msg;
-            console.log('Globals: ');
-            console.log(Globals);
         });
 
         //gameSocket.on('addPlayer', addPlayer);
@@ -33,13 +31,11 @@ module.exports = {
             player.id = socket.id;
 
             // spawn player at random noncolliding position
-            //let isEnd = false;
             while (true) {
-                let x = Math.floor((Math.random() * Globals.SCREEN_WIDTH - player.size) + 1) 
-                let y = Math.floor((Math.random() * Globals.SCREEN_HEIGHT - player.size) + 1)
+                let x = Math.floor((Math.random() * Globals.SCREEN_WIDTH - player.radius) + 1) 
+                let y = Math.floor((Math.random() * Globals.SCREEN_HEIGHT - player.radius) + 1)
                 player.x = x;
                 player.y = y;
-                console.log('randomized pos: (' + x + ',' + y);
 
                 // check if any player is colliding if new player spawns at (x,y)
                 if (checkCollisions(player))
@@ -63,10 +59,8 @@ module.exports = {
                 case Globals.KEY_UP:
                     player.y -= player.speed;
                     player.dir = Globals.UP;
-                    if (checkCollisions(player)) {
+                    if (checkCollisions(player)) 
                         player.y = oldY;
-                        console.log('collision detected');
-                    }
                     break;
                 case Globals.KEY_RIGHT:
                     player.x += player.speed;
@@ -121,6 +115,8 @@ module.exports = {
                 switch(proj.dir) {
                 case Globals.UP:
                     proj.y -= proj.speed;
+                    //if (proj.y < proj.startY - proj.range)
+
                     break;
                 case Globals.LEFT:
                     proj.x -= proj.speed;
@@ -131,32 +127,28 @@ module.exports = {
                 case Globals.DOWN:
                     proj.y += proj.speed;
                     break;
+                default:
+                    break;
                 }
             }
             socket.emit('updateProjectiles', { projectiles: projectiles });
         }
-        setInterval(gameLoop, 300);
+        setInterval(gameLoop, 100);
 
         console.log('game initialized');
     },
 };
 
-function checkCollisionSquares(sq1, sq2) {
-    return (sq1.x <= sq2.x + sq2.size
-            && sq1.x + sq1.size >= sq2.x
-            && sq1.y <= sq2.y + sq2.size
-            && sq1.y + sq1.size >= sq2.y);
-}
-
 function checkCollisions(player) {
-    console.log('checkCollisions');
     for (id in players) {
         if (id == player.id)
             continue;
-        let p = players[id];
-        console.log('checking player: ');
-        console.log(p);
-        if (checkCollisionSquares(player, p)) {
+        let other = players[id];
+        let xdiff = player.x - other.x;
+        let ydiff = player.y - other.y;
+        let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
+        if (dist < player.radius + other.radius) {
+            // collision detected
             return true;
         }
     }
