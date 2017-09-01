@@ -2,6 +2,7 @@
 
 var visibleOthers = [];
 var socketId;
+var projectiles;
     
 var Input = {
 	addEventListeners: function() {
@@ -11,6 +12,17 @@ var Input = {
 
 	onKeydown: function(e) {
         IO.socket.emit('movePlayer', { keyPressed: e.keyCode });
+
+        if (e.keyCode == Globals.KEY_SPACE) {
+            // player shoots projectile
+            let proj = new Projectile(
+                    Player.player.x, Player.player.y,
+                    Globals.DEFAULT_PROJECTILE_THICKNESS,
+                    Globals.DEFAULT_PROJECTILE_SPEED,
+                    Globals.DEFAULT_PROJECTILE_RANGE,
+                    Player.player.dir);
+            IO.socket.emit('addProjectile', { proj: proj });
+        }
 	},
 };
 
@@ -22,6 +34,7 @@ function gameLoop(context) {
     updateVisibleOthers();
     Canvas.displayVisibleOthers(context, visibleOthers);
     Canvas.displayPlayer(context, Player.player);
+    Canvas.displayProjectiles(context, projectiles);
     requestAnimationFrame(function () {
         gameLoop(context);
     });

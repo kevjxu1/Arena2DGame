@@ -8,6 +8,10 @@ var Globals = {
     //DEFAULT_BACKGROUND_COLOR: '#CCCFD3',  // light gray
     DEFAULT_BACKGROUND_COLOR: '#D3D3D3',  // light gray
 
+    DEFAULT_PROJECTILE_SPEED: 5,
+    DEFAULT_PROJECTILE_THICKNESS: 5,
+    DEFAULT_PROJECTILE_RANGE: 200,
+
     SCREEN_WIDTH: window.innerWidth * 0.7,
     SCREEN_HEIGHT: window.innerHeight * 0.7,
 
@@ -20,6 +24,7 @@ var Globals = {
     KEY_LEFT: 37,
     KEY_UP: 38,
     KEY_RIGHT: 39,
-    KEY_DOWN: 40
+    KEY_DOWN: 40,
+    KEY_SPACE: 32
 };
 //module.exports = Globals;

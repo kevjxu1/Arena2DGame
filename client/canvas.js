@@ -36,6 +36,17 @@ var Canvas = {
         }
     },
 
+    displayProjectiles: function(context, projectiles) {
+        for (id in projectiles) {
+            let proj = projectiles[id];
+            context.beginPath();
+            context.rect(proj.x, proj.y, proj.thickness, proj.thickness);
+            context.fillStyle = 'black';
+            context.fill();
+            context.closePath();
+        }
+    },
+
     initCanvas: function(canvas) {
         canvas = document.getElementById("canvas");
         canvas.width = Globals.SCREEN_WIDTH;

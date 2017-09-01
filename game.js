@@ -4,12 +4,13 @@ var Globals;
 
 var players = {};
 var sockets = {};
+var projectiles = {};
 
 module.exports = {
 
     initGame: function(io, socket) {
         //io = sio;    
-        //gameSocket = socket;
+        gameSocket = socket;
         console.log('socket.id: ' + socket.id);
 		sockets[socket.id] = socket;
 
@@ -45,15 +46,6 @@ module.exports = {
                     continue;
                 else
                     break;
-                //isEnd = true;
-                //for (id in players) {
-                //    let p = players[id];
-                //    if (checkCollisionSquares(player, p)) {
-                //        // start over
-                //        isEnd = false;
-                //        break;
-                //    }
-                //}
             }
             players[socket.id] = player;
            
@@ -116,6 +108,35 @@ module.exports = {
             socket.emit('updateVisibleOthers', { visibleOthers: visibleOthers });
         });
 
+        socket.on('addProjectile', function(msg) {
+            let key = msg.keyPressed;
+            let proj = msg.proj;
+            projectiles[proj.id] = proj;
+            socket.emit('updateProjectiles', { projectiles: projectiles });
+        });
+        
+        function gameLoop() {
+            for (id in projectiles) {
+                let proj = projectiles[id];
+                switch(proj.dir) {
+                case Globals.UP:
+                    proj.y -= proj.speed;
+                    break;
+                case Globals.LEFT:
+                    proj.x -= proj.speed;
+                    break;
+                case Globals.RIGHT:
+                    proj.x += proj.speed;
+                    break;
+                case Globals.DOWN:
+                    proj.y += proj.speed;
+                    break;
+                }
+            }
+            socket.emit('updateProjectiles', { projectiles: projectiles });
+        }
+        setInterval(gameLoop, 300);
+
         console.log('game initialized');
     },
 };
@@ -163,4 +184,6 @@ function getL2Distance(p1, p2) {
     let ydist = Math.abs(p2.y - p1.y)
     return Math.sqrt((xdist * xdist) + (ydist * ydist));
 }
+
+
 

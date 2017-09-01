@@ -28,6 +28,11 @@ var IO = {
         IO.socket.on('updateVisibleOthers', function(msg) {
             visibleOthers = msg.visibleOthers;
         });
+
+        IO.socket.on('updateProjectiles', function(msg) {
+            projectiles = msg.projectiles;
+        });
+
     }
 
 };
