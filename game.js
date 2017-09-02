@@ -21,19 +21,20 @@ module.exports = {
 
 		//gameSocket.on('updateGlobals', updateGlobals);
 		socket.on('updateGlobals', function(msg) {
-            Globals = msg;
+            if (!Globals) {
+                Globals = msg.Globals;
+                console.log('Globals: ');
+                console.log(Globals);
+            }
         });
 
         //gameSocket.on('addPlayer', addPlayer);
         socket.on('addPlayer', function(msg) {
-            console.log('addPlayer callback');
-
             let player = msg.player;
             player.id = socket.id;
 
             // spawn player at random noncolliding position
             while (true) {
-                console.log('randomizing');
                 let x = Math.floor((Math.random() * Globals.SCREEN_WIDTH - player.radius) + 1) 
                 let y = Math.floor((Math.random() * Globals.SCREEN_HEIGHT - player.radius) + 1)
                 player.x = x;
@@ -52,31 +53,34 @@ module.exports = {
         });
 
         socket.on('movePlayer', function(msg) {
-            //console.log('movePlayer callback');
             let key = msg.keyPressed;
             let player = players[socket.id];
             let oldX = player.x;
             let oldY = player.y;
             switch (key) {
                 case Globals.KEY_UP:
+                case Globals.KEY_W:
                     player.y -= player.speed;
                     player.dir = Globals.UP;
                     if (checkCollisions(player)) 
                         player.y = oldY;
                     break;
                 case Globals.KEY_RIGHT:
+                case Globals.KEY_D:
                     player.x += player.speed;
                     player.dir = Globals.RIGHT;
                     if (checkCollisions(player))
                         player.x = oldX;
                     break;
                 case Globals.KEY_DOWN:
+                case Globals.KEY_S:
                     player.y += player.speed;
                     player.dir = Globals.DOWN;
                     if (checkCollisions(player))
                         player.y = oldY;
                     break;
                 case Globals.KEY_LEFT:
+                case Globals.KEY_A:
                     player.x -= player.speed;
                     player.dir = Globals.LEFT;
                     if (checkCollisions(player))
@@ -138,29 +142,15 @@ module.exports = {
             }
         }
 
-
-        
         function gameLoop() {
             updateHits();
             deleteOutOfRangeProjectiles();
             for (id in projectiles) {
                 let proj = projectiles[id];
-                switch(proj.dir) {
-                case Globals.UP:
-                    proj.y -= proj.speed;
-                    break;
-                case Globals.LEFT:
-                    proj.x -= proj.speed;
-                    break;
-                case Globals.RIGHT:
-                    proj.x += proj.speed;
-                    break;
-                case Globals.DOWN:
-                    proj.y += proj.speed;
-                    break;
-                default:
-                    break;
-                }
+                let dx = Math.cos(proj.dir) * proj.speed;
+                let dy = Math.sin(proj.dir) * proj.speed;
+                proj.x += dx;
+                proj.y += dy;
             }
             socket.emit('updateProjectiles', { projectiles: projectiles });
         }
@@ -197,22 +187,6 @@ function checkCollisions(player) {
     }
     return false;
 }
-
-//function checkCollision(x, y, width, height) {
-//    let unwalkables = players;
-//    let x, y;
-//    
-//    for (let i = 0; i < walkables.length; i++) {
-//        if x
-//    }
-//
-//    //while (true) {
-//    //    x = Math.floor((Math.random() * Globals.CANVAS_WIDTH - width) + 1) 
-//    //    y = Math.floor((Math.random() * Globals.CANVAS_HEIGHT - height) + 1)
-//    //    
-//    //}
-//
-//}
 
 function getL2Distance(p1, p2) {
     let xdist = Math.abs(p2.x - p1.x);

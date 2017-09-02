@@ -19,12 +19,12 @@ var IO = {
             clearForm();
             Input.addEventListeners();
             Canvas.initCanvas();
-            canvas.addEventListener('mousemove', function(e) {
-                var rect = canvas.getBoundingClientRect();
-                let x = e.clientX - rect.left;
-                let y = e.clientY - rect.top;
-                console.log('(x,y): (' + x + ',' + y);
-            });
+            //canvas.addEventListener('mousemove', function(e) {
+            //    var rect = canvas.getBoundingClientRect();
+            //    let x = e.clientX - rect.left;
+            //    let y = e.clientY - rect.top;
+            //    console.log('(x,y): (' + x + ',' + y);
+            //});
 
             gameLoop(context);
 

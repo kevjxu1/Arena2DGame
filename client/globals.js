@@ -5,14 +5,14 @@ var Globals = {
     // game parameters
 	DEFAULT_PLAYER_RADIUS: 14, 
     DEFAULT_PLAYER_COLOR: 'red',
-    DEFAULT_PLAYER_SPEED: 8,
+    DEFAULT_PLAYER_SPEED: 4,
     DEFAULT_PLAYER_VISION: 1e10,
 
     //DEFAULT_BACKGROUND_COLOR: '#CCCFD3',  // light gray
     DEFAULT_BACKGROUND_COLOR: '#D3D3D3',  // light gray
 
     DEFAULT_PROJECTILE_SPEED: 20,
-    DEFAULT_PROJECTILE_THICKNESS: 5,
+    DEFAULT_PROJECTILE_RADIUS: 5,
     DEFAULT_PROJECTILE_RANGE: 250,
 
     SCREEN_WIDTH: window.innerWidth * 0.7,
@@ -28,6 +28,11 @@ var Globals = {
     KEY_UP: 38,
     KEY_RIGHT: 39,
     KEY_DOWN: 40,
-    KEY_SPACE: 32
+    KEY_SPACE: 32,
+    KEY_W: 87,
+    KEY_A: 65,
+    KEY_S: 83,
+    KEY_D: 68,
+    KEY_SHIFT: 16
 };
 //module.exports = Globals;

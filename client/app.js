@@ -8,30 +8,52 @@ var mainPlayer = Player.player;
 var Input = {
 	addEventListeners: function() {
 		document.addEventListener("keydown", Input.onKeydown, false);
+        document.addEventListener('mousedown', Input.onMousedown, false);
 	},
 
     removeEventListeners: function() {
         document.removeEventListener('keydown', Input.onKeydown);
+        document.removeEventListener('mousedown', Input.onMousedown);
     },
 
 	onKeydown: function(e) {
         IO.socket.emit('movePlayer', { keyPressed: e.keyCode });
+	},
 
-        if (e.keyCode == Globals.KEY_SPACE) {
-            // player shoots projectile
+    onMousedown: function(e) {
+        if (e.which == 1) {  // left mouse button
+            let rect = canvas.getBoundingClientRect();
+            let cursorX = e.clientX - rect.left;
+            let cursorY = e.clientY - rect.top;
+            let xdiff = cursorX - mainPlayer.x;
+            let ydiff = cursorY - mainPlayer.y;
+            //mainPlayer.pointerAngle = Math.atan(ydiff / xdiff);
+            mainPlayer.pointerAngle = atan2(xdiff, ydiff);
             let proj = new Projectile(
-                    mainPlayer.x, mainPlayer.y,
-                    Globals.DEFAULT_PROJECTILE_THICKNESS,
-                    Globals.DEFAULT_PROJECTILE_SPEED,
-                    Globals.DEFAULT_PROJECTILE_RANGE,
-                    mainPlayer.dir,
-                    mainPlayer.id);
+                mainPlayer.x, mainPlayer.y,
+                Globals.DEFAULT_PROJECTILE_RADIUS,
+                Globals.DEFAULT_PROJECTILE_SPEED,
+                Globals.DEFAULT_PROJECTILE_RANGE,
+                mainPlayer.pointerAngle,
+                mainPlayer.id);
+            console.log('cursor x,y: ' + cursorX + ',' + cursorY);
+            console.log('aim angle (degrees): ' + mainPlayer.pointerAngle * 360 / (2 * Math.PI));
             IO.socket.emit('addProjectile', { proj: proj });
         }
-	},
+        else if (e.which == 2) {}  // middle mouse button
+        else if (e.which == 3) {}  // right mouse button
+        else
+            return;
+    }
 
 };
 
+function atan2(x, y) {
+    let rQuadVal = Math.atan(y / x);
+    return (x < 0) ? 
+        rQuadVal + Math.PI:
+        rQuadVal + (2 * Math.PI);
+}
 
 ////////////////////////////////////////////////////
 function gameLoop(context) {
@@ -53,7 +75,7 @@ function updateVisibleOthers() {
 }
 
 function sendGlobals() {
-    IO.socket.emit('updateGlobals', Globals);
+    IO.socket.emit('updateGlobals', { Globals: Globals });
 }
 
 function onSubmit() {

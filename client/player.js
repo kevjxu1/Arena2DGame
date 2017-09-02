@@ -7,7 +7,8 @@ var Player = {
         speed: Globals.DEFAULT_PLAYER_SPEED,
         vision: Globals.DEFAULT_PLAYER_VISION,
         x: Globals.SCREEN_WIDTH / 2,  
-        y: Globals.SCREEN_HEIGHT / 2
+        y: Globals.SCREEN_HEIGHT / 2,
+        playerAngle: 0
     }
 };
 
