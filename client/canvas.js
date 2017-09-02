@@ -7,11 +7,40 @@ var Canvas = {
         context.closePath;
     },
 
+    drawGrid: function(context, player) {
+
+        // draw vertical lines
+        let gridGapX = player.radius * 5;
+        let x = Globals.SCREEN_WIDTH - (player.x % gridGapX);
+        while (x >= 0) {
+            context.beginPath();
+            context.moveTo(x, 0);
+            context.lineTo(x, Globals.SCREEN_HEIGHT);
+            context.stroke();
+            context.closePath();
+            x -= gridGapX;
+        }
+
+        // draw horizontal lines
+        let gridGapY = player.radius * 5;
+        let y = Globals.SCREEN_HEIGHT - (player.y % gridGapY);
+        while (y >= 0) {
+            context.beginPath();
+            context.moveTo(0, y);
+            context.lineTo(Globals.SCREEN_WIDTH, y);
+            context.stroke();
+            context.closePath();
+            y -= gridGapY;
+        }
+    },
+
     drawPlayer: function(context, player) {
         // draw player icon
         context.beginPath();
 
-        context.arc(player.x, player.y, player.radius, 0, 2 * Math.PI, true);
+        //context.arc(player.x, player.y, player.radius, 0, 2 * Math.PI, true);
+        context.arc(Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2, 
+                player.radius, 0, 2 * Math.PI, true);
         context.fillStyle = player.color;
         context.fill();
         context.lineWidth = player.radius * 0.1;

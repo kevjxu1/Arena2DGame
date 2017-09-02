@@ -58,11 +58,13 @@ function atan2(x, y) {
 ////////////////////////////////////////////////////
 function gameLoop(context) {
     Canvas.clearCanvas(context);
-    //drawPlayer(context, mainPlayer);
-    updateVisibleOthers();
-    Canvas.displayVisibleOthers(context, visibleOthers);
+    Canvas.drawGrid(context, mainPlayer);
     Canvas.drawPlayer(context, mainPlayer);
-    Canvas.drawProjectiles(context, projectiles);
+    //updateVisibleOthers();
+    //Canvas.displayVisibleOthers(context, visibleOthers);
+    //Canvas.drawPlayer(context, mainPlayer);
+    //Canvas.drawProjectiles(context, projectiles);
+
     requestAnimationFrame(function () {
         gameLoop(context);
     });
