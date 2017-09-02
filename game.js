@@ -114,8 +114,33 @@ module.exports = {
             projectiles[proj.id] = proj;
             socket.emit('updateProjectiles', { projectiles: projectiles });
         });
+
+        function updateHits() {
+            // if a projectile hits player, both die
+            for (projId in projectiles) {
+                let proj = projectiles[projId];
+                for (playerId in players) {
+                    if (playerId == proj.playerId)
+                        // a player cannot shoot himself
+                        continue;
+
+                    let player = players[playerId];
+                    let xdiff = proj.x - player.x;
+                    let ydiff = proj.y - player.y;
+                    let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
+                    if (dist < proj.radius + player.radius) {
+                        delete projectiles[projId];
+                        delete players[playerId];
+                        sockets[playerId].emit('playerDied');
+                    }
+                }
+            }
+        }
+
+
         
         function gameLoop() {
+            updateHits();
             deleteOutOfRangeProjectiles();
             for (id in projectiles) {
                 let proj = projectiles[id];

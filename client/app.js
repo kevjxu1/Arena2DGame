@@ -3,6 +3,8 @@
 var visibleOthers = [];
 var socketId;
 var projectiles;
+var mainPlayer = Player.player;
+var playerAlive = true;
     
 var Input = {
 	addEventListeners: function() {
@@ -10,16 +12,21 @@ var Input = {
 	},
 
 	onKeydown: function(e) {
+        if (!playerAlive) {
+            return;
+        }
+
         IO.socket.emit('movePlayer', { keyPressed: e.keyCode });
 
         if (e.keyCode == Globals.KEY_SPACE) {
             // player shoots projectile
             let proj = new Projectile(
-                    Player.player.x, Player.player.y,
+                    mainPlayer.x, mainPlayer.y,
                     Globals.DEFAULT_PROJECTILE_THICKNESS,
                     Globals.DEFAULT_PROJECTILE_SPEED,
                     Globals.DEFAULT_PROJECTILE_RANGE,
-                    Player.player.dir);
+                    mainPlayer.dir,
+                    mainPlayer.id);
             IO.socket.emit('addProjectile', { proj: proj });
         }
 	},
@@ -30,10 +37,11 @@ var Input = {
 ////////////////////////////////////////////////////
 function gameLoop(context) {
     Canvas.clearCanvas(context);
-    //drawPlayer(context, Player.player);
+    //drawPlayer(context, mainPlayer);
     updateVisibleOthers();
     Canvas.displayVisibleOthers(context, visibleOthers);
-    Canvas.drawPlayer(context, Player.player);
+    if (playerAlive)
+        Canvas.drawPlayer(context, mainPlayer);
     Canvas.drawProjectiles(context, projectiles);
     requestAnimationFrame(function () {
         gameLoop(context);
@@ -43,7 +51,7 @@ function gameLoop(context) {
 ////////////////////////////////////////////////////
 
 function updateVisibleOthers() {
-    IO.socket.emit('getVisibleOthers', { player: Player.player });
+    IO.socket.emit('getVisibleOthers', { player: mainPlayer });
 }
 
 function sendGlobals() {
@@ -56,8 +64,8 @@ function onSubmit() {
     for (let i = 0; i < form.length; i++) {
         if (form.elements[i].id == 'nameInput') {
             let nameInput = form.elements[i].value;
-            Player.player.name = nameInput;
-            IO.socket.emit('submitForm', { player: Player.player });
+            mainPlayer.name = nameInput;
+            IO.socket.emit('submitForm', { player: mainPlayer });
             break;
         }
     }
@@ -87,10 +95,10 @@ $(document).ready(function() {
     $('#submit').on('click', function(e) {
         let nameInput = $('#nameInput').val();
         let colorInput = $('.colorInput:checked').val();
-        Player.player.name = nameInput;
-        Player.player.color = colorInput;
+        mainPlayer.name = nameInput;
+        mainPlayer.color = colorInput;
         $('#form').hide();
-        IO.socket.emit('addPlayer', { player: Player.player });
+        IO.socket.emit('addPlayer', { player: mainPlayer });
     })
 });
 

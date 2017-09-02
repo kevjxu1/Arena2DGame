@@ -14,7 +14,7 @@ var IO = {
             console.log('startGame callback');
 
             // give player unique id
-            Player.player = msg.player
+            mainPlayer = msg.player
 
             clearForm();
             Input.addEventListeners();
@@ -31,11 +31,22 @@ var IO = {
         });
 
         IO.socket.on("updatePlayer", function(msg) {
+            if (!playerAlive) {
+                return;
+            }
             console.log('updatePlayer callback');
-            Player.player = msg.player;
+            mainPlayer = msg.player;
+        });
+
+        IO.socket.on('playerDied', function() {
+            //mainPlayer = null;
+            playerAlive = false;
+            alert('You died');
         });
 
         IO.socket.on('updateVisibleOthers', function(msg) {
+            if (!playerAlive)
+                return;
             visibleOthers = msg.visibleOthers;
         });
 
