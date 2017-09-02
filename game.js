@@ -131,6 +131,7 @@ module.exports = {
                     if (dist < proj.radius + player.radius) {
                         delete projectiles[projId];
                         delete players[playerId];
+                        //sockets[playerId].off('movePlayer');
                         sockets[playerId].emit('playerDied');
                     }
                 }

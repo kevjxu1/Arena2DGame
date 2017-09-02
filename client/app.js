@@ -4,18 +4,17 @@ var visibleOthers = [];
 var socketId;
 var projectiles;
 var mainPlayer = Player.player;
-var playerAlive = true;
     
 var Input = {
 	addEventListeners: function() {
 		document.addEventListener("keydown", Input.onKeydown, false);
 	},
 
-	onKeydown: function(e) {
-        if (!playerAlive) {
-            return;
-        }
+    removeEventListeners: function() {
+        document.removeEventListener('keydown', Input.onKeydown);
+    },
 
+	onKeydown: function(e) {
         IO.socket.emit('movePlayer', { keyPressed: e.keyCode });
 
         if (e.keyCode == Globals.KEY_SPACE) {
@@ -40,8 +39,7 @@ function gameLoop(context) {
     //drawPlayer(context, mainPlayer);
     updateVisibleOthers();
     Canvas.displayVisibleOthers(context, visibleOthers);
-    if (playerAlive)
-        Canvas.drawPlayer(context, mainPlayer);
+    Canvas.drawPlayer(context, mainPlayer);
     Canvas.drawProjectiles(context, projectiles);
     requestAnimationFrame(function () {
         gameLoop(context);

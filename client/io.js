@@ -31,22 +31,20 @@ var IO = {
         });
 
         IO.socket.on("updatePlayer", function(msg) {
-            if (!playerAlive) {
-                return;
-            }
             console.log('updatePlayer callback');
             mainPlayer = msg.player;
         });
 
         IO.socket.on('playerDied', function() {
             //mainPlayer = null;
-            playerAlive = false;
+            IO.socket.off('updatePlayer');
+            IO.socket.off('updateVisibleOthers');
+            IO.socket.off('updateProjectiles');
+            Input.removeEventListeners();
             alert('You died');
         });
 
         IO.socket.on('updateVisibleOthers', function(msg) {
-            if (!playerAlive)
-                return;
             visibleOthers = msg.visibleOthers;
         });
 
@@ -54,7 +52,9 @@ var IO = {
             projectiles = msg.projectiles;
         });
 
-    }
+    },
+
+
 
 };
 
