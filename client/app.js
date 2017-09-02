@@ -25,8 +25,8 @@ var Input = {
             let rect = canvas.getBoundingClientRect();
             let cursorX = e.clientX - rect.left;
             let cursorY = e.clientY - rect.top;
-            let xdiff = cursorX - mainPlayer.x;
-            let ydiff = cursorY - mainPlayer.y;
+            let xdiff = cursorX - Globals.SCREEN_WIDTH / 2;
+            let ydiff = cursorY - Globals.SCREEN_HEIGHT / 2;
             //mainPlayer.pointerAngle = Math.atan(ydiff / xdiff);
             mainPlayer.pointerAngle = atan2(xdiff, ydiff);
             let proj = new Projectile(
@@ -59,11 +59,10 @@ function atan2(x, y) {
 function gameLoop(context) {
     Canvas.clearCanvas(context);
     Canvas.drawGrid(context, mainPlayer);
-    Canvas.drawPlayer(context, mainPlayer);
-    //updateVisibleOthers();
-    //Canvas.displayVisibleOthers(context, visibleOthers);
-    //Canvas.drawPlayer(context, mainPlayer);
-    //Canvas.drawProjectiles(context, projectiles);
+    updateVisibleOthers();
+    Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
+    Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
+    Canvas.drawProjectiles(context, projectiles, mainPlayer);
 
     requestAnimationFrame(function () {
         gameLoop(context);

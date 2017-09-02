@@ -34,17 +34,17 @@ var Canvas = {
         }
     },
 
-    drawPlayer: function(context, player) {
+    drawPlayer: function(context, player, x, y) {
         // draw player icon
         context.beginPath();
 
         //context.arc(player.x, player.y, player.radius, 0, 2 * Math.PI, true);
-        context.arc(Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2, 
-                player.radius, 0, 2 * Math.PI, true);
+        context.arc(x, y, player.radius, 0, 2 * Math.PI, true);
         context.fillStyle = player.color;
         context.fill();
+        
+        // circle border
         context.lineWidth = player.radius * 0.1;
-
         context.strokeStyle = 'black';
         context.stroke();
 
@@ -61,18 +61,25 @@ var Canvas = {
         context.fillText(player.name, player.x, player.y - player.radius);
     },
 
-    displayVisibleOthers: function(context, visibleOthers) {
+    displayVisibleOthers: function(context, visibleOthers, player) {
         for (let i = 0; i < visibleOthers.length; i++) {
-            let p = visibleOthers[i];
-            Canvas.drawPlayer(context, p);
+            let other = visibleOthers[i];
+            let xoff = other.x - player.x;
+            let yoff = other.y - player.y;
+
+            Canvas.drawPlayer(context, other, Globals.SCREEN_WIDTH / 2 + xoff, Globals.SCREEN_HEIGHT / 2 + yoff);
         }
     },
 
-    drawProjectiles: function(context, projectiles) {
+    drawProjectiles: function(context, projectiles, player) {
         for (id in projectiles) {
             let proj = projectiles[id];
+
+            let xoff = proj.x - player.x;
+            let yoff = proj.y - player.y;
             context.beginPath();
-            context.arc(proj.x, proj.y, proj.radius, 0, 2 * Math.PI, true);
+            context.arc(Globals.SCREEN_WIDTH / 2 + xoff, Globals.SCREEN_HEIGHT / 2 + yoff, 
+                    proj.radius, 0, 2 * Math.PI, true);
             context.fillStyle = 'black';
             context.fill();
             context.closePath();
