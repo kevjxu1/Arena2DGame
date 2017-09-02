@@ -4,6 +4,10 @@ var visibleOthers = [];
 var socketId;
 var projectiles;
 var mainPlayer = Player.player;
+var mapBounds = {
+    rbound: Globals.DEFAULT_MAP_WIDTH,
+    ubound: Globals.DEFAULT_MAP_HEIGHT
+}
     
 var Input = {
 	addEventListeners: function() {
@@ -63,6 +67,7 @@ function gameLoop(context) {
     Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
     Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
     Canvas.drawProjectiles(context, projectiles, mainPlayer);
+    Canvas.drawMapBounds(context, mapBounds, mainPlayer);
 
     requestAnimationFrame(function () {
         gameLoop(context);

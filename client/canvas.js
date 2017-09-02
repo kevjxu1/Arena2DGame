@@ -86,6 +86,49 @@ var Canvas = {
         }
     },
 
+    drawMapBounds: function(context, mapBounds, player) {
+        
+        let edgeOfScreen = { 
+            top: player.y - Globals.SCREEN_HEIGHT / 2,
+            left: player.x - Globals.SCREEN_WIDTH / 2,
+            right: player.x + Globals.SCREEN_WIDTH / 2,
+            bottom: player.y + Globals.SCREEN_HEIGHT / 2,
+        }
+
+        if (edgeOfScreen.left < 0) {
+            let xDistToEdge = player.x;
+            context.beginPath();
+            context.fillStyle = 'black';
+            context.fillRect(0, 0, Globals.SCREEN_WIDTH / 2 - xDistToEdge, Globals.SCREEN_HEIGHT);
+            context.closePath();
+        }
+        if (edgeOfScreen.right > mapBounds.rbound) {
+            let xDistToEdge = mapBounds.rbound - player.x;
+            context.beginPath();
+            context.fillStyle = 'black';
+            context.fillRect(Globals.SCREEN_WIDTH / 2 + xDistToEdge, 0, 
+                    Globals.SCREEN_WIDTH / 2 - xDistToEdge, 
+                    Globals.SCREEN_HEIGHT);
+            context.closePath();
+        }
+
+        if (edgeOfScreen.top < 0) {
+            let yDistToEdge = player.y;
+            context.beginPath();
+            context.fillStyle = 'black';
+            context.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT / 2 - yDistToEdge);
+            context.closePath();
+        }
+        if (edgeOfScreen.bottom > mapBounds.ubound) {
+            let yDistToEdge = mapBounds.ubound - player.y;
+            context.beginPath();
+            context.fillStyle = 'black';
+            context.fillRect(0, Globals.SCREEN_HEIGHT / 2 + yDistToEdge, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT / 2 - yDistToEdge);
+            context.closePath();
+
+        }
+    },
+
     initCanvas: function() {
         canvas = document.getElementById("canvas");
         console.log('canvas: ');
