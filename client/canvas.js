@@ -58,7 +58,7 @@ var Canvas = {
         context.fillStyle = 'black';
         context.textAlign = 'center';
         //context.textBaseline = 'middle';
-        context.fillText(player.name, player.x, player.y - player.radius);
+        context.fillText(player.name, x, y - player.radius);
     },
 
     displayVisibleOthers: function(context, visibleOthers, player) {
