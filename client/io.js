@@ -19,20 +19,13 @@ var IO = {
             clearForm();
             Input.addEventListeners();
             Canvas.initCanvas();
-            //canvas.addEventListener('mousemove', function(e) {
-            //    var rect = canvas.getBoundingClientRect();
-            //    let x = e.clientX - rect.left;
-            //    let y = e.clientY - rect.top;
-            //    console.log('(x,y): (' + x + ',' + y);
-            //});
-
             gameLoop(context);
 
         });
 
         IO.socket.on("updatePlayer", function(msg) {
-            console.log('updatePlayer callback');
             mainPlayer = msg.player;
+            console.log('x: ' + mainPlayer.x);
         });
 
         IO.socket.on('playerDied', function() {

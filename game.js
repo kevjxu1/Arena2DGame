@@ -23,8 +23,6 @@ module.exports = {
 		socket.on('updateGlobals', function(msg) {
             if (!Globals) {
                 Globals = msg.Globals;
-                console.log('Globals: ');
-                console.log(Globals);
             }
         });
 
@@ -53,43 +51,37 @@ module.exports = {
         });
 
         socket.on('movePlayer', function(msg) {
-            let key = msg.keyPressed;
+            let dir = msg.dir;
             let player = players[socket.id];
             let oldX = player.x;
             let oldY = player.y;
-            switch (key) {
-                case Globals.KEY_UP:
-                case Globals.KEY_W:
-                    player.y -= player.speed;
-                    player.dir = Globals.UP;
-                    if (checkCollisions(player)) 
-                        player.y = oldY;
-                    break;
-                case Globals.KEY_RIGHT:
-                case Globals.KEY_D:
-                    player.x += player.speed;
-                    player.dir = Globals.RIGHT;
-                    if (checkCollisions(player))
-                        player.x = oldX;
-                    break;
-                case Globals.KEY_DOWN:
-                case Globals.KEY_S:
-                    player.y += player.speed;
-                    player.dir = Globals.DOWN;
-                    if (checkCollisions(player))
-                        player.y = oldY;
-                    break;
-                case Globals.KEY_LEFT:
-                case Globals.KEY_A:
-                    player.x -= player.speed;
-                    player.dir = Globals.LEFT;
-                    if (checkCollisions(player))
-                        player.x = oldX;
-                    break;
-                default:
-                    break;
+            let isDiag = ((dir & Globals.DIR_UP) && (dir & Globals.DIR_LEFT))
+                    || ((dir & Globals.DIR_UP) && (dir & Globals.DIR_RIGHT))
+                    || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_LEFT))
+                    || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_RIGHT));
+            let l1speed = isDiag ? 
+                    player.speed / Math.sqrt(2) : player.speed;
+
+            if (dir & Globals.DIR_UP) {
+                player.y -= l1speed;
             }
-            //console.log(player);
+            else if (dir & Globals.DIR_DOWN) {
+                player.y += l1speed;
+            }
+
+            if (dir & Globals.DIR_LEFT) {
+                player.x -= l1speed;
+            }
+            else if (dir & Globals.DIR_RIGHT) {
+                player.x += l1speed;
+            }
+            //else {  // dir == Globals.NONE
+            //}
+            if (checkCollisions(player))  {
+                player.y = oldY;
+                player.x = oldX;
+            }
+
             socket.emit('updatePlayer', { player: player });
         });
 
@@ -154,9 +146,7 @@ module.exports = {
             }
             socket.emit('updateProjectiles', { projectiles: projectiles });
         }
-        setInterval(gameLoop, 100);
-
-        console.log('game initialized');
+        setInterval(gameLoop, 10);
     },
 };
 

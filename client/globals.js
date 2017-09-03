@@ -5,7 +5,7 @@ var Globals = {
     // game parameters
 	DEFAULT_PLAYER_RADIUS: 20, 
     DEFAULT_PLAYER_COLOR: 'red',
-    DEFAULT_PLAYER_SPEED: 40,
+    DEFAULT_PLAYER_SPEED: 4,
     DEFAULT_PLAYER_VISION: 1e10,
 
     DEFAULT_MAP_WIDTH: 2000,
@@ -22,7 +22,12 @@ var Globals = {
     SCREEN_HEIGHT: window.innerHeight * 0.9,
 
     // directions
-    UP: 1, LEFT: 2, RIGHT: 3, DOWN: 4,
+    //UP: 1, LEFT: 2, RIGHT: 3, DOWN: 4,
+    DIR_NONE: 0x0,
+    DIR_UP: 0x1,  // 0x1
+    DIR_LEFT: 0x2,  // 0x2
+    DIR_RIGHT: 0x4,  // 0x4
+    DIR_DOWN: 0x8,  // 0x8
 
     // input constants
     KEY_UNPRESSED: -1,

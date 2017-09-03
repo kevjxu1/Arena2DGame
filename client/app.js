@@ -8,10 +8,12 @@ var mapBounds = {
     rbound: Globals.DEFAULT_MAP_WIDTH,
     ubound: Globals.DEFAULT_MAP_HEIGHT
 }
+var moveDir = Globals.DIR_NONE;
     
 var Input = {
 	addEventListeners: function() {
 		document.addEventListener("keydown", Input.onKeydown, false);
+        document.addEventListener('keyup', Input.onKeyup, false);
         document.addEventListener('mousedown', Input.onMousedown, false);
 	},
 
@@ -21,8 +23,58 @@ var Input = {
     },
 
 	onKeydown: function(e) {
-        IO.socket.emit('movePlayer', { keyPressed: e.keyCode });
+        switch (e.keyCode) {
+        case Globals.KEY_W:
+        case Globals.KEY_UP:
+            moveDir |= Globals.DIR_UP;
+            break;
+        case Globals.KEY_A:
+        case Globals.KEY_LEFT:
+            moveDir |= Globals.DIR_LEFT;
+            break;
+        case Globals.KEY_D:
+        case Globals.KEY_RIGHT:
+            moveDir |= Globals.DIR_RIGHT;
+            break;
+        case Globals.KEY_S:
+        case Globals.KEY_DOWN:
+            moveDir |= Globals.DIR_DOWN;
+            break;
+        default:
+            break;
+        }
+
+        //IO.socket.emit('movePlayer', { dir: moveDir });
 	},
+
+    onKeyup: function(e) {
+        // halt movement
+        let dir = Globals.DIR_NONE;
+
+        switch (e.keyCode) {
+        case Globals.KEY_W:
+        case Globals.KEY_UP:
+            dir |= Globals.DIR_UP;
+            break;
+        case Globals.KEY_A:
+        case Globals.KEY_LEFT:
+            dir |= Globals.DIR_LEFT;
+            break;
+        case Globals.KEY_D:
+        case Globals.KEY_RIGHT:
+            dir |= Globals.DIR_RIGHT;
+            break;
+        case Globals.KEY_S:
+        case Globals.KEY_DOWN:
+            dir |= Globals.DIR_DOWN;
+            break;
+        default:
+            break;
+        }
+        moveDir &= (~dir & 0xF);
+        
+        //IO.socket.emit('movePlayer', { dir: moveDir });
+    },
 
     onMousedown: function(e) {
         if (e.which == 1) {  // left mouse button
@@ -68,6 +120,7 @@ function gameLoop(context) {
     Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
     Canvas.drawProjectiles(context, projectiles, mainPlayer);
     Canvas.drawMapBounds(context, mapBounds, mainPlayer);
+    IO.socket.emit('movePlayer', { dir: moveDir });
 
     requestAnimationFrame(function () {
         gameLoop(context);
