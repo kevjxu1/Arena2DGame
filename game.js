@@ -13,6 +13,7 @@ module.exports = {
         socket.on('disconnect', function() {
             console.log('deleting player[' + socket.id + ']');
             delete players[socket.id];
+            delete sockets[socket.id];
         });
 
 		//gameSocket.on('updateGlobals', updateGlobals);
@@ -81,48 +82,6 @@ module.exports = {
             delete players[socket.id];
         });
 
-        function updateHits() {
-            // if a projectile hits player, both die
-            for (projId in projectiles) {
-                let proj = projectiles[projId];
-                for (playerId in players) {
-                    if (playerId == proj.playerId)
-                        // a player cannot shoot himself
-                        continue;
-
-                    let player = players[playerId];
-                    let xdiff = proj.x - player.x;
-                    let ydiff = proj.y - player.y;
-                    let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
-                    if (dist < proj.radius + player.radius) {
-                        delete projectiles[projId];
-                        delete players[playerId];
-                        //sockets[playerId].off('movePlayer');
-                        sockets[playerId].emit('killPlayer');
-                    }
-                }
-            }
-        }
-
-        function gameLoop() {
-            updateHits();
-            deleteOutOfRangeProjectiles();
-            for (id in projectiles) {
-                let proj = projectiles[id];
-                let dx = Math.cos(proj.dir) * proj.speed;
-                let dy = Math.sin(proj.dir) * proj.speed;
-                proj.x += dx;
-                proj.y += dy;
-            }
-            socket.emit('updateProjectiles', { projectiles: projectiles });
-            for (id in players) {
-                let p = players[id];
-                //sockets[id].emit('movePlayer', { player: p });
-                sockets[id].emit('movePlayer');
-            }
-        }
-        //setInterval(gameLoop, 100);
-        setInterval(gameLoop, 10);
     },
 };
 
@@ -160,5 +119,50 @@ function getL2Distance(p1, p2) {
     return Math.sqrt((xdist * xdist) + (ydist * ydist));
 }
 
+function updateHits() {
+    // if a projectile hits player, both die
+    for (projId in projectiles) {
+        let proj = projectiles[projId];
+        for (playerId in players) {
+            if (playerId == proj.playerId)
+                // a player cannot shoot himself
+                continue;
 
+            let player = players[playerId];
+            let xdiff = proj.x - player.x;
+            let ydiff = proj.y - player.y;
+            let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
+            if (dist < proj.radius + player.radius) {
+                delete projectiles[projId];
+                delete players[playerId];
+                //sockets[playerId].off('movePlayer');
+                sockets[playerId].emit('killPlayer');
+            }
+        }
+    }
+}
+
+
+function gameLoop() {
+    updateHits();
+    deleteOutOfRangeProjectiles();
+    for (id in projectiles) {
+        let proj = projectiles[id];
+        let dx = Math.cos(proj.dir) * proj.speed;
+        let dy = Math.sin(proj.dir) * proj.speed;
+        proj.x += dx;
+        proj.y += dy;
+    }
+    for (id in sockets) {
+        sockets[id].emit('updateProjectiles', { projectiles: projectiles });
+        sockets[id].emit('movePlayer');
+    }
+    //for (id in players) {
+    //    let p = players[id];
+    //    //sockets[id].emit('movePlayer', { player: p });
+    //    sockets[id].emit('movePlayer');
+    //}
+}
+//setInterval(gameLoop, 100);
+setInterval(gameLoop, 10);
 
