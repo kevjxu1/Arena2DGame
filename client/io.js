@@ -10,7 +10,7 @@ var IO = {
             socketId = io.socket.sessionid;
         });
 
-        IO.socket.on('startGame', function(msg) {
+        IO.socket.on('joinGame', function(msg) {
             // give player unique id
             mainPlayer = msg.player;
 
@@ -18,7 +18,6 @@ var IO = {
             Input.addEventListeners();
             Canvas.initCanvas();
             gameLoop(context);
-
         });
 
         IO.socket.on("updatePlayer", function(msg) {

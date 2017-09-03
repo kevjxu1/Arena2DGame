@@ -30,8 +30,8 @@ module.exports = {
 
             // spawn player at random noncolliding position
             while (true) {
-                let x = Math.floor((Math.random() * Globals.SCREEN_WIDTH - player.radius) + 1) 
-                let y = Math.floor((Math.random() * Globals.SCREEN_HEIGHT - player.radius) + 1)
+                let x = Math.floor((Math.random() * Globals.DEFAULT_MAP_WIDTH - player.radius) + 1) 
+                let y = Math.floor((Math.random() * Globals.DEFAULT_MAP_HEIGHT - player.radius) + 1)
                 player.x = x;
                 player.y = y;
 
@@ -42,9 +42,7 @@ module.exports = {
                     break;
             }
             players[socket.id] = player;
-           
-            //socket.emit('updatePlayer', { player: player });
-            socket.emit('startGame', { player: player });
+            socket.emit('joinGame', { player: player });
         });
 
         socket.on('updatePlayer', function(msg) {

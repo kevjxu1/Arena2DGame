@@ -8,6 +8,8 @@ var mapBounds = {
     rbound: Globals.DEFAULT_MAP_WIDTH,
     ubound: Globals.DEFAULT_MAP_HEIGHT
 }
+
+var timeLastFired = 0;
     
 var Input = {
 	addEventListeners: function() {
@@ -76,6 +78,11 @@ var Input = {
 
     onMousedown: function(e) {
         if (e.which == 1) {  // left mouse button
+            if (new Date().getTime() - timeLastFired < mainPlayer.reloadTime) {
+                // mainPlayer has not reloaded yet
+                return;
+            }
+            timeLastFired = new Date().getTime();
             let rect = canvas.getBoundingClientRect();
             let cursorX = e.clientX - rect.left;
             let cursorY = e.clientY - rect.top;

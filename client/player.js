@@ -9,7 +9,8 @@ var Player = {
         x: Globals.SCREEN_WIDTH / 2,  
         y: Globals.SCREEN_HEIGHT / 2,
         playerAngle: 0,
-        moveDir: Globals.DIR_NONE
+        moveDir: Globals.DIR_NONE,
+        reloadTime: Globals.DEFAULT_PLAYER_RELOADTIME  // in ms
     }
 };
 
