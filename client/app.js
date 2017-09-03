@@ -8,7 +8,6 @@ var mapBounds = {
     rbound: Globals.DEFAULT_MAP_WIDTH,
     ubound: Globals.DEFAULT_MAP_HEIGHT
 }
-var moveDir = Globals.DIR_NONE;
     
 var Input = {
 	addEventListeners: function() {
@@ -20,31 +19,31 @@ var Input = {
     removeEventListeners: function() {
         document.removeEventListener('keydown', Input.onKeydown);
         document.removeEventListener('mousedown', Input.onMousedown);
+        document.removeEventListener('keyup', Input.onKeyup);
     },
 
 	onKeydown: function(e) {
         switch (e.keyCode) {
         case Globals.KEY_W:
         case Globals.KEY_UP:
-            moveDir |= Globals.DIR_UP;
+            mainPlayer.moveDir |= Globals.DIR_UP;
             break;
         case Globals.KEY_A:
         case Globals.KEY_LEFT:
-            moveDir |= Globals.DIR_LEFT;
+            mainPlayer.moveDir |= Globals.DIR_LEFT;
             break;
         case Globals.KEY_D:
         case Globals.KEY_RIGHT:
-            moveDir |= Globals.DIR_RIGHT;
+            mainPlayer.moveDir |= Globals.DIR_RIGHT;
             break;
         case Globals.KEY_S:
         case Globals.KEY_DOWN:
-            moveDir |= Globals.DIR_DOWN;
+            mainPlayer.moveDir |= Globals.DIR_DOWN;
             break;
         default:
             break;
         }
-
-        //IO.socket.emit('movePlayer', { dir: moveDir });
+        IO.socket.emit('updatePlayer', { player: mainPlayer });
 	},
 
     onKeyup: function(e) {
@@ -71,9 +70,8 @@ var Input = {
         default:
             break;
         }
-        moveDir &= (~dir & 0xF);
-        
-        //IO.socket.emit('movePlayer', { dir: moveDir });
+        mainPlayer.moveDir &= (~dir & 0xF);
+        IO.socket.emit('updatePlayer', { player: mainPlayer });
     },
 
     onMousedown: function(e) {
@@ -101,14 +99,59 @@ var Input = {
         else
             return;
     }
-
 };
+
+function getDistance(circle1, circle2) {
+    let xdiff = circle2.x - circle1.x;
+    let ydiff = circle2.y - circle1.y;
+    let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
+    return dist;
+}
+
+function checkCollisions(player, visibleOthers) {
+    for (let i = 0; i < visibleOthers.length; i++) {
+        let other = visibleOthers[i];
+        let dist = getDistance(other, player);
+        //let xdiff = player.x - other.x;
+        //let ydiff = player.y - other.y;
+        //let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
+        if (dist < player.radius + other.radius) {
+            // collision detected
+            return true;
+        }
+    }
+    return false;
+}
+
+// did mainPlayer get hit?
+function checkHit() {
+    for (id in projectiles) {
+        let proj = projectiles[id];
+		if (proj.playerId == mainPlayer.id)
+			continue;
+        let dist = getDistance(proj, mainPlayer);
+        if (dist < mainPlayer.radius + proj.radius) {
+            return true;
+        }
+    }
+}
 
 function atan2(x, y) {
     let rQuadVal = Math.atan(y / x);
     return (x < 0) ? 
         rQuadVal + Math.PI:
         rQuadVal + (2 * Math.PI);
+}
+
+function killPlayer() {
+	IO.socket.off('updatePlayer');                                         
+    IO.socket.off('movePlayer');
+	IO.socket.off('updateVisibleOthers');                                  
+	IO.socket.off('updateProjectiles');                                    
+	Input.removeEventListeners();                                          
+	mainPlayer = null;                                                     
+    IO.socket.emit('playerDied');
+	alert('You died');
 }
 
 ////////////////////////////////////////////////////
@@ -122,7 +165,9 @@ function gameLoop(context) {
         Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
         Canvas.drawProjectiles(context, projectiles, mainPlayer);
         Canvas.drawMapBounds(context, mapBounds, mainPlayer);
-        IO.socket.emit('movePlayer', { dir: moveDir });
+        //if (checkHit()) {
+        //    killPlayer();
+        //}
     }
 
     requestAnimationFrame(function () {
@@ -169,6 +214,7 @@ function clearForm() {
     let form = document.getElementById('form');
     form.style.display = 'none';
 }
+
 
 // initialize socket.io socket
 IO.init();

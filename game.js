@@ -1,5 +1,3 @@
-var io;
-var gameSocket;
 var Globals;
 
 var players = {};
@@ -9,8 +7,6 @@ var projectiles = {};
 module.exports = {
 
     initGame: function(io, socket) {
-        //io = sio;    
-        gameSocket = socket;
         console.log('socket.id: ' + socket.id);
 		sockets[socket.id] = socket;
 
@@ -46,45 +42,15 @@ module.exports = {
             }
             players[socket.id] = player;
            
-            socket.emit('updatePlayer', { player: player });
+            //socket.emit('updatePlayer', { player: player });
             socket.emit('startGame', { player: player });
         });
 
-        socket.on('movePlayer', function(msg) {
-            let dir = msg.dir;
-            let player = players[socket.id];
-            let oldX = player.x;
-            let oldY = player.y;
-            let isDiag = ((dir & Globals.DIR_UP) && (dir & Globals.DIR_LEFT))
-                    || ((dir & Globals.DIR_UP) && (dir & Globals.DIR_RIGHT))
-                    || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_LEFT))
-                    || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_RIGHT));
-            let l1speed = isDiag ? 
-                    player.speed / Math.sqrt(2) : player.speed;
-
-            if (dir & Globals.DIR_UP) {
-                player.y -= l1speed;
-            }
-            else if (dir & Globals.DIR_DOWN) {
-                player.y += l1speed;
-            }
-
-            if (dir & Globals.DIR_LEFT) {
-                player.x -= l1speed;
-            }
-            else if (dir & Globals.DIR_RIGHT) {
-                player.x += l1speed;
-            }
-            //else {  // dir == Globals.NONE
-            //}
-            if (checkCollisions(player))  {
-                player.y = oldY;
-                player.x = oldX;
-            }
-
-            socket.emit('updatePlayer', { player: player });
+        socket.on('updatePlayer', function(msg) {
+            players[socket.id] = msg.player;
         });
 
+        
         // give client visible players
         socket.on('getVisibleOthers', function(msg) {
             let visibleOthers = [];  // excluding main player
@@ -111,6 +77,10 @@ module.exports = {
             socket.emit('updateProjectiles', { projectiles: projectiles });
         });
 
+        socket.on('playerDied', function() {
+            delete players[socket.id];
+        });
+
         function updateHits() {
             // if a projectile hits player, both die
             for (projId in projectiles) {
@@ -128,7 +98,7 @@ module.exports = {
                         delete projectiles[projId];
                         delete players[playerId];
                         //sockets[playerId].off('movePlayer');
-                        sockets[playerId].emit('playerDied');
+                        sockets[playerId].emit('killPlayer');
                     }
                 }
             }
@@ -145,7 +115,13 @@ module.exports = {
                 proj.y += dy;
             }
             socket.emit('updateProjectiles', { projectiles: projectiles });
+            for (id in players) {
+                let p = players[id];
+                //sockets[id].emit('movePlayer', { player: p });
+                sockets[id].emit('movePlayer');
+            }
         }
+        //setInterval(gameLoop, 100);
         setInterval(gameLoop, 10);
     },
 };
