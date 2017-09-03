@@ -1,0 +1,30 @@
+todo list:
+
+
+Critical:
+
+    game features:
+        
+        walls
+        fog of war (?)
+        weapon / shield / powerups (?)
+        hitpoints
+        synchronize clients
+        deploy server
+            Digital Ocean (?)
+        multiple game rooms + private rooms
+
+    opimizations:
+        quad-tree
+
+
+Additional:
+
+    spawn player away from opponents
+
+    custom/built-in skins
+
+    powerups
+
+
+in the middle of diagonal dir movement
