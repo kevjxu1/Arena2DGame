@@ -34,6 +34,7 @@ var IO = {
             IO.socket.off('updateVisibleOthers');
             IO.socket.off('updateProjectiles');
             Input.removeEventListeners();
+            mainPlayer = null;
             alert('You died');
         });
 

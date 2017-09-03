@@ -114,13 +114,16 @@ function atan2(x, y) {
 ////////////////////////////////////////////////////
 function gameLoop(context) {
     Canvas.clearCanvas(context);
-    Canvas.drawGrid(context, mainPlayer);
-    updateVisibleOthers();
-    Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
-    Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
-    Canvas.drawProjectiles(context, projectiles, mainPlayer);
-    Canvas.drawMapBounds(context, mapBounds, mainPlayer);
-    IO.socket.emit('movePlayer', { dir: moveDir });
+
+    if (mainPlayer) {
+        Canvas.drawGrid(context, mainPlayer);
+        updateVisibleOthers();
+        Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
+        Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
+        Canvas.drawProjectiles(context, projectiles, mainPlayer);
+        Canvas.drawMapBounds(context, mapBounds, mainPlayer);
+        IO.socket.emit('movePlayer', { dir: moveDir });
+    }
 
     requestAnimationFrame(function () {
         gameLoop(context);
