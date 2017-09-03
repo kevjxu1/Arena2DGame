@@ -97,6 +97,10 @@ function deleteOutOfRangeProjectiles() {
     }
 }
 
+//////////////////////////////////////////////////////////////////////
+// Utilities
+//////////////////////////////////////////////////////////////////////
+
 function checkCollisions(player) {
     for (id in players) {
         if (id == player.id)
@@ -118,6 +122,9 @@ function getL2Distance(p1, p2) {
     let ydist = Math.abs(p2.y - p1.y)
     return Math.sqrt((xdist * xdist) + (ydist * ydist));
 }
+
+//////////////////////////////////////////////////////////////////////
+
 
 function updateHits() {
     // if a projectile hits player, both die
@@ -142,26 +149,40 @@ function updateHits() {
     }
 }
 
+function moveProjectiles() {
+    for (id in projectiles) {
+        let proj = projectiles[id];
+
+        // delete out-of-bound projectile
+        if (proj.x < 0 || proj.x > Globals.DEFAULT_MAP_WIDTH 
+                || proj.y < 0 || proj.y > Globals.DEFAULT_MAP_HEIGHT)
+        {
+            delete projectiles[id];
+            console.log('projectile deleted: ' + id);
+        } 
+        else {
+            let dx = Math.cos(proj.dir) * proj.speed;
+            let dy = Math.sin(proj.dir) * proj.speed;
+            proj.x += dx;
+            proj.y += dy;
+        }
+    }
+    for (id in sockets) {
+        sockets[id].emit('updateProjectiles', { projectiles: projectiles });
+    }
+}
+
+function movePlayers() {
+    for (id in sockets) {
+        sockets[id].emit('movePlayer');
+    }
+}
 
 function gameLoop() {
     updateHits();
     deleteOutOfRangeProjectiles();
-    for (id in projectiles) {
-        let proj = projectiles[id];
-        let dx = Math.cos(proj.dir) * proj.speed;
-        let dy = Math.sin(proj.dir) * proj.speed;
-        proj.x += dx;
-        proj.y += dy;
-    }
-    for (id in sockets) {
-        sockets[id].emit('updateProjectiles', { projectiles: projectiles });
-        sockets[id].emit('movePlayer');
-    }
-    //for (id in players) {
-    //    let p = players[id];
-    //    //sockets[id].emit('movePlayer', { player: p });
-    //    sockets[id].emit('movePlayer');
-    //}
+    moveProjectiles();
+    movePlayers();
 }
 //setInterval(gameLoop, 100);
 setInterval(gameLoop, 10);

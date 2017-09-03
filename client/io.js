@@ -74,8 +74,13 @@ var IO = {
                 mainPlayer.x = x;
                 mainPlayer.y = y;
                 if (checkCollisions(mainPlayer, visibleOthers))  {
-                    console.log('collision detected');
                     mainPlayer.x = oldX;
+                    mainPlayer.y = oldY;
+                }
+                if (mainPlayer.x < 0 || mainPlayer.x > Globals.DEFAULT_MAP_WIDTH) {
+                    mainPlayer.x = oldX;
+                }
+                if (mainPlayer.y < 0 || mainPlayer.y > Globals.DEFAULT_MAP_HEIGHT) {
                     mainPlayer.y = oldY;
                 }
             }
