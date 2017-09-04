@@ -166,10 +166,14 @@ var Canvas = {
             let pow = powerups[id];
             let xoff = pow.x - mainPlayer.x;
             let yoff = pow.y - mainPlayer.y;
+            let midx = Globals.SCREEN_WIDTH / 2;
+            let midy = Globals.SCREEN_HEIGHT / 2;
             context.beginPath();
-            context.arc(Globals.SCREEN_WIDTH / 2 + xoff, Globals.SCREEN_HEIGHT / 2  + yoff, 
-                    Globals.DEFAULT_POWERUP_HEIGHT, 0, 2 * Math.PI, true);
-            context.fillStyle = 'green';
+            context.moveTo(midx + xoff - Globals.DEFAULT_POWERUP_WIDTH, midy + yoff);
+            context.lineTo(midx + xoff, midy + yoff - Globals.DEFAULT_POWERUP_HEIGHT);
+            context.lineTo(midx + xoff + Globals.DEFAULT_POWERUP_WIDTH, midy + yoff);
+            context.lineTo(midx + xoff, midy + yoff + Globals.DEFAULT_POWERUP_HEIGHT);
+            context.fillStyle = '#98FB98';  // pale green
             context.fill();
             context.closePath();
         }
