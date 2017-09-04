@@ -25,6 +25,7 @@ var Input = {
         document.removeEventListener('mousedown', Input.onMousedown);
         document.removeEventListener('keyup', Input.onKeyup);
         document.removeEventListener('keydown', Input.onSpaceDown);
+        document.removeEventListener('mousemove', Input.onMousemove);
     },
 
     onMousemove: function(e) {
@@ -107,7 +108,21 @@ var Input = {
             IO.socket.emit('addProjectile', { proj: proj });
         }
         else if (e.which == 2) {}  // middle mouse button
-        else if (e.which == 3) {}  // right mouse button
+        else if (e.which == 3) {
+            switch(mainPlayer.powerup) {
+            case Globals.POWER_CANNON:
+                let proj = new Projectile(
+                    mainPlayer.x, mainPlayer.y,
+                    75, 10, 800,
+                    mainPlayer.pointerAngle,
+                    mainPlayer.id);
+                IO.socket.emit('addProjectile', { proj: proj });
+                mainPlayer.powerup = Globals.POWER_NONE;
+                break;
+            default:  // Globals.POWER_NONE
+                break;
+            }       
+        }  // right mouse button
         else
             return;
     },
@@ -250,6 +265,9 @@ function clearForm() {
 IO.init();
 
 $(document).ready(function() {
+    // disable right-click context menu on canvas
+    $('body').on('contextmenu', '#canvas', function(e) { return false; });
+
     // process form input on submit
     $('#submit').on('click', function(e) {
         let nameInput = $('#nameInput').val();
