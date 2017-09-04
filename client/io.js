@@ -6,14 +6,12 @@ var IO = {
 
     bindEvents: function() {
         IO.socket.on('connection', function() {
-            //socketId = IO.socket.socket.sessionid;
             socketId = io.socket.sessionid;
         });
 
         IO.socket.on('joinGame', function(msg) {
-            // give player unique id
+            console.log('joining game');
             mainPlayer = msg.player;
-
             clearForm();
             Input.addEventListeners();
             Canvas.initCanvas();

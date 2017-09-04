@@ -25,6 +25,7 @@ module.exports = {
 
         //gameSocket.on('addPlayer', addPlayer);
         socket.on('addPlayer', function(msg) {
+            console.log('addPlayer callback');
             let player = msg.player;
             player.id = socket.id;
 
@@ -46,7 +47,9 @@ module.exports = {
         });
 
         socket.on('updatePlayer', function(msg) {
-            players[socket.id] = msg.player;
+            //console.log('updatePlayer callback');
+            if (players[socket.id])
+                players[socket.id] = msg.player;
         });
 
         

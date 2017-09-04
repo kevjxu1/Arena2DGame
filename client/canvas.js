@@ -66,7 +66,6 @@ var Canvas = {
             let other = visibleOthers[i];
             let xoff = other.x - player.x;
             let yoff = other.y - player.y;
-
             Canvas.drawPlayer(context, other, Globals.SCREEN_WIDTH / 2 + xoff, Globals.SCREEN_HEIGHT / 2 + yoff);
         }
     },

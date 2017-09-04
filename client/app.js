@@ -168,6 +168,8 @@ function gameLoop(context) {
     if (mainPlayer) {
         Canvas.drawGrid(context, mainPlayer);
         updateVisibleOthers();
+        console.log(visibleOthers);
+        console.log(Globals);
         Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
         Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
         Canvas.drawProjectiles(context, projectiles, mainPlayer);
@@ -222,9 +224,9 @@ function clearForm() {
     form.style.display = 'none';
 }
 
-
 // initialize socket.io socket
 IO.init();
+
 $(document).ready(function() {
     // process form input on submit
     $('#submit').on('click', function(e) {
