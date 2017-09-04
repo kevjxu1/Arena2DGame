@@ -3,12 +3,12 @@ var canvas,
 
 var Globals = {
     // game parameters
-	DEFAULT_PLAYER_RADIUS: 20, 
+	DEFAULT_PLAYER_RADIUS: 25, 
     DEFAULT_PLAYER_COLOR: 'red',
     DEFAULT_PLAYER_SPEED: 3,
     DEFAULT_PLAYER_VISION: 1e10,
     DEFAULT_PLAYER_RELOADTIME: 1000,
-    DEFAULT_PLAYER_HP: 3,
+    DEFAULT_PLAYER_HP: 5,
 
     DEFAULT_MAP_WIDTH: 2000,
     DEFAULT_MAP_HEIGHT: 1000,
@@ -20,8 +20,8 @@ var Globals = {
     DEFAULT_PROJECTILE_RADIUS: 5,
     DEFAULT_PROJECTILE_RANGE: 500,
 
-    SCREEN_WIDTH: window.innerWidth * 0.9,
-    SCREEN_HEIGHT: window.innerHeight * 0.9,
+    SCREEN_WIDTH: window.innerWidth * 0.95,
+    SCREEN_HEIGHT: window.innerHeight * 0.95,
 
     // directions
     //UP: 1, LEFT: 2, RIGHT: 3, DOWN: 4,

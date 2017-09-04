@@ -2,7 +2,11 @@ var Canvas = {
 
     clearCanvas: function(context) {
         context.beginPath();
-        context.fillStyle = Globals.DEFAULT_BACKGROUND_COLOR;
+        //context.fillStyle = Globals.DEFAULT_BACKGROUND_COLOR;
+        //context.fillStyle = '#A9A9A9';
+        //context.fillStyle = 'black';
+        //context.fillStyle = '#404040';
+        context.fillStyle = '#202020';
         context.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
         context.closePath;
     },
@@ -16,6 +20,8 @@ var Canvas = {
             context.beginPath();
             context.moveTo(x, 0);
             context.lineTo(x, Globals.SCREEN_HEIGHT);
+            context.lineWidth = 2;
+            context.strokeStyle = '#778899';
             context.stroke();
             context.closePath();
             x -= gridGapX;
@@ -42,13 +48,41 @@ var Canvas = {
         context.arc(x, y, player.radius, 0, 2 * Math.PI, true);
         context.fillStyle = player.color;
         context.fill();
+        context.closePath();
         
         // circle border
-        context.lineWidth = player.radius * 0.1;
-        context.strokeStyle = 'black';
+        let outerR = player.radius * 1.2;
+        context.beginPath();
+        context.lineWidth = 3;
+        context.strokeStyle = '#98FB98';  // pale green
+        context.arc(x, y, outerR, 0, 2 * Math.PI, true);
+        context.lineWidth = 2; 
         context.stroke();
-
         context.closePath();
+
+        let hp = player.hp;
+        for (let i = 0; i < hp; i++) {
+            let startAngle = ((i / hp) * 2 * Math.PI);
+            let endAngle = ((i + 1) / hp) * 2 * Math.PI;
+            let x1 = x + player.radius * Math.cos(startAngle);
+            let y1 = y + player.radius * Math.sin(startAngle);
+            let x2 = x + outerR * Math.cos(startAngle);
+            let y2 = y + outerR * Math.sin(startAngle);
+            context.beginPath();
+            context.beginPath();
+            context.lineWidth = 10;
+            context.strokeStyle = 'black';  // pale green
+            context.moveTo(x1, y1);
+            context.lineTo(x2, y2);
+            context.stroke();
+            context.closePath();
+        }
+
+        //context.lineWidth = player.radius * 0.2;
+        //context.strokeStyle = 'black';
+        //context.stroke();
+
+        //context.closePath();
 
         //// draw pointer
         //Canvas._displayPointer(context, player);
