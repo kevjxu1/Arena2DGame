@@ -5,10 +5,7 @@ var sockets = {};
 var projectiles = {};
 var powerups = {};
 
-var Powerup = {
-    NONE: 0,
-    CANNON: 1
-}
+
 
 module.exports = {
 
@@ -132,7 +129,7 @@ function getL2Distance(p1, p2) {
 }
 
 function generatePowerup(player) {
-    player.powerup = Powerup.CANNON;
+    player.powerup = Globals.POWER_CANNON;
 }
 
 //////////////////////////////////////////////////////////////////////

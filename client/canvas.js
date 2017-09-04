@@ -181,8 +181,6 @@ var Canvas = {
 
     initCanvas: function() {
         canvas = document.getElementById("canvas");
-        console.log('canvas: ');
-        console.log(canvas);
         canvas.width = Globals.SCREEN_WIDTH;
         canvas.height = Globals.SCREEN_HEIGHT;
         context = canvas.getContext("2d");

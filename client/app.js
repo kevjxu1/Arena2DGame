@@ -9,20 +9,33 @@ var mapBounds = {
     ubound: Globals.DEFAULT_MAP_HEIGHT
 }
 var powerups;
-
 var timeLastFired = 0;
     
 var Input = {
 	addEventListeners: function() {
+        document.addEventListener('mousemove', Input.onMousemove, false);
 		document.addEventListener("keydown", Input.onKeydown, false);
         document.addEventListener('keyup', Input.onKeyup, false);
         document.addEventListener('mousedown', Input.onMousedown, false);
+        document.addEventListener('keydown', Input.onSpaceDown, false);
 	},
 
     removeEventListeners: function() {
         document.removeEventListener('keydown', Input.onKeydown);
         document.removeEventListener('mousedown', Input.onMousedown);
         document.removeEventListener('keyup', Input.onKeyup);
+        document.removeEventListener('keydown', Input.onSpaceDown);
+    },
+
+    onMousemove: function(e) {
+        let rect = canvas.getBoundingClientRect();
+        let cursorX = e.clientX - rect.left;
+        let cursorY = e.clientY - rect.top;
+        let xdiff = cursorX - Globals.SCREEN_WIDTH / 2;
+        let ydiff = cursorY - Globals.SCREEN_HEIGHT / 2;
+        //mainPlayer.pointerAngle = Math.atan(ydiff / xdiff);
+        mainPlayer.pointerAngle = atan2(xdiff, ydiff);
+        console.log('angle: ' + mainPlayer.pointerAngle * 180 / Math.PI);
     },
 
 	onKeydown: function(e) {
@@ -84,13 +97,6 @@ var Input = {
                 return;
             }
             timeLastFired = new Date().getTime();
-            let rect = canvas.getBoundingClientRect();
-            let cursorX = e.clientX - rect.left;
-            let cursorY = e.clientY - rect.top;
-            let xdiff = cursorX - Globals.SCREEN_WIDTH / 2;
-            let ydiff = cursorY - Globals.SCREEN_HEIGHT / 2;
-            //mainPlayer.pointerAngle = Math.atan(ydiff / xdiff);
-            mainPlayer.pointerAngle = atan2(xdiff, ydiff);
             let proj = new Projectile(
                 mainPlayer.x, mainPlayer.y,
                 Globals.DEFAULT_PROJECTILE_RADIUS,
@@ -98,14 +104,30 @@ var Input = {
                 Globals.DEFAULT_PROJECTILE_RANGE,
                 mainPlayer.pointerAngle,
                 mainPlayer.id);
-            console.log('cursor x,y: ' + cursorX + ',' + cursorY);
-            console.log('aim angle (degrees): ' + mainPlayer.pointerAngle * 360 / (2 * Math.PI));
             IO.socket.emit('addProjectile', { proj: proj });
         }
         else if (e.which == 2) {}  // middle mouse button
         else if (e.which == 3) {}  // right mouse button
         else
             return;
+    },
+
+    onSpaceDown: function(e) {
+        if (e.keyCode == Globals.KEY_SPACE) {
+            switch(mainPlayer.powerup) {
+            case Globals.POWER_CANNON:
+                let proj = new Projectile(
+                    mainPlayer.x, mainPlayer.y,
+                    75, 10, 800,
+                    mainPlayer.pointerAngle,
+                    mainPlayer.id);
+                IO.socket.emit('addProjectile', { proj: proj });
+                mainPlayer.powerup = Globals.POWER_NONE;
+                break;
+            default:  // Globals.POWER_NONE
+                break;
+            }
+        }
     }
 };
 
@@ -169,8 +191,6 @@ function gameLoop(context) {
     if (mainPlayer) {
         Canvas.drawGrid(context, mainPlayer);
         updateVisibleOthers();
-        console.log(visibleOthers);
-        console.log(Globals);
         Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
         Canvas.drawPowerups(context, powerups);
         Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
