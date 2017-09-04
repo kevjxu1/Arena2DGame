@@ -51,7 +51,7 @@ var Canvas = {
         context.closePath();
         
         // circle border
-        let outerR = player.radius * 1.2;
+        let outerR = player.radius * 1.1;
         context.beginPath();
         context.lineWidth = 3;
         context.strokeStyle = '#98FB98';  // pale green
@@ -88,11 +88,10 @@ var Canvas = {
         //Canvas._displayPointer(context, player);
 
         // draw player name
-        context.font = '12px Arial';
-        context.fillStyle = 'black';
+        context.font = '12pt Comic Sans MS'
+        context.fillStyle = 'white';
         context.textAlign = 'center';
-        //context.textBaseline = 'middle';
-        context.fillText(player.name, x, y - player.radius);
+        context.fillText(player.name, x, y + player.radius + 15);
     },
 
     displayVisibleOthers: function(context, visibleOthers, player) {
