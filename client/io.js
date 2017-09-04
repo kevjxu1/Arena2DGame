@@ -22,6 +22,10 @@ var IO = {
             mainPlayer = msg.player;
         });
 
+        IO.socket.on('updatePowerups', function(msg) {
+            powerups = msg.powerups;
+        });
+
         IO.socket.on('killPlayer', function() {
             if (mainPlayer) {
                 killPlayer();

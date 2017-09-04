@@ -3,6 +3,12 @@ var Globals;
 var players = {};
 var sockets = {};
 var projectiles = {};
+var powerups = {};
+
+var Powerup = {
+    NONE: 0,
+    CANNON: 1
+}
 
 module.exports = {
 
@@ -20,6 +26,7 @@ module.exports = {
 		socket.on('updateGlobals', function(msg) {
             if (!Globals) {
                 Globals = msg.Globals;
+                runGame();
             }
         });
 
@@ -124,6 +131,10 @@ function getL2Distance(p1, p2) {
     return Math.sqrt((xdist * xdist) + (ydist * ydist));
 }
 
+function generatePowerup(player) {
+    player.powerup = Powerup.CANNON;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 function updateHits() {
@@ -181,12 +192,63 @@ function movePlayers() {
     }
 }
 
-function gameLoop() {
-    updateHits();
-    deleteOutOfRangeProjectiles();
-    moveProjectiles();
-    movePlayers();
+function spawnPowerups() {
+    console.log('spawnPowerups');
+    console.log('powerups.size: ' + Object.keys(powerups).length);
+    console.log('Globals.DEFAULT_MAP_MAX_POWERUPS: ' + Globals.DEFAULT_MAP_MAX_POWERUPS);
+    while (Object.keys(powerups).length < Globals.DEFAULT_MAP_MAX_POWERUPS) {
+        let x = Math.floor((Math.random() * Globals.DEFAULT_MAP_WIDTH - Globals.DEFAULT_POWERUP_WIDTH) + 1) 
+        let y = Math.floor((Math.random() * Globals.DEFAULT_MAP_HEIGHT - Globals.DEFAULT_POWERUP_HEIGHT) + 1)
+        let powerup = {
+            x: x,
+            y: y,
+        };
+        let id = Object.keys(powerups).length;
+        console.log('created powerup: ' + id);
+        powerups[id] = powerup;
+    }
+    for (id in sockets) {
+        sockets[id].emit('updatePowerups', { powerups: powerups });
+    }
+    console.log(powerups);
 }
-//setInterval(gameLoop, 100);
-setInterval(gameLoop, 10);
+
+function updatePowerupPickups() {
+    for (playerId in players) {
+        for (powerId in powerups) {
+            let player = players[playerId];
+            let powerup = powerups[powerId];
+            if (getL2Distance(player, powerup) <= player.radius) {
+                // player gets powerup
+                generatePowerup(player);    
+                delete powerups[powerId];
+                console.log('deleted powerup ' + powerId);
+                console.log('player: ' + player.id + ' gets powerup');
+                powerups[powerId] = {
+                    x: Math.floor((Math.random() * Globals.DEFAULT_MAP_WIDTH - Globals.DEFAULT_POWERUP_WIDTH) + 1),
+                    y: Math.floor((Math.random() * Globals.DEFAULT_MAP_HEIGHT - Globals.DEFAULT_POWERUP_HEIGHT) + 1)
+                }
+                console.log('created powerup ' + powerId);
+                sockets[playerId].emit('updatePlayer', { player: player });
+            }
+        }
+        sockets[playerId].emit('updatePowerups', { powerups: powerups });
+    }
+}
+
+
+function runGame() {
+    spawnPowerups();
+    function gameLoop() {
+        updateHits();
+        deleteOutOfRangeProjectiles();
+        moveProjectiles();
+        movePlayers();
+        updatePowerupPickups();
+    }
+    setInterval(gameLoop, 10);
+}
+
+//runGame();
+
 

@@ -8,6 +8,7 @@ var mapBounds = {
     rbound: Globals.DEFAULT_MAP_WIDTH,
     ubound: Globals.DEFAULT_MAP_HEIGHT
 }
+var powerups;
 
 var timeLastFired = 0;
     
@@ -171,6 +172,7 @@ function gameLoop(context) {
         console.log(visibleOthers);
         console.log(Globals);
         Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
+        Canvas.drawPowerups(context, powerups);
         Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
         Canvas.drawProjectiles(context, projectiles, mainPlayer);
         Canvas.drawMapBounds(context, mapBounds, mainPlayer);

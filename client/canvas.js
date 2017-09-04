@@ -161,6 +161,20 @@ var Canvas = {
         }
     },
 
+    drawPowerups: function(context, powerups) {
+        for (id in powerups) {
+            let pow = powerups[id];
+            let xoff = pow.x - mainPlayer.x;
+            let yoff = pow.y - mainPlayer.y;
+            context.beginPath();
+            context.arc(Globals.SCREEN_WIDTH / 2 + xoff, Globals.SCREEN_HEIGHT / 2  + yoff, 
+                    Globals.DEFAULT_POWERUP_HEIGHT, 0, 2 * Math.PI, true);
+            context.fillStyle = 'green';
+            context.fill();
+            context.closePath();
+        }
+    },
+
     initCanvas: function() {
         canvas = document.getElementById("canvas");
         console.log('canvas: ');
