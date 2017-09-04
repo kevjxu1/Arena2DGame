@@ -126,9 +126,8 @@ function getL2Distance(p1, p2) {
 
 //////////////////////////////////////////////////////////////////////
 
-
 function updateHits() {
-    // if a projectile hits player, both die
+    // if a projectile hits player, projectile dies, player loses hitpoints
     for (projId in projectiles) {
         let proj = projectiles[projId];
         for (playerId in players) {
@@ -142,9 +141,12 @@ function updateHits() {
             let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
             if (dist < proj.radius + player.radius) {
                 delete projectiles[projId];
-                delete players[playerId];
-                //sockets[playerId].off('movePlayer');
-                sockets[playerId].emit('killPlayer');
+                players[playerId].hp--;
+                sockets[playerId].emit('updatePlayer', { player: players[playerId] });
+                if (players[playerId].hp <= 0) {
+                    delete players[playerId];
+                    sockets[playerId].emit('killPlayer');
+                }
             }
         }
     }
