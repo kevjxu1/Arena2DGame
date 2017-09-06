@@ -5,8 +5,6 @@ var sockets = {};
 var projectiles = {};
 var powerups = {};
 
-
-
 module.exports = {
 
     initGame: function(io, socket) {
@@ -130,9 +128,17 @@ function getL2Distance(p1, p2) {
 
 function generatePowerup(player) {
     player.powerup = Globals.POWER_CANNON;
+
+    switch(player.powerup) {
+    case Globals.POWER_CANNON:
+        return 'Cannon';
+    default:
+        return 'None';
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
+
 
 function updateHits() {
     // if a projectile hits player, projectile dies, player loses hitpoints
@@ -217,7 +223,7 @@ function updatePowerupPickups() {
             let powerup = powerups[powerId];
             if (getL2Distance(player, powerup) <= player.radius) {
                 // player gets powerup
-                generatePowerup(player);    
+                let powerName = generatePowerup(player);    
                 delete powerups[powerId];
                 console.log('deleted powerup ' + powerId);
                 console.log('player: ' + player.id + ' gets powerup');
@@ -227,6 +233,8 @@ function updatePowerupPickups() {
                 }
                 console.log('created powerup ' + powerId);
                 sockets[playerId].emit('updatePlayer', { player: player });
+
+                sockets[playerId].emit('announce', { message: 'You picked up powerup: ' + powerName });
             }
         }
         sockets[playerId].emit('updatePowerups', { powerups: powerups });

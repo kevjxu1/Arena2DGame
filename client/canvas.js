@@ -179,6 +179,13 @@ var Canvas = {
         }
     },
 
+    announce: function(context, message) {
+        context.font = '18pt Comic Sans MS'
+        context.fillStyle = 'white';
+        context.textAlign = 'center';
+        context.fillText(message, Globals.SCREEN_WIDTH / 2, 20);
+    },
+
     initCanvas: function() {
         canvas = document.getElementById("canvas");
         canvas.width = Globals.SCREEN_WIDTH;

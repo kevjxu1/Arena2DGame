@@ -87,6 +87,12 @@ var IO = {
             }
 
             IO.socket.emit('updatePlayer', { player: mainPlayer });
+
+        });
+
+        IO.socket.on('announce', function(msg) {
+            timeLastAnnounced = new Date().getTime();
+            announceMessage = msg.message;
         });
 
     }

@@ -10,6 +10,8 @@ var mapBounds = {
 }
 var powerups;
 var timeLastFired = 0;
+var timeLastAnnounced = 0;
+var announceMessage = '';
     
 var Input = {
 	addEventListeners: function() {
@@ -113,7 +115,7 @@ var Input = {
             case Globals.POWER_CANNON:
                 let proj = new Projectile(
                     mainPlayer.x, mainPlayer.y,
-                    75, 10, 800,
+                    75, 3, 800,
                     mainPlayer.pointerAngle,
                     mainPlayer.id);
                 IO.socket.emit('addProjectile', { proj: proj });
@@ -199,30 +201,6 @@ function killPlayer() {
 	alert('You died');
 }
 
-////////////////////////////////////////////////////
-function gameLoop(context) {
-    Canvas.clearCanvas(context);
-
-    if (mainPlayer) {
-        Canvas.drawGrid(context, mainPlayer);
-        updateVisibleOthers();
-        Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
-        Canvas.drawPowerups(context, powerups);
-        Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
-        Canvas.drawProjectiles(context, projectiles, mainPlayer);
-        Canvas.drawMapBounds(context, mapBounds, mainPlayer);
-        //if (checkHit()) {
-        //    killPlayer();
-        //}
-    }
-
-    requestAnimationFrame(function () {
-        gameLoop(context);
-    });
-};
-
-////////////////////////////////////////////////////
-
 function updateVisibleOthers() {
     IO.socket.emit('getVisibleOthers', { player: mainPlayer });
 }
@@ -279,6 +257,40 @@ $(document).ready(function() {
     })
 });
 
-
 // sync globals with server
 sendGlobals(Globals);
+
+////////////////////////////////////////////////////
+function gameLoop(context) {
+    Canvas.clearCanvas(context);
+
+    if (mainPlayer) {
+        Canvas.drawGrid(context, mainPlayer);
+        updateVisibleOthers();
+        Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
+        Canvas.drawPowerups(context, powerups);
+        Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
+        Canvas.drawProjectiles(context, projectiles, mainPlayer);
+        Canvas.drawMapBounds(context, mapBounds, mainPlayer);
+        if (announceMessage != '') {
+            if (new Date().getTime() - timeLastAnnounced < 5000) {
+                Canvas.announce(context, announceMessage);
+            }
+            else {
+                announceMessage = '';
+            }
+        }
+        if (checkHit()) {
+            killPlayer();
+        }
+    }
+
+    requestAnimationFrame(function () {
+        gameLoop(context);
+    });
+};
+
+
+////////////////////////////////////////////////////
+
+
