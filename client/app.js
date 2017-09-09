@@ -36,9 +36,8 @@ var Input = {
         let cursorY = e.clientY - rect.top;
         let xdiff = cursorX - Globals.SCREEN_WIDTH / 2;
         let ydiff = cursorY - Globals.SCREEN_HEIGHT / 2;
-        //mainPlayer.pointerAngle = Math.atan(ydiff / xdiff);
-        mainPlayer.pointerAngle = atan2(xdiff, ydiff);
-        console.log('angle: ' + mainPlayer.pointerAngle * 180 / Math.PI);
+        mainPlayer.angle = atan2(xdiff, ydiff);
+        //console.log('angle: ' + mainPlayer.angle * 180 / Math.PI);
     },
 
 	onKeydown: function(e) {
@@ -62,7 +61,7 @@ var Input = {
         default:
             break;
         }
-        IO.socket.emit('updatePlayer', { player: mainPlayer });
+        IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
 	},
 
     onKeyup: function(e) {
@@ -90,7 +89,7 @@ var Input = {
             break;
         }
         mainPlayer.moveDir &= (~dir & 0xF);
-        IO.socket.emit('updatePlayer', { player: mainPlayer });
+        IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
     },
 
     onMousedown: function(e) {
@@ -105,26 +104,27 @@ var Input = {
                 Globals.DEFAULT_PROJECTILE_RADIUS,
                 Globals.DEFAULT_PROJECTILE_SPEED,
                 Globals.DEFAULT_PROJECTILE_RANGE,
-                mainPlayer.pointerAngle,
+                mainPlayer.angle,
                 mainPlayer.id);
             IO.socket.emit('addProjectile', { proj: proj });
         }
         else if (e.which == 2) {}  // middle mouse button
-        else if (e.which == 3) {
+        else if (e.which == 3) {  // right mouse button
             switch(mainPlayer.powerup) {
             case Globals.POWER_CANNON:
                 let proj = new Projectile(
                     mainPlayer.x, mainPlayer.y,
-                    75, 3, 800,
-                    mainPlayer.pointerAngle,
+                    100, 3, 900,
+                    mainPlayer.angle,
                     mainPlayer.id);
                 IO.socket.emit('addProjectile', { proj: proj });
+                proj.angle = proj.angle * 180 / Math.PI;
                 mainPlayer.powerup = Globals.POWER_NONE;
                 break;
             default:  // Globals.POWER_NONE
                 break;
             }       
-        }  // right mouse button
+        }  // end right mouse button
         else
             return;
     },
@@ -136,7 +136,7 @@ var Input = {
                 let proj = new Projectile(
                     mainPlayer.x, mainPlayer.y,
                     75, 10, 800,
-                    mainPlayer.pointerAngle,
+                    mainPlayer.angle,
                     mainPlayer.id);
                 IO.socket.emit('addProjectile', { proj: proj });
                 mainPlayer.powerup = Globals.POWER_NONE;
@@ -191,7 +191,10 @@ function atan2(x, y) {
 }
 
 function killPlayer() {
-	IO.socket.off('updatePlayer');                                         
+	IO.socket.off('updatePlayer');
+	IO.socket.off('updatePlayerPos');
+	IO.socket.off('updatePlayerPowerup');
+	IO.socket.off('updatePlayerHp');
     IO.socket.off('movePlayer');
 	IO.socket.off('updateVisibleOthers');                                  
 	IO.socket.off('updateProjectiles');                                    
@@ -209,30 +212,29 @@ function sendGlobals() {
     IO.socket.emit('updateGlobals', { Globals: Globals });
 }
 
-function onSubmit() {
-    console.log('onSubmit callback');
-    form = document.getElementById('form');
-    for (let i = 0; i < form.length; i++) {
-        if (form.elements[i].id == 'nameInput') {
-            let nameInput = form.elements[i].value;
-            mainPlayer.name = nameInput;
-            IO.socket.emit('submitForm', { player: mainPlayer });
-            break;
-        }
-    }
-}
+//function onSubmit() {
+//    form = document.getElementById('form');
+//    for (let i = 0; i < form.length; i++) {
+//        if (form.elements[i].id == 'nameInput') {
+//            let nameInput = form.elements[i].value;
+//            mainPlayer.name = nameInput;
+//            IO.socket.emit('submitForm', { player: mainPlayer });
+//            break;
+//        }
+//    }
+//}
 
-function bindSubmit() {
-    let form = document.getElementById('form');
-    for (let i = 0; i < form.length; i++) {
-        if (form.elements[i].id == 'submit') {
-            //form.elements[i].onclick='onSubmit();';
-            form.elements[i].addEventListener('click', onSubmit);
-            console.log(form.elements[i].value + ' binded');
-            break;
-        }
-    }
-}
+//function bindSubmit() {
+//    let form = document.getElementById('form');
+//    for (let i = 0; i < form.length; i++) {
+//        if (form.elements[i].id == 'submit') {
+//            //form.elements[i].onclick='onSubmit();';
+//            form.elements[i].addEventListener('click', onSubmit);
+//            console.log(form.elements[i].value + ' binded');
+//            break;
+//        }
+//    }
+//}
 
 function clearForm() {
     let form = document.getElementById('form');
@@ -273,7 +275,7 @@ function gameLoop(context) {
         Canvas.drawProjectiles(context, projectiles, mainPlayer);
         Canvas.drawMapBounds(context, mapBounds, mainPlayer);
         if (announceMessage != '') {
-            if (new Date().getTime() - timeLastAnnounced < 5000) {
+            if (new Date().getTime() - timeLastAnnounced < 3500) {
                 Canvas.announce(context, announceMessage);
             }
             else {

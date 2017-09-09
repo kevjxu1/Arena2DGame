@@ -112,7 +112,7 @@ var Canvas = {
             context.beginPath();
             context.arc(Globals.SCREEN_WIDTH / 2 + xoff, Globals.SCREEN_HEIGHT / 2 + yoff, 
                     proj.radius, 0, 2 * Math.PI, true);
-            context.fillStyle = 'black';
+            context.fillStyle = player.color;
             context.fill();
             context.closePath();
         }

@@ -22,6 +22,29 @@ var IO = {
             mainPlayer = msg.player;
         });
 
+        IO.socket.on('updatePlayerPos', function(msg) {
+            mainPlayer.x = msg.x;
+            mainPlayer.y = msg.y;
+        });
+
+        IO.socket.on('updatePlayerPowerup', function(msg) {
+            mainPlayer.powerup = msg.powerup;
+            switch(mainPlayer.powerup) {
+            case Globals.POWER_CANNON:
+                var powerupString = 'Cannon';
+                break;
+            default:
+                powerupString = 'None';
+                break;
+            }
+            announceMessage = 'You picked up powerup: ' + powerupString;
+            timeLastAnnounced = new Date().getTime();
+        });
+
+        IO.socket.on('updatePlayerHp', function(msg) {
+            mainPlayer.hp = msg.hp;
+        });
+
         IO.socket.on('updatePowerups', function(msg) {
             powerups = msg.powerups;
         });
@@ -39,64 +62,12 @@ var IO = {
         IO.socket.on('updateProjectiles', function(msg) {
             projectiles = msg.projectiles;
         });
-
-        IO.socket.on('movePlayer', function(msg) {
-            //mainPlayer = msg.player;
-
-            if (mainPlayer) {
-                var dir = mainPlayer.moveDir;
-                var oldX = mainPlayer.x;
-                var oldY = mainPlayer.y;
-                var x = mainPlayer.x;
-                var y = mainPlayer.y;
-            }
-            let isDiag = ((dir & Globals.DIR_UP) && (dir & Globals.DIR_LEFT))
-                    || ((dir & Globals.DIR_UP) && (dir & Globals.DIR_RIGHT))
-                    || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_LEFT))
-                    || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_RIGHT));
-            let l1speed = isDiag ? 
-                    mainPlayer.speed / Math.sqrt(2) : mainPlayer.speed;
-
-            if (dir & Globals.DIR_UP) {
-                y -= l1speed;
-            }
-            else if (dir & Globals.DIR_DOWN) {
-                y += l1speed;
-            }
-
-            if (dir & Globals.DIR_LEFT) {
-                x -= l1speed;
-            }
-            else if (dir & Globals.DIR_RIGHT) {
-                x += l1speed;
-            }
-            //else  // dir == Globals.NONE
-            if (mainPlayer) {
-                mainPlayer.x = x;
-                mainPlayer.y = y;
-                if (checkCollisions(mainPlayer, visibleOthers))  {
-                    mainPlayer.x = oldX;
-                    mainPlayer.y = oldY;
-                }
-                if (mainPlayer.x < 0 || mainPlayer.x > Globals.DEFAULT_MAP_WIDTH) {
-                    mainPlayer.x = oldX;
-                }
-                if (mainPlayer.y < 0 || mainPlayer.y > Globals.DEFAULT_MAP_HEIGHT) {
-                    mainPlayer.y = oldY;
-                }
-            }
-
-            IO.socket.emit('updatePlayer', { player: mainPlayer });
-
-        });
-
-        IO.socket.on('announce', function(msg) {
-            timeLastAnnounced = new Date().getTime();
-            announceMessage = msg.message;
-        });
-
+        
+        //IO.socket.on('announce', function(msg) {
+        //    timeLastAnnounced = new Date().getTime();
+        //    announceMessage = msg.message;
+        //});
     }
-
 };
 
 

@@ -27,7 +27,6 @@ module.exports = {
 
         //gameSocket.on('addPlayer', addPlayer);
         socket.on('addPlayer', function(msg) {
-            console.log('addPlayer callback');
             let player = msg.player;
             player.id = socket.id;
 
@@ -49,11 +48,26 @@ module.exports = {
         });
 
         socket.on('updatePlayer', function(msg) {
-            //console.log('updatePlayer callback');
             if (players[socket.id])
                 players[socket.id] = msg.player;
         });
 
+        socket.on('updatePlayerPosition', function(msg) {
+            let x = msg.x;
+            let y = msg.y;
+            players[socket.id].x = x;
+            players[socket.id].y = y;
+        });
+
+        socket.on('updatePlayerAngle', function(msg) {
+            let angle = msg.angle;
+            players[socket.id].angle = angle;
+        });
+
+        socket.on('updatePlayerDir', function(msg) {
+            let moveDir = msg.moveDir;
+            players[socket.id].moveDir = moveDir;
+        });
         
         // give client visible players
         socket.on('getVisibleOthers', function(msg) {
@@ -71,7 +85,6 @@ module.exports = {
         });
 
         socket.on('addProjectile', function(msg) {
-            let key = msg.keyPressed;
             let proj = msg.proj;
             if (!proj.dir) {
                 // if direction not initialized, don't add the projectile
@@ -128,13 +141,13 @@ function getL2Distance(p1, p2) {
 
 function generatePowerup(player) {
     player.powerup = Globals.POWER_CANNON;
-
-    switch(player.powerup) {
-    case Globals.POWER_CANNON:
-        return 'Cannon';
-    default:
-        return 'None';
-    }
+    sockets[player.id].emit('updatePlayerPowerup', { powerup: player.powerup });
+    //switch(player.powerup) {
+    //case Globals.POWER_CANNON:
+    //    return 'Cannon';
+    //default:
+    //    return 'None';
+    //}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -156,7 +169,8 @@ function updateHits() {
             if (dist < proj.radius + player.radius) {
                 delete projectiles[projId];
                 players[playerId].hp--;
-                sockets[playerId].emit('updatePlayer', { player: players[playerId] });
+                //sockets[playerId].emit('updatePlayer', { player: players[playerId] });
+                sockets[playerId].emit('updatePlayerHp', { hp: players[playerId].hp });
                 if (players[playerId].hp <= 0) {
                     delete players[playerId];
                     sockets[playerId].emit('killPlayer');
@@ -190,8 +204,48 @@ function moveProjectiles() {
 }
 
 function movePlayers() {
-    for (id in sockets) {
-        sockets[id].emit('movePlayer');
+    for (id in players) {
+        let player = players[id];
+        let dir = player.moveDir;
+        let isDiag = ((dir & Globals.DIR_UP) && (dir & Globals.DIR_LEFT))
+                    || ((dir & Globals.DIR_UP) && (dir & Globals.DIR_RIGHT))
+                    || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_LEFT))
+                    || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_RIGHT));
+        let l1speed = isDiag ? 
+                player.speed / Math.sqrt(2) : player.speed;
+        let x = player.x, oldX = player.x;
+        let y = player.y, oldY = player.y;
+
+        if (dir & Globals.DIR_UP) {
+            y -= l1speed;
+        }
+        else if (dir & Globals.DIR_DOWN) {
+            y += l1speed;
+        }
+
+        if (dir & Globals.DIR_LEFT) {
+            x -= l1speed;
+        }
+        else if (dir & Globals.DIR_RIGHT) {
+            x += l1speed;
+        }
+        //else  // dir == Globals.NONE
+        if (player) {
+            player.x = x;
+            player.y = y;
+            if (checkCollisions(player, players))  {
+                player.x = oldX;
+                player.y = oldY;
+            }
+            if (player.x < 0 || player.x > Globals.DEFAULT_MAP_WIDTH) {
+                player.x = oldX;
+            }
+            if (player.y < 0 || player.y > Globals.DEFAULT_MAP_HEIGHT) {
+                player.y = oldY;
+            }
+        }
+        //sockets[id].emit('updatePlayer', { player: player });
+        sockets[id].emit('updatePlayerPos', { x: player.x, y: player.y });
     }
 }
 
@@ -232,9 +286,9 @@ function updatePowerupPickups() {
                     y: Math.floor((Math.random() * Globals.DEFAULT_MAP_HEIGHT - Globals.DEFAULT_POWERUP_HEIGHT) + 1)
                 }
                 console.log('created powerup ' + powerId);
-                sockets[playerId].emit('updatePlayer', { player: player });
+                //sockets[playerId].emit('updatePlayer', { player: player });
 
-                sockets[playerId].emit('announce', { message: 'You picked up powerup: ' + powerName });
+                //sockets[playerId].emit('announce', { message: 'You picked up powerup: ' + powerName });
             }
         }
         sockets[playerId].emit('updatePowerups', { powerups: powerups });
