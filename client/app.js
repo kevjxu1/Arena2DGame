@@ -170,19 +170,6 @@ function checkCollisions(player, visibleOthers) {
     return false;
 }
 
-// did mainPlayer get hit?
-function checkHit() {
-    for (id in projectiles) {
-        let proj = projectiles[id];
-		if (proj.playerId == mainPlayer.id)
-			continue;
-        let dist = getDistance(proj, mainPlayer);
-        if (dist < mainPlayer.radius + proj.radius) {
-            return true;
-        }
-    }
-}
-
 function atan2(x, y) {
     let rQuadVal = Math.atan(y / x);
     return (x < 0) ? 
@@ -282,11 +269,7 @@ function gameLoop(context) {
                 announceMessage = '';
             }
         }
-        if (checkHit()) {
-            killPlayer();
-        }
     }
-
     requestAnimationFrame(function () {
         gameLoop(context);
     });
