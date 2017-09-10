@@ -105,7 +105,7 @@ var Input = {
                 Globals.DEFAULT_PROJECTILE_SPEED,
                 Globals.DEFAULT_PROJECTILE_RANGE,
                 mainPlayer.angle,
-                mainPlayer.id);
+                mainPlayer.id, mainPlayer.color);
             IO.socket.emit('addProjectile', { proj: proj });
         }
         else if (e.which == 2) {}  // middle mouse button
@@ -116,7 +116,7 @@ var Input = {
                     mainPlayer.x, mainPlayer.y,
                     100, 3, 900,
                     mainPlayer.angle,
-                    mainPlayer.id);
+                    mainPlayer.id, mainPlayer.color);
                 IO.socket.emit('addProjectile', { proj: proj });
                 proj.angle = proj.angle * 180 / Math.PI;
                 mainPlayer.powerup = Globals.POWER_NONE;
@@ -129,23 +129,23 @@ var Input = {
             return;
     },
 
-    onSpaceDown: function(e) {
-        if (e.keyCode == Globals.KEY_SPACE) {
-            switch(mainPlayer.powerup) {
-            case Globals.POWER_CANNON:
-                let proj = new Projectile(
-                    mainPlayer.x, mainPlayer.y,
-                    75, 10, 800,
-                    mainPlayer.angle,
-                    mainPlayer.id);
-                IO.socket.emit('addProjectile', { proj: proj });
-                mainPlayer.powerup = Globals.POWER_NONE;
-                break;
-            default:  // Globals.POWER_NONE
-                break;
-            }
-        }
-    }
+    //onSpaceDown: function(e) {
+    //    if (e.keyCode == Globals.KEY_SPACE) {
+    //        switch(mainPlayer.powerup) {
+    //        case Globals.POWER_CANNON:
+    //            let proj = new Projectile(
+    //                mainPlayer.x, mainPlayer.y,
+    //                75, 10, 800,
+    //                mainPlayer.angle,
+    //                mainPlayer.id, mainPlayer.color);
+    //            IO.socket.emit('addProjectile', { proj: proj });
+    //            mainPlayer.powerup = Globals.POWER_NONE;
+    //            break;
+    //        default:  // Globals.POWER_NONE
+    //            break;
+    //        }
+    //    }
+    //}
 };
 
 function getDistance(circle1, circle2) {
