@@ -191,7 +191,7 @@ function atan2(x, y) {
 }
 
 function killPlayer() {
-	IO.socket.off('updatePlayer');
+    console.log('player died');
 	IO.socket.off('updatePlayerPos');
 	IO.socket.off('updatePlayerPowerup');
 	IO.socket.off('updatePlayerHp');

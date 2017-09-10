@@ -28,3 +28,6 @@ Additional:
 
 
 in the middle of diagonal dir movement
+
+error:
+player == players[id] => player.id != id

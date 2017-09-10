@@ -18,11 +18,8 @@ var IO = {
             gameLoop(context);
         });
 
-        IO.socket.on("updatePlayer", function(msg) {
-            mainPlayer = msg.player;
-        });
-
         IO.socket.on('updatePlayerPos', function(msg) {
+            console.log('x: ' + msg.x + ' y: ' + msg.y);
             mainPlayer.x = msg.x;
             mainPlayer.y = msg.y;
         });
