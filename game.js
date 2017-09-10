@@ -166,7 +166,8 @@ function updateHits() {
                 delete projectiles[projId];
                 players[playerId].hp--;
                 sockets[playerId].emit('updatePlayerHp', { hp: players[playerId].hp });
-                if (players[playerId].hp <= 0) {
+                if (players[playerId].hp < 1) {
+                    // Math.floor(hp) < 1 => player has no discrete hp bars left
                     delete players[playerId];
                     sockets[playerId].emit('killPlayer');
                 }

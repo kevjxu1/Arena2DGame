@@ -88,10 +88,17 @@ var Canvas = {
         //Canvas._displayPointer(context, player);
 
         // draw player name
-        context.font = '12pt Comic Sans MS'
+        context.font = '12pt Comic Sans MS';
         context.fillStyle = 'white';
         context.textAlign = 'center';
         context.fillText(player.name, x, y + player.radius + 15);
+    },
+
+    drawHpText: function(context, hp, color) {
+        context.font = '12pt Comic Sans MS';        
+        context.fillStyle = color;
+        context.textAlign = 'center';
+        context.fillText('HP: ' + hp.toFixed(2), Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT - 16);
     },
 
     displayVisibleOthers: function(context, visibleOthers, player) {

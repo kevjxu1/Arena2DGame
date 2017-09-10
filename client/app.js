@@ -261,6 +261,7 @@ function gameLoop(context) {
         Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
         Canvas.drawProjectiles(context, projectiles, mainPlayer);
         Canvas.drawMapBounds(context, mapBounds, mainPlayer);
+        Canvas.drawHpText(context, mainPlayer.hp, mainPlayer.color);
         if (announceMessage != '') {
             if (new Date().getTime() - timeLastAnnounced < 3500) {
                 Canvas.announce(context, announceMessage);
