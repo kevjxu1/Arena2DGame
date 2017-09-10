@@ -60,7 +60,7 @@ var Canvas = {
         context.stroke();
         context.closePath();
 
-        let hp = player.hp;
+        let hp = Math.floor(player.hp);
         for (let i = 0; i < hp; i++) {
             let startAngle = ((i / hp) * 2 * Math.PI);
             let endAngle = ((i + 1) / hp) * 2 * Math.PI;

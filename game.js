@@ -156,6 +156,13 @@ function updateHits() {
             let ydiff = proj.y - player.y;
             let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
             if (dist < proj.radius + player.radius) {
+				// projectile hit a player
+				// reward hitter with some HP gain
+				let hitterId = proj.playerId;
+				players[hitterId].hp += 0.4;
+				sockets[hitterId].emit('updatePlayerHp', { hp: players[hitterId].hp });
+				
+				// penalize hittee with HP loss
                 delete projectiles[projId];
                 players[playerId].hp--;
                 sockets[playerId].emit('updatePlayerHp', { hp: players[playerId].hp });
