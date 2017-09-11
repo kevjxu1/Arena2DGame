@@ -1,8 +1,8 @@
 'use strict'; 
 
-var visibleOthers = [];
+var visibleOthers = {};
 var socketId;
-var projectiles;
+var projectiles = {};
 var mainPlayer = Player.player;
 var mapBounds = {
     rbound: Globals.DEFAULT_MAP_WIDTH,
@@ -183,7 +183,7 @@ function killPlayer() {
 	IO.socket.off('updatePlayerPowerup');
 	IO.socket.off('updatePlayerHp');
     IO.socket.off('movePlayer');
-	IO.socket.off('updateVisibleOthers');                                  
+	//IO.socket.off('updateVisibleOthers');                                  
 	IO.socket.off('updateProjectiles');                                    
 	Input.removeEventListeners();                                          
 	mainPlayer = null;                                                     
@@ -191,9 +191,9 @@ function killPlayer() {
 	alert('You died');
 }
 
-function updateVisibleOthers() {
-    IO.socket.emit('getVisibleOthers', { player: mainPlayer });
-}
+//function updateVisibleOthers() {
+//    IO.socket.emit('getVisibleOthers', { player: mainPlayer });
+//}
 
 function sendGlobals() {
     IO.socket.emit('updateGlobals', { Globals: Globals });
@@ -255,8 +255,8 @@ function gameLoop(context) {
 
     if (mainPlayer) {
         Canvas.drawGrid(context, mainPlayer);
-        updateVisibleOthers();
-        Canvas.displayVisibleOthers(context, visibleOthers, mainPlayer);
+        //updateVisibleOthers();
+        Canvas.drawVisibleOthers(context, visibleOthers, mainPlayer);
         Canvas.drawPowerups(context, powerups);
         Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
         Canvas.drawProjectiles(context, projectiles, mainPlayer);
@@ -275,6 +275,12 @@ function gameLoop(context) {
         gameLoop(context);
     });
 };
+
+//function debugLog() {
+//    console.log('visibleOthers: ');
+//    console.log(visibleOthers);
+//}
+//setInterval(debugLog, 500);
 
 
 ////////////////////////////////////////////////////

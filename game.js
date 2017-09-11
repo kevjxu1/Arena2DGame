@@ -58,20 +58,24 @@ module.exports = {
             players[socket.id].moveDir = moveDir;
         });
         
-        // give client visible players
-        socket.on('getVisibleOthers', function(msg) {
-            let visibleOthers = [];  // excluding main player
-            let player = msg.player;
-            for (let playerId in players) {
-                if (playerId == player.id)
-                    continue;
-                let p = players[playerId];
-                if (getL2Distance(player, p) <= player.vision) {
-                    visibleOthers.push(p);
-                }
-            }
-            socket.emit('updateVisibleOthers', { visibleOthers: visibleOthers });
-        });
+        //// give client visible players
+        //socket.on('updateVisibleOthers', function(msg) {
+        //    let visibleOthers = [];  // excluding main player
+        //    let player = msg.player;
+        //    for (let playerId in players) {
+        //        if (playerId == player.id)
+        //            continue;
+        //        let p = players[playerId];
+        //        if (getL2Distance(player, p) <= player.vision) {
+        //            sockets[playerId].emit('addVisibleOther', { player: p });
+        //            //visibleOthers.push(p);
+        //        }
+        //        //else {
+        //        //    socket.emit('rmVisibleOther', { id: p.id };
+        //        //}
+        //    }
+        //    //socket.emit('updateVisibleOthers', { visibleOthers: visibleOthers });
+        //});
 
         socket.on('addProjectile', function(msg) {
             let proj = msg.proj;
@@ -80,7 +84,9 @@ module.exports = {
                 return;
             }
             projectiles[proj.id] = proj;
-            socket.emit('updateProjectiles', { projectiles: projectiles });
+            for (let id in sockets) {
+                sockets[id].emit('addProjectile', { proj: proj });
+            }
         });
 
         socket.on('playerDied', function() {
@@ -97,7 +103,20 @@ function deleteOutOfRangeProjectiles() {
         let ydiff = proj.y - proj.startY;
         let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
         if (dist > proj.range) {
-           delete projectiles[id]; 
+            delete projectiles[id]; 
+            console.log('projectile deleted: ' + id);
+            for (let id in sockets) {
+                sockets[id].emit('rmProjectile', { id: proj.id });
+            }
+        }
+        if (proj.x < 0 || proj.x > Globals.DEFAULT_MAP_WIDTH 
+                || proj.y < 0 || proj.y > Globals.DEFAULT_MAP_HEIGHT)
+        {
+            delete projectiles[id];
+            console.log('projectile deleted: ' + id);
+            for (let id in sockets) {
+                sockets[id].emit('rmProjectile', { id: proj.id });
+            }
         }
     }
 }
@@ -157,13 +176,19 @@ function updateHits() {
             let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
             if (dist < proj.radius + player.radius) {
 				// projectile hit a player
+
+                // delete projectile
+                delete projectiles[projId];
+                for (let id in sockets) {
+                    sockets[id].emit('rmProjectile', { id: projId });
+                }
+
 				// reward hitter with some HP gain
 				let hitterId = proj.playerId;
 				players[hitterId].hp += 0.4;
 				sockets[hitterId].emit('updatePlayerHp', { hp: players[hitterId].hp });
 				
 				// penalize hittee with HP loss
-                delete projectiles[projId];
                 players[playerId].hp--;
                 sockets[playerId].emit('updatePlayerHp', { hp: players[playerId].hp });
                 if (players[playerId].hp < 1) {
@@ -180,22 +205,24 @@ function moveProjectiles() {
     for (let id in projectiles) {
         let proj = projectiles[id];
 
-        // delete out-of-bound projectile
-        if (proj.x < 0 || proj.x > Globals.DEFAULT_MAP_WIDTH 
-                || proj.y < 0 || proj.y > Globals.DEFAULT_MAP_HEIGHT)
-        {
-            delete projectiles[id];
-            console.log('projectile deleted: ' + id);
-        } 
-        else {
+        //// delete out-of-bound projectile
+        //if (proj.x < 0 || proj.x > Globals.DEFAULT_MAP_WIDTH 
+        //        || proj.y < 0 || proj.y > Globals.DEFAULT_MAP_HEIGHT)
+        //{
+        //    delete projectiles[id];
+        //    console.log('projectile deleted: ' + id);
+        //} 
+        if (proj) {
             let dx = Math.cos(proj.dir) * proj.speed;
             let dy = Math.sin(proj.dir) * proj.speed;
             proj.x += dx;
             proj.y += dy;
+
+            for (let id in sockets) {
+                sockets[id].emit('updateProjectilePos', 
+                        { id: proj.id, x: proj.x, y: proj.y });
+            }
         }
-    }
-    for (let id in sockets) {
-        sockets[id].emit('updateProjectiles', { projectiles: projectiles });
     }
 }
 
@@ -285,6 +312,19 @@ function updatePowerupPickups() {
     }
 }
 
+function updateVisibleOthers() {
+    for (let id1 in players) {
+        for (let id2 in players) {
+            if (id1 == id2) 
+                continue;
+            let p1 = players[id1];
+            let p2 = players[id2];
+            if (getL2Distance(p1, p2) <= p1.vision) {
+                sockets[id1].emit('addVisibleOther', { player: p2 });
+            }
+        }
+    }
+}
 
 function runGame() {
     spawnPowerups();
@@ -293,6 +333,7 @@ function runGame() {
         moveProjectiles();
     }
     function gameLoop() {
+        updateVisibleOthers();
         updateHits();
         deleteOutOfRangeProjectiles();
         updatePowerupPickups();

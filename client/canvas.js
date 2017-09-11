@@ -101,9 +101,9 @@ var Canvas = {
         context.fillText('HP: ' + hp.toFixed(2), Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT - 16);
     },
 
-    displayVisibleOthers: function(context, visibleOthers, player) {
-        for (let i = 0; i < visibleOthers.length; i++) {
-            let other = visibleOthers[i];
+    drawVisibleOthers: function(context, visibleOthers, player) {
+        for (let id in visibleOthers) {
+            let other = visibleOthers[id];
             let xoff = other.x - player.x;
             let yoff = other.y - player.y;
             Canvas.drawPlayer(context, other, Globals.SCREEN_WIDTH / 2 + xoff, Globals.SCREEN_HEIGHT / 2 + yoff);

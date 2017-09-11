@@ -19,7 +19,7 @@ var IO = {
         });
 
         IO.socket.on('updatePlayerPos', function(msg) {
-            console.log('x: ' + msg.x + ' y: ' + msg.y);
+            //console.log('x: ' + msg.x + ' y: ' + msg.y);
             mainPlayer.x = msg.x;
             mainPlayer.y = msg.y;
         });
@@ -52,18 +52,49 @@ var IO = {
             }
         });
 
-        IO.socket.on('updateVisibleOthers', function(msg) {
-            visibleOthers = msg.visibleOthers;
+        //IO.socket.on('updateVisibleOthers', function(msg) {
+        //    visibleOthers = msg.visibleOthers;
+        //});
+        IO.socket.on('addVisibleOther', function(msg) {
+            let player = msg.player;
+            console.log('add visible other: ' + player.id);
+            visibleOthers[player.id] = player;
         });
 
-        IO.socket.on('updateProjectiles', function(msg) {
-            projectiles = msg.projectiles;
+        IO.socket.on('rmVisibleOther', function(msg) {
+            console.log('removing visible other: ' + id);
+            if (visibleOthers[msg.id]) {
+                delete visibleOther[msg.id];
+            }
+        });
+
+        IO.socket.on('updateProjectilePos', function(msg) {
+            let id = msg.id;
+            let x = msg.x;
+            let y = msg.y;
+            projectiles[id].x = x;
+            projectiles[id].y = y;
+        });
+
+        IO.socket.on('addProjectile', function(msg) {
+            let proj = msg.proj;
+            projectiles[proj.id] = proj;
+            console.log('addProjectile');
+            console.log('projectiles: ');
+            console.log(projectiles);
         });
         
-        //IO.socket.on('announce', function(msg) {
-        //    timeLastAnnounced = new Date().getTime();
-        //    announceMessage = msg.message;
-        //});
+        IO.socket.on('rmProjectile', function(msg) {
+            let id = msg.id;
+            if (projectiles[id]) {
+                delete projectiles[id];
+            }
+            console.log('rmProjectile');
+            console.log('projectiles: ');
+            console.log(projectiles);
+
+        });
+ 
     }
 };
 
