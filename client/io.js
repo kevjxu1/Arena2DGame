@@ -53,12 +53,10 @@ var IO = {
 
         IO.socket.on('addVisibleOther', function(msg) {
             let player = msg.player;
-            console.log('add visible other: ' + player.id);
             visibleOthers[player.id] = player;
         });
 
         IO.socket.on('rmVisibleOther', function(msg) {
-            console.log('removing visible other: ' + id);
             if (visibleOthers[msg.id]) {
                 delete visibleOthers[msg.id];
             }
@@ -75,9 +73,6 @@ var IO = {
         IO.socket.on('addProjectile', function(msg) {
             let proj = msg.proj;
             projectiles[proj.id] = proj;
-            console.log('addProjectile');
-            console.log('projectiles: ');
-            console.log(projectiles);
         });
         
         IO.socket.on('rmProjectile', function(msg) {
@@ -85,9 +80,6 @@ var IO = {
             if (projectiles[id]) {
                 delete projectiles[id];
             }
-            console.log('rmProjectile');
-            console.log('projectiles: ');
-            console.log(projectiles);
         });
  
     }

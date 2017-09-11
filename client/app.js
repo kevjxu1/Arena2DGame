@@ -160,11 +160,11 @@ function atan2(x, y) {
 function killPlayer() {
     playerDead = true;
     console.log('player died');
-	//IO.socket.off('updatePlayerPos');
-	//IO.socket.off('updatePlayerPowerup');
-	//IO.socket.off('updatePlayerHp');
-    //IO.socket.off('movePlayer');
-	//IO.socket.off('updateProjectiles');                                    
+	IO.socket.off('updatePlayerPos');
+	IO.socket.off('updatePlayerPowerup');
+	IO.socket.off('updatePlayerHp');
+    IO.socket.off('movePlayer');
+	IO.socket.off('updateProjectiles');                                    
 	Input.removeEventListeners();                                          
     
     let x = mainPlayer.x;
@@ -230,9 +230,10 @@ function gameLoop(context) {
         }
     }
 
-    requestAnimationFrame(function () {
-        gameLoop(context);
-    });
+    if (!playerDead)
+        requestAnimationFrame(function () {
+            gameLoop(context);
+        });
 };
 
 
