@@ -241,7 +241,9 @@ $(document).ready(function() {
         let colorInput = $('.colorInput:checked').val();
         mainPlayer.name = nameInput;
         mainPlayer.color = colorInput;
-        $('#form').hide();
+        $('#frontPage').hide();
+        //$('#form').hide();
+        //$('#instructions').hide();
         IO.socket.emit('addPlayer', { player: mainPlayer });
     })
 });

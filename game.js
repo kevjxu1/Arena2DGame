@@ -33,8 +33,8 @@ module.exports = {
 
             // spawn player at random noncolliding position
             while (true) {
-                let x = Math.floor((Math.random() * Globals.DEFAULT_MAP_WIDTH - player.radius) + 1) 
-                let y = Math.floor((Math.random() * Globals.DEFAULT_MAP_HEIGHT - player.radius) + 1)
+                let x = Math.floor(Math.random() * Globals.DEFAULT_MAP_WIDTH);
+                let y = Math.floor(Math.random() * Globals.DEFAULT_MAP_HEIGHT);
                 player.x = x;
                 player.y = y;
 
