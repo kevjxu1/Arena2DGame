@@ -168,6 +168,9 @@ function updateHits() {
                     // Math.floor(hp) < 1 => player has no discrete hp bars left
                     delete players[playerId];
                     sockets[playerId].emit('killPlayer');
+                    for (let id in sockets) {
+                        sockets[id].emit('rmVisibleOther', { id: playerId });
+                    }
                 }
             }
         }

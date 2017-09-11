@@ -60,7 +60,7 @@ var IO = {
         IO.socket.on('rmVisibleOther', function(msg) {
             console.log('removing visible other: ' + id);
             if (visibleOthers[msg.id]) {
-                delete visibleOther[msg.id];
+                delete visibleOthers[msg.id];
             }
         });
 

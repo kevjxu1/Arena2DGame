@@ -36,41 +36,43 @@
 </head>
 
 <body>
-	<center>
-	<form id='form' action="javascript:void(0);">
-		<label for="nameInput">Name</label><br>
-		<input type="text" id="nameInput" placeholder="Enter your name here."><br><br>
+    <div id="frontPage">
+        <center>
+        <form id='form' action="javascript:void(0);">
+            <label for="nameInput">Name</label><br>
+            <input type="text" id="nameInput" placeholder="Enter your name here."><br><br>
 
-        <!-- radio buttons with the same name are mutually exclusive -->
-        <label for="colorSelection">Color</label><br>
-        <div id="colorSelection">
-            <input type="radio" class="colorInput" name="colorRadio" id="redRadio" value="red" checked="checked">
-            <label for="redRadio" style="color:red">red</label><br>
-            <input type="radio" class="colorInput" name="colorRadio" id="greenRadio" value="green">
-            <label for="greenRadio" style="color:green">green</label><br>
-            <input type="radio" class="colorInput" name="colorRadio" id="blueRadio" value="blue">
-            <label for="blueRadio" style="color:blue">blue</label><br>
-            <input type="radio" class="colorInput" name="colorRadio" id="yellowRadio" value="yellow">
-            <label for="yellowRadio" style="color:yellow">yellow</label><br>
-            <input type="radio" class="colorInput" name="colorRadio" id="purpleRadio" value="purple">
-            <label for="purpleRadio" style="color:purple">purple</label><br>
-            <input type="radio" class="colorInput" name="colorRadio" id="orangeRadio" value="orange">
-            <label for="orangeRadio" style="color:orange">orange</label><br><br>
+            <!-- radio buttons with the same name are mutually exclusive -->
+            <label for="colorSelection">Color</label><br>
+            <div id="colorSelection">
+                <input type="radio" class="colorInput" name="colorRadio" id="redRadio" value="red" checked="checked">
+                <label for="redRadio" style="color:red">red</label><br>
+                <input type="radio" class="colorInput" name="colorRadio" id="greenRadio" value="green">
+                <label for="greenRadio" style="color:green">green</label><br>
+                <input type="radio" class="colorInput" name="colorRadio" id="blueRadio" value="blue">
+                <label for="blueRadio" style="color:blue">blue</label><br>
+                <input type="radio" class="colorInput" name="colorRadio" id="yellowRadio" value="yellow">
+                <label for="yellowRadio" style="color:yellow">yellow</label><br>
+                <input type="radio" class="colorInput" name="colorRadio" id="purpleRadio" value="purple">
+                <label for="purpleRadio" style="color:purple">purple</label><br>
+                <input type="radio" class="colorInput" name="colorRadio" id="orangeRadio" value="orange">
+                <label for="orangeRadio" style="color:orange">orange</label><br><br>
+            </div>
+
+            <input type="submit" id="submit" value="Submit"><br>
+        </form>
+        <div id="instructions">
+            <hr style="margin-top:10px;margin-bottom:10px;">
+            <span><h1>Instructions:</h1></span>
+            <span>Move with W,A,S,D</span><br>
+            <span>Shoot with left-click</span><br>
+            <span>Activate powerup with right-click</span><br>
+            <br>
+            <span>Pick up a green jewel for a powerup</span><br>
+            <span>Kill and don't be killed!</span><br>
         </div>
-
-		<input type="submit" id="submit" value="Submit"><br>
-	</form>
-    <div id="instructions">
-        <hr style="margin-top:10px;margin-bottom:10px;">
-        <span><h1>Instructions:</h1></span>
-        <span>Move with W,A,S,D</span><br>
-        <span>Shoot with left-click</span><br>
-        <span>Activate powerup with right-click</span><br>
-        <br>
-        <span>Pick up a green jewel for a powerup</span><br>
-        <span>Kill and don't be killed!</span><br>
+        </center>
     </div>
-	</center>
     <canvas id="canvas"></canvas>
     <!-- If Socket.IO is used with Express, then the /socket.io/ path will
         serve the proper Socket.IO javascript files used by the browser -->
