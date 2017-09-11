@@ -19,7 +19,6 @@ var IO = {
         });
 
         IO.socket.on('updatePlayerPos', function(msg) {
-            //console.log('x: ' + msg.x + ' y: ' + msg.y);
             mainPlayer.x = msg.x;
             mainPlayer.y = msg.y;
         });
@@ -52,9 +51,6 @@ var IO = {
             }
         });
 
-        //IO.socket.on('updateVisibleOthers', function(msg) {
-        //    visibleOthers = msg.visibleOthers;
-        //});
         IO.socket.on('addVisibleOther', function(msg) {
             let player = msg.player;
             console.log('add visible other: ' + player.id);
@@ -92,7 +88,6 @@ var IO = {
             console.log('rmProjectile');
             console.log('projectiles: ');
             console.log(projectiles);
-
         });
  
     }

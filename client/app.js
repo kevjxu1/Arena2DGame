@@ -37,7 +37,6 @@ var Input = {
         let xdiff = cursorX - Globals.SCREEN_WIDTH / 2;
         let ydiff = cursorY - Globals.SCREEN_HEIGHT / 2;
         mainPlayer.angle = atan2(xdiff, ydiff);
-        //console.log('angle: ' + mainPlayer.angle * 180 / Math.PI);
     },
 
 	onKeydown: function(e) {
@@ -129,23 +128,6 @@ var Input = {
             return;
     },
 
-    //onSpaceDown: function(e) {
-    //    if (e.keyCode == Globals.KEY_SPACE) {
-    //        switch(mainPlayer.powerup) {
-    //        case Globals.POWER_CANNON:
-    //            let proj = new Projectile(
-    //                mainPlayer.x, mainPlayer.y,
-    //                75, 10, 800,
-    //                mainPlayer.angle,
-    //                mainPlayer.id, mainPlayer.color);
-    //            IO.socket.emit('addProjectile', { proj: proj });
-    //            mainPlayer.powerup = Globals.POWER_NONE;
-    //            break;
-    //        default:  // Globals.POWER_NONE
-    //            break;
-    //        }
-    //    }
-    //}
 };
 
 function getDistance(circle1, circle2) {
@@ -159,9 +141,6 @@ function checkCollisions(player, visibleOthers) {
     for (let i = 0; i < visibleOthers.length; i++) {
         let other = visibleOthers[i];
         let dist = getDistance(other, player);
-        //let xdiff = player.x - other.x;
-        //let ydiff = player.y - other.y;
-        //let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
         if (dist < player.radius + other.radius) {
             // collision detected
             return true;
@@ -183,7 +162,6 @@ function killPlayer() {
 	IO.socket.off('updatePlayerPowerup');
 	IO.socket.off('updatePlayerHp');
     IO.socket.off('movePlayer');
-	//IO.socket.off('updateVisibleOthers');                                  
 	IO.socket.off('updateProjectiles');                                    
 	Input.removeEventListeners();                                          
 	mainPlayer = null;                                                     
@@ -191,37 +169,9 @@ function killPlayer() {
 	alert('You died');
 }
 
-//function updateVisibleOthers() {
-//    IO.socket.emit('getVisibleOthers', { player: mainPlayer });
-//}
-
 function sendGlobals() {
     IO.socket.emit('updateGlobals', { Globals: Globals });
 }
-
-//function onSubmit() {
-//    form = document.getElementById('form');
-//    for (let i = 0; i < form.length; i++) {
-//        if (form.elements[i].id == 'nameInput') {
-//            let nameInput = form.elements[i].value;
-//            mainPlayer.name = nameInput;
-//            IO.socket.emit('submitForm', { player: mainPlayer });
-//            break;
-//        }
-//    }
-//}
-
-//function bindSubmit() {
-//    let form = document.getElementById('form');
-//    for (let i = 0; i < form.length; i++) {
-//        if (form.elements[i].id == 'submit') {
-//            //form.elements[i].onclick='onSubmit();';
-//            form.elements[i].addEventListener('click', onSubmit);
-//            console.log(form.elements[i].value + ' binded');
-//            break;
-//        }
-//    }
-//}
 
 function clearForm() {
     let form = document.getElementById('form');
@@ -242,8 +192,6 @@ $(document).ready(function() {
         mainPlayer.name = nameInput;
         mainPlayer.color = colorInput;
         $('#frontPage').hide();
-        //$('#form').hide();
-        //$('#instructions').hide();
         IO.socket.emit('addPlayer', { player: mainPlayer });
     })
 });
@@ -277,12 +225,6 @@ function gameLoop(context) {
         gameLoop(context);
     });
 };
-
-//function debugLog() {
-//    console.log('visibleOthers: ');
-//    console.log(visibleOthers);
-//}
-//setInterval(debugLog, 500);
 
 
 ////////////////////////////////////////////////////

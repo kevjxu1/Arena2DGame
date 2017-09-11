@@ -18,7 +18,6 @@ module.exports = {
             delete sockets[socket.id];
         });
 
-		//gameSocket.on('updateGlobals', updateGlobals);
 		socket.on('updateGlobals', function(msg) {
             if (!Globals) {
                 Globals = msg.Globals;
@@ -26,7 +25,6 @@ module.exports = {
             }
         });
 
-        //gameSocket.on('addPlayer', addPlayer);
         socket.on('addPlayer', function(msg) {
             let player = msg.player;
             player.id = socket.id;
@@ -58,25 +56,6 @@ module.exports = {
             players[socket.id].moveDir = moveDir;
         });
         
-        //// give client visible players
-        //socket.on('updateVisibleOthers', function(msg) {
-        //    let visibleOthers = [];  // excluding main player
-        //    let player = msg.player;
-        //    for (let playerId in players) {
-        //        if (playerId == player.id)
-        //            continue;
-        //        let p = players[playerId];
-        //        if (getL2Distance(player, p) <= player.vision) {
-        //            sockets[playerId].emit('addVisibleOther', { player: p });
-        //            //visibleOthers.push(p);
-        //        }
-        //        //else {
-        //        //    socket.emit('rmVisibleOther', { id: p.id };
-        //        //}
-        //    }
-        //    //socket.emit('updateVisibleOthers', { visibleOthers: visibleOthers });
-        //});
-
         socket.on('addProjectile', function(msg) {
             let proj = msg.proj;
             if (!proj.dir) {
@@ -150,12 +129,6 @@ function getL2Distance(p1, p2) {
 function generatePowerup(player) {
     player.powerup = Globals.POWER_CANNON;
     sockets[player.id].emit('updatePlayerPowerup', { powerup: player.powerup });
-    //switch(player.powerup) {
-    //case Globals.POWER_CANNON:
-    //    return 'Cannon';
-    //default:
-    //    return 'None';
-    //}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -205,13 +178,6 @@ function moveProjectiles() {
     for (let id in projectiles) {
         let proj = projectiles[id];
 
-        //// delete out-of-bound projectile
-        //if (proj.x < 0 || proj.x > Globals.DEFAULT_MAP_WIDTH 
-        //        || proj.y < 0 || proj.y > Globals.DEFAULT_MAP_HEIGHT)
-        //{
-        //    delete projectiles[id];
-        //    console.log('projectile deleted: ' + id);
-        //} 
         if (proj) {
             let dx = Math.cos(proj.dir) * proj.speed;
             let dy = Math.sin(proj.dir) * proj.speed;
