@@ -113,7 +113,7 @@ var Input = {
             case Globals.POWER_CANNON:
                 let proj = new Projectile(
                     mainPlayer.x, mainPlayer.y,
-                    100, 3, 900,
+                    100, 4, 900,
                     mainPlayer.angle,
                     mainPlayer.id, mainPlayer.color);
                 IO.socket.emit('addProjectile', { proj: proj });

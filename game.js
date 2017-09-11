@@ -16,6 +16,10 @@ module.exports = {
             console.log('deleting player[' + socket.id + ']');
             delete players[socket.id];
             delete sockets[socket.id];
+
+            for (let id in sockets) {
+                sockets[id].emit('rmVisibleOther', { id: socket.id });
+            }
         });
 
 		socket.on('updateGlobals', function(msg) {
@@ -243,8 +247,8 @@ function movePlayers() {
 
 function spawnPowerups() {
     while (Object.keys(powerups).length < Globals.DEFAULT_MAP_MAX_POWERUPS) {
-        let x = Math.floor((Math.random() * Globals.DEFAULT_MAP_WIDTH - Globals.DEFAULT_POWERUP_WIDTH) + 1) 
-        let y = Math.floor((Math.random() * Globals.DEFAULT_MAP_HEIGHT - Globals.DEFAULT_POWERUP_HEIGHT) + 1)
+        let x = Math.floor(Math.random() * Globals.DEFAULT_MAP_WIDTH);
+        let y = Math.floor(Math.random() * Globals.DEFAULT_MAP_HEIGHT);
         let powerup = {
             x: x,
             y: y,
