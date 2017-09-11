@@ -14,7 +14,7 @@ var Canvas = {
     drawGrid: function(context, player) {
 
         // draw vertical lines
-        let gridGapX = player.radius * 5;
+        let gridGapX = 125;
         let x = Globals.SCREEN_WIDTH - (player.x % gridGapX);
         while (x >= 0) {
             context.beginPath();
@@ -28,7 +28,7 @@ var Canvas = {
         }
 
         // draw horizontal lines
-        let gridGapY = player.radius * 5;
+        let gridGapY = 125;
         let y = Globals.SCREEN_HEIGHT - (player.y % gridGapY);
         while (y >= 0) {
             context.beginPath();

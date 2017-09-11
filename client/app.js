@@ -12,6 +12,7 @@ var powerups;
 var timeLastFired = 0;
 var timeLastAnnounced = 0;
 var announceMessage = '';
+var playerDead = false;
     
 var Input = {
 	addEventListeners: function() {
@@ -157,16 +158,20 @@ function atan2(x, y) {
 }
 
 function killPlayer() {
+    playerDead = true;
     console.log('player died');
-	IO.socket.off('updatePlayerPos');
-	IO.socket.off('updatePlayerPowerup');
-	IO.socket.off('updatePlayerHp');
-    IO.socket.off('movePlayer');
-	IO.socket.off('updateProjectiles');                                    
+	//IO.socket.off('updatePlayerPos');
+	//IO.socket.off('updatePlayerPowerup');
+	//IO.socket.off('updatePlayerHp');
+    //IO.socket.off('movePlayer');
+	//IO.socket.off('updateProjectiles');                                    
 	Input.removeEventListeners();                                          
-	mainPlayer = null;                                                     
+    
+    let x = mainPlayer.x;
+    let y = mainPlayer.y;
+    mainPlayer = { x: x, y: y };
+	//mainPlayer = null;                                                     
     IO.socket.emit('playerDied');
-	alert('You died');
 }
 
 function sendGlobals() {
@@ -199,28 +204,32 @@ $(document).ready(function() {
 // sync globals with server
 sendGlobals(Globals);
 
+
 ////////////////////////////////////////////////////
 function gameLoop(context) {
     Canvas.clearCanvas(context);
 
-    if (mainPlayer) {
-        Canvas.drawGrid(context, mainPlayer);
-        //updateVisibleOthers();
-        Canvas.drawVisibleOthers(context, visibleOthers, mainPlayer);
-        Canvas.drawPowerups(context, powerups);
+    Canvas.drawGrid(context, mainPlayer);
+    //updateVisibleOthers();
+    Canvas.drawVisibleOthers(context, visibleOthers, mainPlayer);
+    Canvas.drawPowerups(context, powerups);
+    if (!playerDead) {
         Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
-        Canvas.drawProjectiles(context, projectiles, mainPlayer);
-        Canvas.drawMapBounds(context, mapBounds, mainPlayer);
+    }
+    Canvas.drawProjectiles(context, projectiles, mainPlayer);
+    Canvas.drawMapBounds(context, mapBounds, mainPlayer);
+    if (!playerDead) {
         Canvas.drawHpText(context, mainPlayer.hp, mainPlayer.color);
-        if (announceMessage != '') {
-            if (new Date().getTime() - timeLastAnnounced < 3500) {
-                Canvas.announce(context, announceMessage);
-            }
-            else {
-                announceMessage = '';
-            }
+    }
+    if (announceMessage != '') {
+        if (new Date().getTime() - timeLastAnnounced < 3500) {
+            Canvas.announce(context, announceMessage);
+        }
+        else {
+            announceMessage = '';
         }
     }
+
     requestAnimationFrame(function () {
         gameLoop(context);
     });

@@ -46,9 +46,9 @@ var IO = {
         });
 
         IO.socket.on('killPlayer', function() {
-            if (mainPlayer) {
-                killPlayer();
-            }
+            killPlayer();
+            announceMessage = 'You died!';
+            timeLastAnnounced = new Date().getTime();
         });
 
         IO.socket.on('addVisibleOther', function(msg) {
