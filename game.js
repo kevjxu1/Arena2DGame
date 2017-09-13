@@ -76,6 +76,10 @@ module.exports = {
             delete players[socket.id];
         });
 
+        socket.on('submitChatMessage', function(msg) {
+            io.sockets.emit('receiveMessage', { msg: message, timestamp: msg.timestamp });
+        });
+
     },
 };
 

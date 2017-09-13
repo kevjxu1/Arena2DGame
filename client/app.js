@@ -210,7 +210,6 @@ function gameLoop(context) {
     Canvas.clearCanvas(context);
 
     Canvas.drawGrid(context, mainPlayer);
-    //updateVisibleOthers();
     Canvas.drawVisibleOthers(context, visibleOthers, mainPlayer);
     Canvas.drawPowerups(context, powerups);
     if (!playerDead) {

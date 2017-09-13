@@ -2,10 +2,6 @@ var Canvas = {
 
     clearCanvas: function(context) {
         context.beginPath();
-        //context.fillStyle = Globals.DEFAULT_BACKGROUND_COLOR;
-        //context.fillStyle = '#A9A9A9';
-        //context.fillStyle = 'black';
-        //context.fillStyle = '#404040';
         context.fillStyle = '#202020';
         context.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
         context.closePath;
@@ -70,19 +66,13 @@ var Canvas = {
             let y2 = y + outerR * Math.sin(startAngle);
             context.beginPath();
             context.beginPath();
-            context.lineWidth = 10;
+            context.lineWidth = 6;
             context.strokeStyle = 'black';  // pale green
             context.moveTo(x1, y1);
             context.lineTo(x2, y2);
             context.stroke();
             context.closePath();
         }
-
-        //context.lineWidth = player.radius * 0.2;
-        //context.strokeStyle = 'black';
-        //context.stroke();
-
-        //context.closePath();
 
         //// draw pointer
         //Canvas._displayPointer(context, player);
