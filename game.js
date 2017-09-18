@@ -52,12 +52,14 @@ module.exports = {
 
         socket.on('updatePlayerAngle', function(msg) {
             let angle = msg.angle;
-            players[socket.id].angle = angle;
+            if (players[socket.id])
+                players[socket.id].angle = angle;
         });
 
         socket.on('updatePlayerDir', function(msg) {
             let moveDir = msg.moveDir;
-            players[socket.id].moveDir = moveDir;
+            if (players[socket.id])
+                players[socket.id].moveDir = moveDir;
         });
         
         socket.on('addProjectile', function(msg) {
@@ -73,7 +75,8 @@ module.exports = {
         });
 
         socket.on('playerDied', function() {
-            delete players[socket.id];
+            if (players[socket.id])
+                delete players[socket.id];
         });
 
         socket.on('submitChatMessage', function(msg) {

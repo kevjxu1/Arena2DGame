@@ -8,6 +8,10 @@ var IO = {
         IO.socket.on('connection', function() {
             socketId = io.socket.sessionid;
         });
+        IO.socket.on('disconnect', function() {
+            playerDead = true;
+            console.log('socket ' + socketId + ' disconnected');
+        });
 
         IO.socket.on('joinGame', function(msg) {
             console.log('joining game');

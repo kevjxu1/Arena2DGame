@@ -46,23 +46,26 @@ var Input = {
         case Globals.KEY_W:
         case Globals.KEY_UP:
             mainPlayer.moveDir |= Globals.DIR_UP;
+            IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
             break;
         case Globals.KEY_A:
         case Globals.KEY_LEFT:
             mainPlayer.moveDir |= Globals.DIR_LEFT;
+            IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
             break;
         case Globals.KEY_D:
         case Globals.KEY_RIGHT:
             mainPlayer.moveDir |= Globals.DIR_RIGHT;
+            IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
             break;
         case Globals.KEY_S:
         case Globals.KEY_DOWN:
             mainPlayer.moveDir |= Globals.DIR_DOWN;
+            IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
             break;
         default:
             break;
         }
-        IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
 	},
 
     onKeyup: function(e) {
