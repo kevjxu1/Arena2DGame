@@ -77,7 +77,10 @@ module.exports = {
         });
 
         socket.on('submitChatMessage', function(msg) {
-            io.sockets.emit('receiveMessage', { msg: message, timestamp: msg.timestamp });
+            let chatMsg = msg.chatMsg;
+            console.log('message received from socket ' + socket.id + ': ');
+            console.log(msg.chatMsg);
+            io.sockets.emit('receiveMessage', { chatMsg: chatMsg });
         });
 
     },

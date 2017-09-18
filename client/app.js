@@ -13,6 +13,7 @@ var timeLastFired = 0;
 var timeLastAnnounced = 0;
 var announceMessage = '';
 var playerDead = false;
+var chatClient = new ChatClient();
     
 var Input = {
 	addEventListeners: function() {
@@ -185,6 +186,8 @@ function clearForm() {
 
 // initialize socket.io socket
 IO.init();
+console.log('spawning chatClient with socket: ' + IO.socket);
+chatClient.init(IO.socket, context);
 
 $(document).ready(function() {
     // disable right-click context menu on canvas
@@ -204,6 +207,8 @@ $(document).ready(function() {
 // sync globals with server
 sendGlobals(Globals);
 
+console.log('"": ' + "");
+console.log("" + 1);
 
 ////////////////////////////////////////////////////
 function gameLoop(context) {

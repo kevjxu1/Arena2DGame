@@ -183,6 +183,18 @@ var Canvas = {
         context.fillText(message, Globals.SCREEN_WIDTH / 2, 20);
     },
 
+    drawChat: function(context, message, timestamp) {
+        // chat box
+        context.beginPath();
+        context.fillStyle = 'black';
+        context.fillRect(0, Globals.Globals.SCREEN_HEIGHT - 400, 600, 400);
+        
+        context.font = '14pt Times New Roman';
+        context.fillStyle = 'white';
+        context.textAlign = 'right';
+        context.fillText(timestamp, 0, Globals.SCREEN_HEIGHT - 14);
+    },
+
     initCanvas: function() {
         canvas = document.getElementById("canvas");
         canvas.width = Globals.SCREEN_WIDTH;
