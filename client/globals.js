@@ -25,6 +25,8 @@ var Globals = {
 
     SCREEN_WIDTH: window.innerWidth * 0.95,
     SCREEN_HEIGHT: window.innerHeight * 0.95,
+    //SCREEN_WIDTH: 1000,
+    //SCREEN_HEIGHT: 700,
 
     // directions
     //UP: 1, LEFT: 2, RIGHT: 3, DOWN: 4,

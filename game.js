@@ -172,20 +172,26 @@ function updateHits() {
 
 				// reward hitter with some HP gain
 				let hitterId = proj.playerId;
-				players[hitterId].hp += 0.4;
-				sockets[hitterId].emit('updatePlayerHp', { hp: players[hitterId].hp });
+                if (players[hitterId]) {
+                    players[hitterId].hp += 0.4;
+                    sockets[hitterId].emit('updatePlayerHp', { hp: players[hitterId].hp });
+                }
 				
 				// penalize hittee with HP loss
-                players[playerId].hp--;
-                sockets[playerId].emit('updatePlayerHp', { hp: players[playerId].hp });
-                if (players[playerId].hp < 1) {
-                    // Math.floor(hp) < 1 => player has no discrete hp bars left
-                    delete players[playerId];
-                    sockets[playerId].emit('killPlayer');
-                    for (let id in sockets) {
-                        sockets[id].emit('rmVisibleOther', { id: playerId });
+                if (players[playerId]) {
+                    players[playerId].hp--;
+                    sockets[playerId].emit('updatePlayerHp', { hp: players[playerId].hp });
+
+                    if (players[playerId].hp < 1) {
+                        // Math.floor(hp) < 1 => player has no discrete hp bars left
+                        delete players[playerId];
+                        sockets[playerId].emit('killPlayer');
+                        for (let id in sockets) {
+                            sockets[id].emit('rmVisibleOther', { id: playerId });
+                        }
                     }
                 }
+                
             }
         }
     }
