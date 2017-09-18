@@ -19,7 +19,8 @@ var IO = {
             clearForm();
             Input.addEventListeners();
             Canvas.initCanvas();
-            gameLoop(context);
+            runApp(contextBack, contextFront);
+            //gameLoop(contextFront);
         });
 
         IO.socket.on('updatePlayerPos', function(msg) {

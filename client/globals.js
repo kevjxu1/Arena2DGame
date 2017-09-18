@@ -1,5 +1,9 @@
 var canvas,
-    context;
+    canvasBack,
+    canvasFront,
+    context,
+    contextBack,
+    contextFront;
 
 var Globals = {
     // game parameters

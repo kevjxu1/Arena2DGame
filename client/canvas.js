@@ -1,6 +1,6 @@
 var Canvas = { 
 
-    clearCanvas: function(context) {
+    drawBackground: function(context) {
         context.beginPath();
         context.fillStyle = '#202020';
         context.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
@@ -197,9 +197,13 @@ var Canvas = {
 
     initCanvas: function() {
         canvas = document.getElementById("canvas");
+        canvasBack = document.getElementById("canvasBack");
+        canvasFront = document.getElementById("canvasFront");
         canvas.width = Globals.SCREEN_WIDTH;
         canvas.height = Globals.SCREEN_HEIGHT;
         context = canvas.getContext("2d");
+        contextBack = canvasBack.getContext("2d");
+        contextFront = canvasFront.getContext("2d");
     },
 
     ////////////////////////////////////////////////////////////////

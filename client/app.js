@@ -195,9 +195,10 @@ chatClient.init(IO.socket, context);
 $(document).ready(function() {
     // disable right-click context menu on canvas
     $('body').on('contextmenu', '#canvas', function(e) { return false; });
-
+    
     // process form input on submit
     $('#submit').on('click', function(e) {
+        console.log('submit clicked');
         let nameInput = $('#nameInput').val();
         let colorInput = $('.colorInput:checked').val();
         mainPlayer.name = nameInput;
@@ -210,27 +211,25 @@ $(document).ready(function() {
 // sync globals with server
 sendGlobals(Globals);
 
-console.log('"": ' + "");
-console.log("" + 1);
-
 ////////////////////////////////////////////////////
-function gameLoop(context) {
-    Canvas.clearCanvas(context);
+//Canvas.drawBackground(contextBack);
 
-    Canvas.drawGrid(context, mainPlayer);
-    Canvas.drawVisibleOthers(context, visibleOthers, mainPlayer);
-    Canvas.drawPowerups(context, powerups);
+function gameLoop(contextFront) {
+
+    Canvas.drawGrid(contextFront, mainPlayer);
+    Canvas.drawVisibleOthers(contextFront, visibleOthers, mainPlayer);
+    Canvas.drawPowerups(contextFront, powerups);
     if (!playerDead) {
-        Canvas.drawPlayer(context, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
+        Canvas.drawPlayer(contextFront, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
     }
-    Canvas.drawProjectiles(context, projectiles, mainPlayer);
-    Canvas.drawMapBounds(context, mapBounds, mainPlayer);
+    Canvas.drawProjectiles(contextFront, projectiles, mainPlayer);
+    Canvas.drawMapBounds(contextFront, mapBounds, mainPlayer);
     if (!playerDead) {
-        Canvas.drawHpText(context, mainPlayer.hp, mainPlayer.color);
+        Canvas.drawHpText(contextFront, mainPlayer.hp, mainPlayer.color);
     }
     if (announceMessage != '') {
         if (new Date().getTime() - timeLastAnnounced < 3500) {
-            Canvas.announce(context, announceMessage);
+            Canvas.announce(contextFront, announceMessage);
         }
         else {
             announceMessage = '';
@@ -239,10 +238,15 @@ function gameLoop(context) {
 
     if (!playerDead)
         requestAnimationFrame(function () {
-            gameLoop(context);
+            gameLoop(contextFront);
         });
 };
 
+function runApp(contextBack, contextFront) {
+    console.log('running app');
+    Canvas.drawBackground(contextBack);
+    gameLoop(contextFront);
+}
 
 ////////////////////////////////////////////////////
 
