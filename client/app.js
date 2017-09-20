@@ -22,7 +22,7 @@ var Input = {
         document.addEventListener('keyup', Input.onKeyup, false);
         document.addEventListener('mousedown', Input.onMousedown, false);
         document.addEventListener('keydown', Input.onSpaceDown, false);
-	},
+    },
 
     removeEventListeners: function() {
         document.removeEventListener('keydown', Input.onKeydown);
@@ -33,7 +33,7 @@ var Input = {
     },
 
     onMousemove: function(e) {
-        let rect = canvas.getBoundingClientRect();
+        let rect = canvasBack.getBoundingClientRect();
         let cursorX = e.clientX - rect.left;
         let cursorY = e.clientY - rect.top;
         let xdiff = cursorX - Globals.SCREEN_WIDTH / 2;
@@ -194,6 +194,7 @@ chatClient.init(IO.socket, context);
 
 $(document).ready(function() {
     // disable right-click context menu on canvas
+    console.log('document ready');
     $('body').on('contextmenu', '#canvas', function(e) { return false; });
     
     // process form input on submit
@@ -205,7 +206,8 @@ $(document).ready(function() {
         mainPlayer.color = colorInput;
         $('#frontPage').hide();
         IO.socket.emit('addPlayer', { player: mainPlayer });
-    })
+    });
+    console.log('submit binded');
 });
 
 // sync globals with server
@@ -220,7 +222,8 @@ function gameLoop(contextFront) {
     Canvas.drawVisibleOthers(contextFront, visibleOthers, mainPlayer);
     Canvas.drawPowerups(contextFront, powerups);
     if (!playerDead) {
-        Canvas.drawPlayer(contextFront, mainPlayer, Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
+        Canvas.drawPlayer(contextFront, mainPlayer, 
+                Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
     }
     Canvas.drawProjectiles(contextFront, projectiles, mainPlayer);
     Canvas.drawMapBounds(contextFront, mapBounds, mainPlayer);
