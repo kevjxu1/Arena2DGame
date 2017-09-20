@@ -7,6 +7,11 @@ var Canvas = {
         context.closePath;
     },
 
+    clearScreen: function(context) {
+        context.beginPath()
+        context.clearRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
+    },
+
     drawGrid: function(context, player) {
 
         // draw vertical lines
@@ -199,9 +204,10 @@ var Canvas = {
         canvas = document.getElementById("canvas");
         canvasBack = document.getElementById("canvasBack");
         canvasFront = document.getElementById("canvasFront");
-        canvas.width = Globals.SCREEN_WIDTH;
-        canvas.height = Globals.SCREEN_HEIGHT;
-        context = canvas.getContext("2d");
+        canvasFront.width = Globals.SCREEN_WIDTH;
+        canvasFront.height = Globals.SCREEN_HEIGHT;
+        canvasBack.width = Globals.SCREEN_WIDTH;
+        canvasBack.height = Globals.SCREEN_HEIGHT;
         contextBack = canvasBack.getContext("2d");
         contextFront = canvasFront.getContext("2d");
     },

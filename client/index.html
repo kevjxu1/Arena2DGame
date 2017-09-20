@@ -73,9 +73,9 @@
         </div>
         </center>
     </div>
-    <div id="canvas">
-        <canvas id="canvasBack"></canvas>
-        <canvas id="canvasFront"></canvas>
+    <div id="canvasDiv" style="position: relative;">
+        <canvas id="canvasBack" style="position: absolute; z-index: 0"></canvas>
+        <canvas id="canvasFront" style="position: absolute; z-index: 1"></canvas>
     </div>
     <!-- If Socket.IO is used with Express, then the /socket.io/ path will
         serve the proper Socket.IO javascript files used by the browser -->

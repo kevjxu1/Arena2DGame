@@ -195,7 +195,7 @@ chatClient.init(IO.socket, context);
 $(document).ready(function() {
     // disable right-click context menu on canvas
     console.log('document ready');
-    $('body').on('contextmenu', '#canvas', function(e) { return false; });
+    $('body').on('contextmenu', '#canvasDiv', function(e) { return false; });
     
     // process form input on submit
     $('#submit').on('click', function(e) {
@@ -217,7 +217,7 @@ sendGlobals(Globals);
 //Canvas.drawBackground(contextBack);
 
 function gameLoop(contextFront) {
-
+    Canvas.clearScreen(contextFront);
     Canvas.drawGrid(contextFront, mainPlayer);
     Canvas.drawVisibleOthers(contextFront, visibleOthers, mainPlayer);
     Canvas.drawPowerups(contextFront, powerups);
