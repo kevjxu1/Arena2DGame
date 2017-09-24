@@ -1,5 +1,4 @@
 'use strict';
-
 // This module contains all the socket.io socket event listeners
 
 var IO = {

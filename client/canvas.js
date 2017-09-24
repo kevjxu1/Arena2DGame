@@ -1,3 +1,7 @@
+'use strict';
+// This module holds the html5 canvas functions
+// initCanvas sets things up
+
 var Canvas = { 
 
     drawBackground: function(context) {
@@ -13,6 +17,7 @@ var Canvas = {
     },
 
     drawGrid: function(context, player) {
+        // The grid is a visual aid for the mainPlayer's movement
 
         // draw vertical lines
         let gridGapX = 125;

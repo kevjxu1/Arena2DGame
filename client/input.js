@@ -1,4 +1,5 @@
 'use strict';
+// This module defines the event listeners for keyboard and mouse inputs
 
 var Input = {
 	addEventListeners: function() {

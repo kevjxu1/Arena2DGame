@@ -1,3 +1,9 @@
+'use strict';
+// Run the server with 'node server/index.js'.
+// This module sets up a server that listens on localhost:3000 and serves
+// requesting clients client/index.html.
+// Then it runs the game from server/game.js.
+
 // Import the Express module
 var express = require('express');
 

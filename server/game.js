@@ -1,4 +1,5 @@
 "use strict";
+// This module holds the main game logic.
 
 var defaults = require('./defaults.js');
 
@@ -95,11 +96,6 @@ module.exports.socketSetup = {
             for (let sid in sockets) {
                 sockets[sid].emit('addProjectile', { id: projId, proj: proj });
             }
-        });
-
-        socket.on('playerDied', function() {
-            if (players[socket.id])
-                delete players[socket.id];
         });
 
         socket.on('submitChatMessage', function(msg) {

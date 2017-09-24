@@ -1,4 +1,6 @@
 'use strict'; 
+// This module holds the logic for the client app 
+// This has the game loop for the client and the front page
 
 var announceMessage = '';
 //var chatClient = new ChatClient();
@@ -43,7 +45,6 @@ function killPlayer() {
     let y = mainPlayer.y;
     mainPlayer = { x: x, y: y };
 	//mainPlayer = null;                                                     
-    IO.socket.emit('playerDied');
 }
 
 function clearForm() {
