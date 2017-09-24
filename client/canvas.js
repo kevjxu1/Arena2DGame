@@ -111,7 +111,7 @@ var Canvas = {
     },
 
     drawProjectiles: function(context, projectiles, player) {
-        for (id in projectiles) {
+        for (let id in projectiles) {
             let proj = projectiles[id];
 
             let xoff = proj.x - player.x;
@@ -126,12 +126,12 @@ var Canvas = {
     },
 
     drawMapBounds: function(context, mapWidth, mapHeight, player) {
-        
+        // map coordinates of edge of screen
         let edgeOfScreen = { 
             top: player.y - SCREEN_HEIGHT / 2,
             left: player.x - SCREEN_WIDTH / 2,
             right: player.x + SCREEN_WIDTH / 2,
-            bottom: player.y + 2,
+            bottom: player.y + SCREEN_HEIGHT / 2,
         }
 
         if (edgeOfScreen.left < 0) {
@@ -169,7 +169,7 @@ var Canvas = {
     },
 
     drawPowerups: function(context, powerups) {
-        for (id in powerups) {
+        for (let id in powerups) {
             let pow = powerups[id];
             let xoff = pow.x - mainPlayer.x;
             let yoff = pow.y - mainPlayer.y;
