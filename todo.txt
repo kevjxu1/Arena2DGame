@@ -1,24 +1,50 @@
-todo list:
+===============================================================================
 
-Critical:
+Big feature plan
+----------------
+goal: 
+    (1) want to make the game rewarding for staying in the game.
+    (2) want to discourage old-timers from bullying newcomers and keep the game
+        balanced between them
+        - ideally, strong players have the potential to crush newer, weaker players,
+            but are highly discouraged from doing so.
+    (3) want to increase importance in tactical decision-making 
 
-    game features:
-        chat log        
-        leaderboard
-        walls
-        more powerups
-        multiple game rooms + private rooms
+strategy:
+    Projectiles for each player are now limited. 
+    Shooting a projectile costs *ammo*, which must be picked up from the ground.
 
-    opimizations:
-        quad-tree
-        updateProjectiles, updateVisibleOthers need optimizing
+    We will have a *leaderboard* based on HP.
+    This would make the game more interesting, competitive, and long-term.
 
+    More HP => faster movement (a way to reward skill) and bigger projectiles
+    but also => bigger player radius (easier to get hit)
+
+    To get more HP, we have *lifesteal*. In other words, a player gets strong
+    by hitting other players.
+
+    Lifesteal, scales with hittee's HP.
+    Therefore, more rewarding to hit strong players than weak players.
+
+    Larger projectiles (from stronger players) cost more ammo.
+    Stronger players would be less inclined to waste ammo on a weak player, which
+        would give small lifesteal.
+    This also counters the advantage that a bigger, faster, and stronger player 
+    would have in obtaining ammo.
+
+
+===============================================================================
 
 Additional:
-
     spawn player away from opponents
+    optimize search space with quadtree
     skins
     sound
     mobile devices
 
+Powerup ideas:
+    wall, like in boxhead2d
+    speed boost
+    shroud of shadows - player is unseen unless within certain distance of 
+        another
 
