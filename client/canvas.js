@@ -120,7 +120,7 @@ var Canvas = {
         }
     },
 
-    drawMapBounds: function(context, mapBounds, player) {
+    drawMapBounds: function(context, mapWidth, mapHeight, player) {
         
         let edgeOfScreen = { 
             top: player.y - Globals.SCREEN_HEIGHT / 2,
@@ -136,8 +136,8 @@ var Canvas = {
             context.fillRect(0, 0, Globals.SCREEN_WIDTH / 2 - xDistToEdge, Globals.SCREEN_HEIGHT);
             context.closePath();
         }
-        if (edgeOfScreen.right > mapBounds.rbound) {
-            let xDistToEdge = mapBounds.rbound - player.x;
+        if (edgeOfScreen.right > mapWidth) {
+            let xDistToEdge = mapWidth - player.x;
             context.beginPath();
             context.fillStyle = 'black';
             context.fillRect(Globals.SCREEN_WIDTH / 2 + xDistToEdge, 0, 
@@ -153,8 +153,8 @@ var Canvas = {
             context.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT / 2 - yDistToEdge);
             context.closePath();
         }
-        if (edgeOfScreen.bottom > mapBounds.ubound) {
-            let yDistToEdge = mapBounds.ubound - player.y;
+        if (edgeOfScreen.bottom > mapHeight) {
+            let yDistToEdge = mapHeight - player.y;
             context.beginPath();
             context.fillStyle = 'black';
             context.fillRect(0, Globals.SCREEN_HEIGHT / 2 + yDistToEdge, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT / 2 - yDistToEdge);

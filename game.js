@@ -1,14 +1,27 @@
 "use strict";
-var Globals;
+
+var defaults = require('./defaults.js');
 
 var players = {};
 var sockets = {};
 var projectiles = {};
 var powerups = {};
 
-module.exports = {
+// we may want map bounds to dynamically adjust (in case of overcrowding) 
+var mapWidth = defaults.DEFAULT_MAP_WIDTH;
+var mapHeight = defaults.DEFAULT_MAP_HEIGHT;
 
-    initGame: function(io, socket) {
+// class Player
+var Player = require('./player.js'); 
+
+// class Projectile
+var Projectile = require('./projectile.js');
+
+var dirs = require('./dirs.js');
+
+module.exports.socketSetup = {
+
+    connectSocket: function(io, socket) {
         console.log('socket.id: ' + socket.id);
 		sockets[socket.id] = socket;
 
@@ -22,32 +35,35 @@ module.exports = {
             }
         });
 
-		socket.on('updateGlobals', function(msg) {
-            if (!Globals) {
-                Globals = msg.Globals;
-                runGame();
-            }
-        });
-
+        // msg: { name, color }
         socket.on('addPlayer', function(msg) {
-            let player = msg.player;
-            player.id = socket.id;
 
-            // spawn player at random noncolliding position
+            // spawn player at random (x,y) that doesn't collide with another
+            console.log('randomizing new player position');
             while (true) {
-                let x = Math.floor(Math.random() * Globals.DEFAULT_MAP_WIDTH);
-                let y = Math.floor(Math.random() * Globals.DEFAULT_MAP_HEIGHT);
-                player.x = x;
-                player.y = y;
+                let x = Math.floor(Math.random() * mapWidth);
+                let y = Math.floor(Math.random() * mapHeight);
 
                 // check if any player is colliding if new player spawns at (x,y)
-                if (checkCollisions(player))
+                if (collidesWithPlayer(
+                        { x: x, y: y, radius: globals.DEFAULT_PLAYER_RADIUS }))
                     continue;
                 else
                     break;
             }
-            players[socket.id] = player;
-            socket.emit('joinGame', { player: player });
+
+            players[socket.id] = new Player(
+                    id=socket.id, 
+                    name=msg.name,
+                    color=msg.color,
+                    x=x, y=y);
+
+            // tell client to join game with newly created player
+            // and give the client map bounds
+            socket.emit('joinGame', { 
+                    player: players[socket.id], 
+                    mapWidth: mapWidth,
+                    mapHeight: mapHeight});
         });
 
         socket.on('updatePlayerAngle', function(msg) {
@@ -63,12 +79,14 @@ module.exports = {
         });
         
         socket.on('addProjectile', function(msg) {
-            let proj = msg.proj;
-            if (!proj.dir) {
-                // if direction not initialized, don't add the projectile
+            if (!msg.dir) {
                 return;
             }
+            let proj = new Projectile(x=msg.x, y=msg.y, dir=msg.dir,
+                    playerId=msg.playerId, color=msg.color);
             projectiles[proj.id] = proj;
+
+            // tell all clients that a new projectile is on the map
             for (let id in sockets) {
                 sockets[id].emit('addProjectile', { proj: proj });
             }
@@ -102,8 +120,8 @@ function deleteOutOfRangeProjectiles() {
                 sockets[id].emit('rmProjectile', { id: proj.id });
             }
         }
-        if (proj.x < 0 || proj.x > Globals.DEFAULT_MAP_WIDTH 
-                || proj.y < 0 || proj.y > Globals.DEFAULT_MAP_HEIGHT)
+        if (proj.x < 0 || proj.x > mapWidth 
+                || proj.y < 0 || proj.y > mapHeight)
         {
             delete projectiles[id];
             console.log('projectile deleted: ' + id);
@@ -118,15 +136,14 @@ function deleteOutOfRangeProjectiles() {
 // Utilities
 //////////////////////////////////////////////////////////////////////
 
-function checkCollisions(player) {
+// cir: { x, y, radius }
+function collidesWithPlayer(cir) {
     for (let id in players) {
-        if (id == player.id)
-            continue;
-        let other = players[id];
-        let xdiff = player.x - other.x;
-        let ydiff = player.y - other.y;
+        let p = players[id];
+        let xdiff = cir.x - p.x;
+        let ydiff = cir.y - p.y;
         let dist = Math.sqrt((xdiff * xdiff) + (ydiff * ydiff));
-        if (dist < player.radius + other.radius) {
+        if (dist < cir.radius + p.radius) {
             // collision detected
             return true;
         }
@@ -134,6 +151,7 @@ function checkCollisions(player) {
     return false;
 }
 
+// p1, p2: { x, y }
 function getL2Distance(p1, p2) {
     let xdist = Math.abs(p2.x - p1.x);
     let ydist = Math.abs(p2.y - p1.y)
@@ -198,6 +216,7 @@ function updateHits() {
 }
 
 function moveProjectiles() {
+    // tick each projectile's x and y
     for (let id in projectiles) {
         let proj = projectiles[id];
 
@@ -207,6 +226,7 @@ function moveProjectiles() {
             proj.x += dx;
             proj.y += dy;
 
+            // tell every client projectile's new position
             for (let id in sockets) {
                 sockets[id].emit('updateProjectilePos', 
                         { id: proj.id, x: proj.x, y: proj.y });
@@ -226,45 +246,52 @@ function movePlayers() {
                     || ((dir & Globals.DIR_UP) && (dir & Globals.DIR_RIGHT))
                     || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_LEFT))
                     || ((dir & Globals.DIR_DOWN) && (dir & Globals.DIR_RIGHT));
+
+        // l2 speed must be constant <=> 
+        // diagonal => x and y speeds scale down by sqrt(2)
         let l1speed = isDiag ? 
                 player.speed / Math.sqrt(2) : player.speed;
         let x = player.x, oldX = player.x;
         let y = player.y, oldY = player.y;
 
+        // tick player's x and y
         if (dir & Globals.DIR_UP) {
             y -= l1speed;
         }
         else if (dir & Globals.DIR_DOWN) {
             y += l1speed;
         }
-
         if (dir & Globals.DIR_LEFT) {
             x -= l1speed;
         }
         else if (dir & Globals.DIR_RIGHT) {
             x += l1speed;
         }
-        //else  // dir == Globals.NONE
+        //else (dir == Globals.NONE) { do nothing }
+
         player.x = x;
         player.y = y;
-        if (checkCollisions(player)) {
+
+        // prevent collisions
+        if (collidesWithPlayer(player)) {
             player.x = oldX;
             player.y = oldY;
         }
-        if (player.x < 0 || player.x > Globals.DEFAULT_MAP_WIDTH) {
+        if (player.x < 0 || player.x > mapWidth) {
             player.x = oldX;
         }
-        if (player.y < 0 || player.y > Globals.DEFAULT_MAP_HEIGHT) {
+        if (player.y < 0 || player.y > mapHeight) {
             player.y = oldY;
         }
+
         sockets[id].emit('updatePlayerPos', { x: player.x, y: player.y });
     }
 }
 
 function spawnPowerups() {
     while (Object.keys(powerups).length < Globals.DEFAULT_MAP_MAX_POWERUPS) {
-        let x = Math.floor(Math.random() * Globals.DEFAULT_MAP_WIDTH);
-        let y = Math.floor(Math.random() * Globals.DEFAULT_MAP_HEIGHT);
+        let x = Math.floor(Math.random() * mapWidth);
+        let y = Math.floor(Math.random() * mapHeight);
         let powerup = {
             x: x,
             y: y,
@@ -291,8 +318,8 @@ function updatePowerupPickups() {
                 console.log('deleted powerup ' + powerId);
                 console.log('player: ' + player.id + ' gets powerup');
                 powerups[powerId] = {
-                    x: Math.floor((Math.random() * Globals.DEFAULT_MAP_WIDTH - Globals.DEFAULT_POWERUP_WIDTH) + 1),
-                    y: Math.floor((Math.random() * Globals.DEFAULT_MAP_HEIGHT - Globals.DEFAULT_POWERUP_HEIGHT) + 1)
+                    x: Math.floor((Math.random() * mapWidth - Globals.DEFAULT_POWERUP_WIDTH) + 1),
+                    y: Math.floor((Math.random() * mapHeight - Globals.DEFAULT_POWERUP_HEIGHT) + 1)
                 }
                 console.log('created powerup ' + powerId);
             }
@@ -301,6 +328,7 @@ function updatePowerupPickups() {
     }
 }
 
+// TODO: if we're not doing vision, then maybe implementation should change
 function updateVisibleOthers() {
     for (let id1 in players) {
         for (let id2 in players) {
@@ -316,7 +344,8 @@ function updateVisibleOthers() {
 }
 
 function runGame() {
-    spawnPowerups();
+    console.log('running game')
+    //spawnPowerups();
     function moveLoop() {
         movePlayers();
         moveProjectiles();
@@ -325,10 +354,9 @@ function runGame() {
         updateVisibleOthers();
         updateHits();
         deleteOutOfRangeProjectiles();
-        updatePowerupPickups();
+        //updatePowerupPickups();
     }
     setInterval(gameLoop, 50);
     setInterval(moveLoop, 10);
 }
-
-
+exports.runGame = runGame;

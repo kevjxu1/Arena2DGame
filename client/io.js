@@ -1,3 +1,5 @@
+'use strict';
+
 var IO = {
 	init: function() {
 		IO.socket = io.connect();
@@ -8,6 +10,7 @@ var IO = {
         IO.socket.on('connection', function() {
             socketId = io.socket.sessionid;
         });
+
         IO.socket.on('disconnect', function() {
             playerDead = true;
             console.log('socket ' + socketId + ' disconnected');
@@ -15,12 +18,16 @@ var IO = {
 
         IO.socket.on('joinGame', function(msg) {
             console.log('joining game');
+            
+            // get map bounds
+            mapWidth = msg.mapWidth;
+            mapHeight = msg.mapHeight;
+
             mainPlayer = msg.player;
             clearForm();
             Input.addEventListeners();
             Canvas.initCanvas();
-            runApp(contextBack, contextFront);
-            //gameLoop(contextFront);
+            runApp();
         });
 
         IO.socket.on('updatePlayerPos', function(msg) {

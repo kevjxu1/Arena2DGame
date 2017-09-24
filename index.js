@@ -7,22 +7,25 @@ var path = require('path');
 // Create a new instance of Express
 var app = express();
 
-var game = require('./game');
 
+// serve 'client/index.html'
 app.use(express.static(path.join(__dirname, 'client')));
 
 // Create a Node.js based http server on port 3000
 var server = require('http').createServer(app).listen(process.env.PORT || 3000);
-//var server = require('http').createServer(app).listen(3000);
 
 // Create a Socket.IO server and attach it to the http server
 var io = require('socket.io').listen(server);
 
-// Listen for Socket.IO Connections. Once connected, start the game logic.
+var game = require('./game');
+
+// Listen for Socket.IO Connections. 
+// On client requests, setup message callbacks
 io.sockets.on('connection', function (socket) {
-    console.log('client connected');
-    game.initGame(io, socket);
+    game.socketSetup.connectSocket(io, socket);
 });
 
+// run game loop
+game.runGame();
 
 
