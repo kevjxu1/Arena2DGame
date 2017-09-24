@@ -6,8 +6,11 @@ var canvas,
     contextBack,
     contextFront;
 
+// to be received by server
 var mapWidth,
     mapHeight;
+// name constants for encoding of move directions
+var dirs;
 
 const SCREEN_WIDTH = window.innerWidth * 0.95;
 const SCREEN_HEIGHT = window.innerHeight * 0.95;

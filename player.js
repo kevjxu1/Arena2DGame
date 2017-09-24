@@ -2,33 +2,40 @@ var dirs = require('./dirs.js');
 var defaults = require('./defaults.js');
 
 class Player {
-    constructor(id, name='', color='red', radius=defaults.DEFAULT_PLAYER_RADIUS,
-            speed=3, vision=1e10,
-            x, y, angle=0, moveDir=dirs.DIR_NONE,
-            reloadTime=750, hp=defaults.DEFAULT_PLAYER_HP)
-    {
-        this.id = id;  // same as socket.id
-        this.name = name;
-        this.radius = radius;
-        this.speed = speed;
+    // params is an object of optional parameters:
+    // id, name, color, radius, speed, vision, x, y, angle, moveDir,
+    // reloadTime, hp
+    constructor(params) {
+    
+    //id, name='', color='red', radius=defaults.DEFAULT_PLAYER_RADIUS,
+    //        speed=3, vision=1e10,
+    //        x, y, angle=0, moveDir=dirs.DIR_NONE,
+    //        reloadTime=750, hp=defaults.DEFAULT_PLAYER_HP)
+    //{
+
+        this.id = params.id || null;  // same as socket.id
+        this.name = params.name || '';
+        this.color = params.color || null;
+        this.radius = params.radius || defaults.DEFAULT_PLAYER_RADIUS;
+        this.speed = params.speed || defaults.DEFAULT_PLAYER_SPEED;
 
         // this is currently not used (defaulted at 1e100)
         // Will vision and Fog of War be a good feature? 
         // Blinding weapon powerup?
-        this.vision = vision;
+        this.vision = params.vision || defaults.DEFAULT_PLAYER_VISION;
 
-        this.x = x; this.y = y;
+        this.x = params.x || null; this.y = params.y || null;
 
         // this is a player property because we may want drawPlayer to 
         // visualize an aimer
-        this.angle = angle;
+        this.angle = params.angle || 0;
 
-        this.moveDir = moveDir;
+        this.moveDir = params.moveDir || dirs.DIR_NONE;
 
         // TODO: maybe we can move this a non-property to save memory
-        this.reloadTime = reloadTime;
+        this.reloadTime = params.reloadTime || defaults.DEFAULT_PLAYER_RELOADTIME;
 
-        this.hp = hp;
+        this.hp = params.hp || defaults.DEFAULT_PLAYER_HP;
     }
 }
 

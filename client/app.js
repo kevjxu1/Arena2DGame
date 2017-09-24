@@ -1,7 +1,7 @@
 'use strict'; 
 
 var announceMessage = '';
-var chatClient = new ChatClient();
+//var chatClient = new ChatClient();
     
 function getDistance(circle1, circle2) {
     let xdiff = circle2.x - circle1.x;
@@ -46,10 +46,6 @@ function killPlayer() {
     IO.socket.emit('playerDied');
 }
 
-function sendGlobals() {
-    IO.socket.emit('updateGlobals', { Globals: Globals });
-}
-
 function clearForm() {
     let form = document.getElementById('form');
     form.style.display = 'none';
@@ -57,8 +53,8 @@ function clearForm() {
 
 // initialize socket.io socket
 IO.init();
-console.log('spawning chatClient with socket: ' + IO.socket);
-chatClient.init(IO.socket, context);
+//console.log('spawning chatClient with socket: ' + IO.socket);
+//chatClient.init(IO.socket, context);
 
 // Front Page Form
 $(document).ready(function() {
@@ -73,11 +69,13 @@ $(document).ready(function() {
         let nameInput = $('#nameInput').val();
         let colorInput = $('.colorInput:checked').val();
 
+        console.log('input name: ' + nameInput);
+        console.log('input color: ' + colorInput);
+
         // add new player on server
         IO.socket.emit('addPlayer', { name: nameInput, color: colorInput });
         $('#frontPage').hide();
     });
-    console.log('submit binded');
 });
 
 ////////////////////////////////////////////////////
@@ -89,7 +87,7 @@ function gameLoop(contextFront) {
     Canvas.drawPowerups(contextFront, powerups);
     if (!playerDead) {
         Canvas.drawPlayer(contextFront, mainPlayer, 
-                Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2);
+                SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     }
     Canvas.drawProjectiles(contextFront, projectiles, mainPlayer);
     Canvas.drawMapBounds(contextFront, mapWidth, mapHeight, mainPlayer);

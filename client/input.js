@@ -21,31 +21,31 @@ var Input = {
         let rect = canvasBack.getBoundingClientRect();
         let cursorX = e.clientX - rect.left;
         let cursorY = e.clientY - rect.top;
-        let xdiff = cursorX - Globals.SCREEN_WIDTH / 2;
-        let ydiff = cursorY - Globals.SCREEN_HEIGHT / 2;
+        let xdiff = cursorX - SCREEN_WIDTH / 2;
+        let ydiff = cursorY - SCREEN_HEIGHT / 2;
         mainPlayer.angle = atan2(xdiff, ydiff);
     },
 
 	onKeydown: function(e) {
         switch (e.keyCode) {
-        case Globals.KEY_W:
-        case Globals.KEY_UP:
-            mainPlayer.moveDir |= Globals.DIR_UP;
+        case KEY_W:
+        case KEY_UP:
+            mainPlayer.moveDir |= dirs.DIR_UP;
             IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
             break;
-        case Globals.KEY_A:
-        case Globals.KEY_LEFT:
-            mainPlayer.moveDir |= Globals.DIR_LEFT;
+        case KEY_A:
+        case KEY_LEFT:
+            mainPlayer.moveDir |= dirs.DIR_LEFT;
             IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
             break;
-        case Globals.KEY_D:
-        case Globals.KEY_RIGHT:
-            mainPlayer.moveDir |= Globals.DIR_RIGHT;
+        case KEY_D:
+        case KEY_RIGHT:
+            mainPlayer.moveDir |= dirs.DIR_RIGHT;
             IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
             break;
-        case Globals.KEY_S:
-        case Globals.KEY_DOWN:
-            mainPlayer.moveDir |= Globals.DIR_DOWN;
+        case KEY_S:
+        case KEY_DOWN:
+            mainPlayer.moveDir |= dirs.DIR_DOWN;
             IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
             break;
         default:
@@ -54,29 +54,30 @@ var Input = {
 	},
 
     onKeyup: function(e) {
-        // halt movement
-        let dir = Globals.DIR_NONE;
+        let dir = dirs.DIR_NONE;
 
         switch (e.keyCode) {
-        case Globals.KEY_W:
-        case Globals.KEY_UP:
-            dir |= Globals.DIR_UP;
+        case KEY_W:
+        case KEY_UP:
+            dir |= dirs.DIR_UP;
             break;
-        case Globals.KEY_A:
-        case Globals.KEY_LEFT:
-            dir |= Globals.DIR_LEFT;
+        case KEY_A:
+        case KEY_LEFT:
+            dir |= dirs.DIR_LEFT;
             break;
-        case Globals.KEY_D:
-        case Globals.KEY_RIGHT:
-            dir |= Globals.DIR_RIGHT;
+        case KEY_D:
+        case KEY_RIGHT:
+            dir |= dirs.DIR_RIGHT;
             break;
-        case Globals.KEY_S:
-        case Globals.KEY_DOWN:
-            dir |= Globals.DIR_DOWN;
+        case KEY_S:
+        case KEY_DOWN:
+            dir |= dirs.DIR_DOWN;
             break;
         default:
             break;
         }
+        // dir is the direction unpressed
+
         mainPlayer.moveDir &= (~dir & 0xF);
         IO.socket.emit('updatePlayerDir', { moveDir: mainPlayer.moveDir });
     },
@@ -88,13 +89,6 @@ var Input = {
                 return;
             }
             timeLastFired = new Date().getTime();
-            let proj = new Projectile(
-                    mainPlayer.x, mainPlayer.y,
-                    Globals.DEFAULT_PROJECTILE_RADIUS,
-                    Globals.DEFAULT_PROJECTILE_SPEED,
-                    Globals.DEFAULT_PROJECTILE_RANGE,
-                    mainPlayer.angle,
-                    mainPlayer.id, mainPlayer.color);
 
             IO.socket.emit('addProjectile', { 
                     x: mainPlayer.x, y: mainPlayer.y, 
@@ -105,7 +99,7 @@ var Input = {
         //else if (e.which == 2) {}  // middle mouse button
         //else if (e.which == 3) {  // right mouse button
         //    switch(mainPlayer.powerup) {
-        //    case Globals.POWER_CANNON:
+        //    case POWER_CANNON:
         //        let proj = new Projectile(
         //            mainPlayer.x, mainPlayer.y,
         //            100, 4, 900,
@@ -113,9 +107,9 @@ var Input = {
         //            mainPlayer.id, mainPlayer.color);
         //        IO.socket.emit('addProjectile', { proj: proj });
         //        //proj.angle = proj.angle * 180 / Math.PI;
-        //        mainPlayer.powerup = Globals.POWER_NONE;
+        //        mainPlayer.powerup = POWER_NONE;
         //        break;
-        //    default:  // Globals.POWER_NONE
+        //    default:  // POWER_NONE
         //        break;
         //    }       
         //}  // end right mouse button

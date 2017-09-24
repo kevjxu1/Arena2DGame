@@ -1,5 +1,7 @@
 'use strict';
 
+// This module contains all the socket.io socket event listeners
+
 var IO = {
 	init: function() {
 		IO.socket = io.connect();
@@ -22,6 +24,9 @@ var IO = {
             // get map bounds
             mapWidth = msg.mapWidth;
             mapHeight = msg.mapHeight;
+
+            // get constants for move direction encoding
+            dirs = msg.dirs;
 
             mainPlayer = msg.player;
             clearForm();
@@ -83,14 +88,14 @@ var IO = {
         });
 
         IO.socket.on('addProjectile', function(msg) {
-            let proj = msg.proj;
-            projectiles[proj.id] = proj;
+            projectiles[msg.id] = msg.proj;
+            console.log('projectiles: ');
+            console.log(projectiles);
         });
         
         IO.socket.on('rmProjectile', function(msg) {
-            let id = msg.id;
-            if (projectiles[id]) {
-                delete projectiles[id];
+            if (projectiles[msg.id]) {
+                delete projectiles[msg.id];
             }
         });
  

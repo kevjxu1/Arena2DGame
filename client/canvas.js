@@ -3,24 +3,24 @@ var Canvas = {
     drawBackground: function(context) {
         context.beginPath();
         context.fillStyle = '#202020';
-        context.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
+        context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         context.closePath;
     },
 
     clearScreen: function(context) {
         context.beginPath()
-        context.clearRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
+        context.clearRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     },
 
     drawGrid: function(context, player) {
 
         // draw vertical lines
         let gridGapX = 125;
-        let x = Globals.SCREEN_WIDTH - (player.x % gridGapX);
+        let x = SCREEN_WIDTH - (player.x % gridGapX);
         while (x >= 0) {
             context.beginPath();
             context.moveTo(x, 0);
-            context.lineTo(x, Globals.SCREEN_HEIGHT);
+            context.lineTo(x, SCREEN_HEIGHT);
             context.lineWidth = 2;
             context.strokeStyle = '#778899';
             context.stroke();
@@ -30,11 +30,11 @@ var Canvas = {
 
         // draw horizontal lines
         let gridGapY = 125;
-        let y = Globals.SCREEN_HEIGHT - (player.y % gridGapY);
+        let y = SCREEN_HEIGHT - (player.y % gridGapY);
         while (y >= 0) {
             context.beginPath();
             context.moveTo(0, y);
-            context.lineTo(Globals.SCREEN_WIDTH, y);
+            context.lineTo(SCREEN_WIDTH, y);
             context.stroke();
             context.closePath();
             y -= gridGapY;
@@ -93,7 +93,7 @@ var Canvas = {
         context.font = '12pt Comic Sans MS';        
         context.fillStyle = color;
         context.textAlign = 'center';
-        context.fillText('HP: ' + hp.toFixed(2), Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT - 16);
+        context.fillText('HP: ' + hp.toFixed(2), SCREEN_WIDTH / 2, SCREEN_HEIGHT - 16);
     },
 
     drawVisibleOthers: function(context, visibleOthers, player) {
@@ -101,7 +101,7 @@ var Canvas = {
             let other = visibleOthers[id];
             let xoff = other.x - player.x;
             let yoff = other.y - player.y;
-            Canvas.drawPlayer(context, other, Globals.SCREEN_WIDTH / 2 + xoff, Globals.SCREEN_HEIGHT / 2 + yoff);
+            Canvas.drawPlayer(context, other, SCREEN_WIDTH / 2 + xoff, SCREEN_HEIGHT / 2 + yoff);
         }
     },
 
@@ -112,7 +112,7 @@ var Canvas = {
             let xoff = proj.x - player.x;
             let yoff = proj.y - player.y;
             context.beginPath();
-            context.arc(Globals.SCREEN_WIDTH / 2 + xoff, Globals.SCREEN_HEIGHT / 2 + yoff, 
+            context.arc(SCREEN_WIDTH / 2 + xoff, SCREEN_HEIGHT / 2 + yoff, 
                     proj.radius, 0, 2 * Math.PI, true);
             context.fillStyle = proj.color;
             context.fill();
@@ -123,26 +123,26 @@ var Canvas = {
     drawMapBounds: function(context, mapWidth, mapHeight, player) {
         
         let edgeOfScreen = { 
-            top: player.y - Globals.SCREEN_HEIGHT / 2,
-            left: player.x - Globals.SCREEN_WIDTH / 2,
-            right: player.x + Globals.SCREEN_WIDTH / 2,
-            bottom: player.y + Globals.SCREEN_HEIGHT / 2,
+            top: player.y - SCREEN_HEIGHT / 2,
+            left: player.x - SCREEN_WIDTH / 2,
+            right: player.x + SCREEN_WIDTH / 2,
+            bottom: player.y + 2,
         }
 
         if (edgeOfScreen.left < 0) {
             let xDistToEdge = player.x;
             context.beginPath();
             context.fillStyle = 'black';
-            context.fillRect(0, 0, Globals.SCREEN_WIDTH / 2 - xDistToEdge, Globals.SCREEN_HEIGHT);
+            context.fillRect(0, 0, SCREEN_WIDTH / 2 - xDistToEdge, SCREEN_HEIGHT);
             context.closePath();
         }
         if (edgeOfScreen.right > mapWidth) {
             let xDistToEdge = mapWidth - player.x;
             context.beginPath();
             context.fillStyle = 'black';
-            context.fillRect(Globals.SCREEN_WIDTH / 2 + xDistToEdge, 0, 
-                    Globals.SCREEN_WIDTH / 2 - xDistToEdge, 
-                    Globals.SCREEN_HEIGHT);
+            context.fillRect(SCREEN_WIDTH / 2 + xDistToEdge, 0, 
+                    SCREEN_WIDTH / 2 - xDistToEdge, 
+                    SCREEN_HEIGHT);
             context.closePath();
         }
 
@@ -150,14 +150,14 @@ var Canvas = {
             let yDistToEdge = player.y;
             context.beginPath();
             context.fillStyle = 'black';
-            context.fillRect(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT / 2 - yDistToEdge);
+            context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT / 2 - yDistToEdge);
             context.closePath();
         }
         if (edgeOfScreen.bottom > mapHeight) {
             let yDistToEdge = mapHeight - player.y;
             context.beginPath();
             context.fillStyle = 'black';
-            context.fillRect(0, Globals.SCREEN_HEIGHT / 2 + yDistToEdge, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT / 2 - yDistToEdge);
+            context.fillRect(0, SCREEN_HEIGHT / 2 + yDistToEdge, SCREEN_WIDTH, SCREEN_HEIGHT / 2 - yDistToEdge);
             context.closePath();
 
         }
@@ -168,13 +168,13 @@ var Canvas = {
             let pow = powerups[id];
             let xoff = pow.x - mainPlayer.x;
             let yoff = pow.y - mainPlayer.y;
-            let midx = Globals.SCREEN_WIDTH / 2;
-            let midy = Globals.SCREEN_HEIGHT / 2;
+            let midx = SCREEN_WIDTH / 2;
+            let midy = SCREEN_HEIGHT / 2;
             context.beginPath();
-            context.moveTo(midx + xoff - Globals.DEFAULT_POWERUP_WIDTH, midy + yoff);
-            context.lineTo(midx + xoff, midy + yoff - Globals.DEFAULT_POWERUP_HEIGHT);
-            context.lineTo(midx + xoff + Globals.DEFAULT_POWERUP_WIDTH, midy + yoff);
-            context.lineTo(midx + xoff, midy + yoff + Globals.DEFAULT_POWERUP_HEIGHT);
+            context.moveTo(midx + xoff - DEFAULT_POWERUP_WIDTH, midy + yoff);
+            context.lineTo(midx + xoff, midy + yoff - DEFAULT_POWERUP_HEIGHT);
+            context.lineTo(midx + xoff + DEFAULT_POWERUP_WIDTH, midy + yoff);
+            context.lineTo(midx + xoff, midy + yoff + DEFAULT_POWERUP_HEIGHT);
             context.fillStyle = '#98FB98';  // pale green
             context.fill();
             context.closePath();
@@ -185,29 +185,29 @@ var Canvas = {
         context.font = '18pt Comic Sans MS'
         context.fillStyle = 'white';
         context.textAlign = 'center';
-        context.fillText(message, Globals.SCREEN_WIDTH / 2, 20);
+        context.fillText(message, SCREEN_WIDTH / 2, 20);
     },
 
     drawChat: function(context, message, timestamp) {
         // chat box
         context.beginPath();
         context.fillStyle = 'black';
-        context.fillRect(0, Globals.Globals.SCREEN_HEIGHT - 400, 600, 400);
+        context.fillRect(0, SCREEN_HEIGHT - 400, 600, 400);
         
         context.font = '14pt Times New Roman';
         context.fillStyle = 'white';
         context.textAlign = 'right';
-        context.fillText(timestamp, 0, Globals.SCREEN_HEIGHT - 14);
+        context.fillText(timestamp, 0, SCREEN_HEIGHT - 14);
     },
 
     initCanvas: function() {
         canvas = document.getElementById("canvas");
         canvasBack = document.getElementById("canvasBack");
         canvasFront = document.getElementById("canvasFront");
-        canvasFront.width = Globals.SCREEN_WIDTH;
-        canvasFront.height = Globals.SCREEN_HEIGHT;
-        canvasBack.width = Globals.SCREEN_WIDTH;
-        canvasBack.height = Globals.SCREEN_HEIGHT;
+        canvasFront.width = SCREEN_WIDTH;
+        canvasFront.height = SCREEN_HEIGHT;
+        canvasBack.width = SCREEN_WIDTH;
+        canvasBack.height = SCREEN_HEIGHT;
         contextBack = canvasBack.getContext("2d");
         contextFront = canvasFront.getContext("2d");
     },
@@ -216,42 +216,7 @@ var Canvas = {
     // helpers
     ////////////////////////////////////////////////////////////////
 
-    _displayPointer: function(context, player) {
-        let dir = player.dir;
-        let ptrHt = player.size / 2;
-        //context.fillStyle = player.color;
-        context.fillStyle = 'black';
-        context.beginPath();
-        switch(dir) {
-        case Globals.LEFT:
-            context.moveTo(player.x, player.y);
-            context.lineTo(player.x - ptrHt, player.y + player.size / 2);
-            context.lineTo(player.x, player.y + player.size);
-            context.fill();
-            break;
-        case Globals.UP:
-            context.moveTo(player.x, player.y);
-            context.lineTo(player.x + (player.size / 2), player.y - ptrHt);
-            context.lineTo(player.x + player.size, player.y);
-            context.fill();
-            break;
-        case Globals.RIGHT:
-            context.moveTo(player.x + player.size, player.y);
-            context.lineTo(player.x + player.size + ptrHt, player.y + (player.size / 2));
-            context.lineTo(player.x + player.size, player.y + player.size);
-            context.fill();
-            break;
-        case Globals.DOWN:
-            context.moveTo(player.x, player.y + player.size);
-            context.lineTo(player.x + (player.size / 2), player.y + player.size + ptrHt);
-            context.lineTo(player.x + player.size, player.y + player.size);
-            context.fill();
-            break;
-        default:
-            break;
-        }
-        context.closePath();
-    }
+    _displayPointer: function(context, player) {}
 };
 
 
