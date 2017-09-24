@@ -9,7 +9,7 @@ var app = express();
 
 
 // serve 'client/index.html'
-app.use(express.static(path.join(__dirname, 'client')));
+app.use(express.static(path.join(__dirname, '../client')));
 
 // Create a Node.js based http server on port 3000
 var server = require('http').createServer(app).listen(process.env.PORT || 3000);

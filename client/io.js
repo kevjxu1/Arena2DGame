@@ -89,8 +89,6 @@ var IO = {
 
         IO.socket.on('addProjectile', function(msg) {
             projectiles[msg.id] = msg.proj;
-            console.log('projectiles: ');
-            console.log(projectiles);
         });
         
         IO.socket.on('rmProjectile', function(msg) {
