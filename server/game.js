@@ -98,11 +98,15 @@ module.exports.socketSetup = {
             }
         });
 
-        socket.on('submitChatMessage', function(msg) {
-            let chatMsg = msg.chatMsg;
-            console.log('message received from socket ' + socket.id + ': ');
-            console.log(msg.chatMsg);
-            io.sockets.emit('receiveMessage', { chatMsg: chatMsg });
+        // msg: { name, ts, text }
+        socket.on('sendChatMessage', function(msg) {
+            // broadcast to all clients the chat log message
+            for (let sid in sockets) {
+                sockets[sid].emit('receiveChatMessage', {
+                        name: msg.name,
+                        ts: msg.ts,
+                        text: msg.text });
+            }
         });
 
     },

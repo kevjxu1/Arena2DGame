@@ -8,6 +8,8 @@ var Input = {
         document.addEventListener('keyup', Input.onKeyup, false);
         document.addEventListener('mousedown', Input.onMousedown, false);
         document.addEventListener('keydown', Input.onSpaceDown, false);
+        document.addEventListeners('keydown', Input.toggleChat, false);
+        document.addEventListeners('keydown', Input.addToChatMessage, false);
     },
 
     removeEventListeners: function() {
@@ -118,5 +120,44 @@ var Input = {
             return;
     },
 
+    ////////////////////////////////////////////////////
+    // Chat Log
+    ////////////////////////////////////////////////////
+    toggleChat: function(e) {
+        if (e.keyCode == KEY_ENTER) {
+            if (!Chat.isChatting) {
+                console.log('chatting on');
+                Chat.isChatting = true;
+            }
+            else {
+                // submit message
+                let ts = Chat._getCurrentTime();
+                socket.emit('sendChatMessage', { 
+                        name: mainPlayer.name,
+                        ts: ts,
+                        text: Chat.message });
+
+                this.message = "";
+                this.isChatting = false;
+            }
+        }
+    },
+
+    addToChatMessage: function(e) {
+        if (!Chat.isChatting || e.keyCode == KEY_ENTER) {
+            return;
+        }
+        
+        // assuming ascii encoding
+        if (e.keyCode < 32 || e.keyCode > 126) {
+            // invalid keypress
+            return;
+        }
+
+        // add typed character to chat message
+        Chat.message.concat(String.fromCharCode(e.keyCode));
+    }
+
+    ////////////////////////////////////////////////////
 };
 

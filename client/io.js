@@ -95,6 +95,13 @@ var IO = {
                 delete projectiles[msg.id];
             }
         });
+
+        // msg: { name, ts, text }
+        IO.socket.on('receiveChatMessage', function(msg) {
+            console.log('name: ' + msg.name);
+            console.log('ts: ' + msg.ts);
+            console.log('text: ' + msg.text);
+        });
  
     }
 };
