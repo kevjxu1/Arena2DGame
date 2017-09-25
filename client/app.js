@@ -54,6 +54,7 @@ function showRespawnForm() {
     var terminal = document.getElementById("respawnForm");
     if (!terminal.hasChildNodes()) {
         var terminalForm = document.createElement("form");
+        terminalForm.action = "javascript:void(0);";
 
         var respawn_button = document.createElement("input");
         respawn_button.setAttribute('type',"submit");
@@ -69,8 +70,11 @@ function showRespawnForm() {
     
     // process form input on submit
     $('#respawnForm').on('click', function(e) {
-        IO.socket.emit('addPlayer', { name: nameInput, color: colorInput });
+        let nameInput = $('#nameInput').val();
+        let colorInput = $('.colorInput:checked').val();
+        IO.socket.emit('addPlayer', { name: nameInput, color: colorInput, respawn: true });
         $('#respawnForm').hide();
+        $('#canvasDiv').show();
     });
     // playerDead = false;
 }

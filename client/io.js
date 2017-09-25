@@ -28,6 +28,7 @@ var IO = {
             dirs = msg.dirs;
 
             mainPlayer = msg.player;
+            playerDead = false;
             clearForm();
             Input.addEventListeners();
             Canvas.initCanvas();
