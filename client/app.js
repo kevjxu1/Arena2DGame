@@ -44,7 +44,22 @@ function killPlayer() {
     let x = mainPlayer.x;
     let y = mainPlayer.y;
     mainPlayer = { x: x, y: y };
-	//mainPlayer = null;                                                     
+    showRespawnForm()
+}
+
+function showRespawnForm() {
+    // Respawn Form
+    $(document).ready(function() {
+        // disable right-click context menu on canvas
+        $('body').on('contextmenu', '#canvasDiv', function(e) { return false; });
+        
+        // process form input on submit
+        $('#submit').on('click', function(e) {
+            IO.socket.emit('addPlayer', { name: nameInput, color: colorInput });
+            $('#frontPage').hide();
+        });
+    });
+    playerDead = false;
 }
 
 function clearForm() {
