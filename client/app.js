@@ -49,17 +49,30 @@ function killPlayer() {
 
 function showRespawnForm() {
     // Respawn Form
-    $(document).ready(function() {
-        // disable right-click context menu on canvas
-        $('body').on('contextmenu', '#canvasDiv', function(e) { return false; });
+    $('#canvasDiv').hide();
+
+    var terminal = document.getElementById("respawnForm");
+    if (!terminal.hasChildNodes()) {
+        var terminalForm = document.createElement("form");
+
+        var respawn_button = document.createElement("input");
+        respawn_button.setAttribute('type',"submit");
+        respawn_button.setAttribute('value',"Respawn?");
+
+        terminalForm.append(respawn_button);
         
-        // process form input on submit
-        $('#submit').on('click', function(e) {
-            IO.socket.emit('addPlayer', { name: nameInput, color: colorInput });
-            $('#frontPage').hide();
-        });
+        terminal.appendChild(terminalForm);
+        terminal.style.display = "block";
+    } else {
+        $('#respawnForm').show();
+    }
+    
+    // process form input on submit
+    $('#respawnForm').on('click', function(e) {
+        IO.socket.emit('addPlayer', { name: nameInput, color: colorInput });
+        $('#respawnForm').hide();
     });
-    playerDead = false;
+    // playerDead = false;
 }
 
 function clearForm() {
