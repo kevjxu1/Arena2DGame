@@ -44,7 +44,39 @@ function killPlayer() {
     let x = mainPlayer.x;
     let y = mainPlayer.y;
     mainPlayer = { x: x, y: y };
-	//mainPlayer = null;                                                     
+    showRespawnForm()
+}
+
+function showRespawnForm() {
+    // Respawn Form
+    $('#canvasDiv').hide();
+
+    var terminal = document.getElementById("respawnForm");
+    if (!terminal.hasChildNodes()) {
+        var terminalForm = document.createElement("form");
+        terminalForm.action = "javascript:void(0);";
+
+        var respawn_button = document.createElement("input");
+        respawn_button.setAttribute('type',"submit");
+        respawn_button.setAttribute('value',"Respawn?");
+
+        terminalForm.append(respawn_button);
+        
+        terminal.appendChild(terminalForm);
+        terminal.style.display = "block";
+    } else {
+        $('#respawnForm').show();
+    }
+    
+    // process form input on submit
+    $('#respawnForm').on('click', function(e) {
+        let nameInput = $('#nameInput').val();
+        let colorInput = $('.colorInput:checked').val();
+        IO.socket.emit('addPlayer', { name: nameInput, color: colorInput, respawn: true });
+        $('#respawnForm').hide();
+        $('#canvasDiv').show();
+    });
+    // playerDead = false;
 }
 
 function clearForm() {

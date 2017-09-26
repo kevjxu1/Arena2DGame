@@ -63,10 +63,10 @@ module.exports.socketSetup = {
             // tell client to join game with newly created player.
             // Also, give the client (1) map bounds and (2) direction encoding
             socket.emit('joinGame', { 
-                    player: players[socket.id], 
-                    mapWidth: mapWidth,
-                    mapHeight: mapHeight,
-                    dirs: dirs });
+                player: players[socket.id], 
+                mapWidth: mapWidth,
+                mapHeight: mapHeight,
+                dirs: dirs });
         });
 
         socket.on('updatePlayerAngle', function(msg) {
