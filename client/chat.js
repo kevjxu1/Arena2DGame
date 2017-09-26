@@ -1,8 +1,8 @@
 'use strict';
 
 var Chat = {
-    isChatting = false,
-    message = "",
+    isChatting: false,
+    message: "",
 
     ChatMessage: function(name, ts, text) {
         this.name = name;

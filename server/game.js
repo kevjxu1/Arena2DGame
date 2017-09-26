@@ -101,6 +101,8 @@ module.exports.socketSetup = {
         // msg: { name, ts, text }
         socket.on('sendChatMessage', function(msg) {
             // broadcast to all clients the chat log message
+            console.log('sendChatMessage');
+            console.log(msg);
             for (let sid in sockets) {
                 sockets[sid].emit('receiveChatMessage', {
                         name: msg.name,
