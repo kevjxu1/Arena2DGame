@@ -58,6 +58,10 @@ var IO = {
             mainPlayer.hp = msg.hp;
         });
 
+        IO.socket.on('updatePlayerDir', function(msg) {
+            mainPlayer.moveDir = msg.moveDir;
+        });
+
         IO.socket.on('updatePowerups', function(msg) {
             powerups = msg.powerups;
         });

@@ -4,8 +4,8 @@
 var Input = {
 	addEventListeners: function() {
         document.addEventListener('mousemove', Input.onMousemove, false);
-		document.addEventListener("keydown", Input.onKeydown, false);
-        document.addEventListener('keyup', Input.onKeyup, false);
+		document.addEventListener("keydown", Input.addDir, false);
+        document.addEventListener('keyup', Input.rmDir, false);
         document.addEventListener('mousedown', Input.onMousedown, false);
         document.addEventListener('keydown', Input.onSpaceDown, false);
         document.addEventListener('keydown', Input.toggleChat, false);
@@ -13,9 +13,9 @@ var Input = {
     },
 
     removeEventListeners: function() {
-        document.removeEventListener('keydown', Input.onKeydown);
+        document.removeEventListener('keydown', Input.addDir);
         document.removeEventListener('mousedown', Input.onMousedown);
-        document.removeEventListener('keyup', Input.onKeyup);
+        document.removeEventListener('keyup', Input.rmDir);
         document.removeEventListener('keydown', Input.onSpaceDown);
         document.removeEventListener('mousemove', Input.onMousemove);
     },
@@ -29,7 +29,7 @@ var Input = {
         mainPlayer.angle = atan2(xdiff, ydiff);
     },
 
-	onKeydown: function(e) {
+	addDir: function(e) {
         switch (e.keyCode) {
         case KEY_W:
         case KEY_UP:
@@ -56,7 +56,7 @@ var Input = {
         }
 	},
 
-    onKeyup: function(e) {
+    rmDir: function(e) {
         let dir = dirs.DIR_NONE;
 
         switch (e.keyCode) {
@@ -126,8 +126,17 @@ var Input = {
     toggleChat: function(e) {
         if (e.keyCode == KEY_ENTER) {
             if (!Chat.isChatting) {
+                // turn on chatting
                 console.log('chatting on');
                 Chat.isChatting = true;
+
+                // temorarily disable movement
+                document.removeEventListener('keydown', Input.addDir);
+                document.removeEventListener('keyup', Input.rmDir);
+
+                // halt player movement by removing its directions
+                mainPlayer.moveDir = dirs.DIR_NONE;
+                IO.socket.emit('updatePlayerDir', { moveDir: dirs.DIR_NONE });
             }
             else {
                 // submit message
@@ -139,6 +148,10 @@ var Input = {
 
                 Chat.message = "";
                 Chat.isChatting = false;
+
+                // unhalt player
+                document.addEventListener("keydown", Input.addDir, false);
+                document.addEventListener('keyup', Input.rmDir, false);
             }
         }
     },
