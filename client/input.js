@@ -9,7 +9,6 @@ var Input = {
         document.addEventListener('mousedown', Input.onMousedown, false);
         document.addEventListener('keydown', Input.onSpaceDown, false);
         document.addEventListener('keydown', Input.toggleChat, false);
-        document.addEventListener('keydown', Input.addToChatMessage, false);
     },
 
     removeEventListeners: function() {
@@ -126,6 +125,13 @@ var Input = {
     toggleChat: function(e) {
         if (e.keyCode == KEY_ENTER) {
             if (!Chat.isChatting) {
+
+                // temporary:
+                //$canvasDiv').hide();
+                $('body').on('contextmenu', '#canvasDiv', function(e) { 
+                    return true; 
+                });
+
                 // turn on chatting
                 console.log('chatting on');
                 Chat.isChatting = true;
@@ -137,14 +143,19 @@ var Input = {
                 // halt player movement by removing its directions
                 mainPlayer.moveDir = dirs.DIR_NONE;
                 IO.socket.emit('updatePlayerDir', { moveDir: dirs.DIR_NONE });
+
+                // enable chat input
+                $("#chatInput").prop('disabled', false);
+                $('#chatInput').focus();
             }
             else {
                 // submit message
+
                 let ts = Chat._getCurrentTime();
                 IO.socket.emit('sendChatMessage', { 
                         name: mainPlayer.name,
                         ts: ts,
-                        text: Chat.message });
+                        text: $("#chatInput").val() });
 
                 Chat.message = "";
                 Chat.isChatting = false;
@@ -152,24 +163,13 @@ var Input = {
                 // unhalt player
                 document.addEventListener("keydown", Input.addDir, false);
                 document.addEventListener('keyup', Input.rmDir, false);
+
+                // clear and disable chat input
+                $('#chatInput').val('');
+                $("#chatInput").prop('disabled', true);
             }
         }
     },
-
-    addToChatMessage: function(e) {
-        if (!Chat.isChatting || e.keyCode == KEY_ENTER) {
-            return;
-        }
-        
-        // assuming ascii encoding
-        if (e.keyCode < 32 || e.keyCode > 126) {
-            // invalid keypress
-            return;
-        }
-
-        // add typed character to chat message
-        Chat.message += String.fromCharCode(e.keyCode);
-    }
 
     ////////////////////////////////////////////////////
 };
