@@ -34,6 +34,16 @@
 
     #chatBody {
         position: relative;
+        width: 400px;
+        height: 300px;
+        background: rgba(0, 0, 0, 0.5);
+        /*bottom: 5px;*/
+        left: 0px;
+    }
+
+    #chatInput {
+        /*position: relative;*/
+        width: 395px;
     }
 
 	</style>
@@ -83,7 +93,7 @@
         <canvas id="canvasBack" style="position: absolute; z-index: 0"></canvas>
         <canvas id="canvasFront" style="position: absolute; z-index: 1"></canvas>
 
-        <div id="chatBody" style="position: absolute; z-index: 2">
+        <div id="chatBody" style="position: relative; z-index: 2">
             <ul id="chatList" style="list-style-type: none;"></ul>
             <form action="javascript:void(0);">
             <input id="chatInput" autocomplete="off" style="opacity: 0.4;" disabled>

@@ -126,11 +126,11 @@ var Input = {
         if (e.keyCode == KEY_ENTER) {
             if (!Chat.isChatting) {
 
-                // temporary:
-                //$canvasDiv').hide();
-                $('body').on('contextmenu', '#canvasDiv', function(e) { 
-                    return true; 
-                });
+                //// temporary:
+                ////$canvasDiv').hide();
+                //$('body').on('contextmenu', '#canvasDiv', function(e) { 
+                //    return true; 
+                //});
 
                 // turn on chatting
                 console.log('chatting on');

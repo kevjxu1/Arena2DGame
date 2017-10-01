@@ -43,4 +43,4 @@ var timeLastAnnounced = 0;
 var playerDead = false;
 
 // The maximum number of chat messages able to be displayed
-const MAX_CHAT_COUNT = 10;
+const MAX_CHAT_COUNT = 15;

@@ -14,20 +14,9 @@ var Chat = {
     // setup
     setup: function() {
         //// place the chat input on bottom left of canvas
-
         let chatBody = document.getElementById('chatBody');
-        chatBody.style.position = 'relative';
-        //chatBody.style.top = (SCREEN_HEIGHT - 400) + 'px';
         let chatInput = document.getElementById('chatInput');
-        chatInput.style.width = '400px';
-        chatBody.style.bottom = (SCREEN_HEIGHT - 20) + 'px';
-        //chatBody.style.top = 0;
-        
-        chatInput.style.bottom = (SCREEN_HEIGHT - 20) + 'px';
-        //chatInput.style.top = 0;
-        console.log('bot: ' + chatBody.style.bottom);
-        //console.log('top: ' + chatBody.style.top);
-        //chatBody.style.bottom = (SCREEN_HEIGHT - 20) + 'px';
+        chatBody.style.bottom = -SCREEN_HEIGHT + 305 + 'px';
         
     },
 
