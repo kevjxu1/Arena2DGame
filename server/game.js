@@ -103,11 +103,13 @@ module.exports.socketSetup = {
             // broadcast to all clients the chat log message
             console.log('sendChatMessage');
             console.log(msg);
+            let color = players[socket.id].color;
             for (let sid in sockets) {
                 sockets[sid].emit('receiveChatMessage', {
                         name: msg.name,
                         ts: msg.ts,
-                        text: msg.text });
+                        text: msg.text,
+                        color: color });
             }
         });
 

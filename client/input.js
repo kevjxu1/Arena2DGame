@@ -150,12 +150,14 @@ var Input = {
             }
             else {
                 // submit message
-
                 let ts = Chat._getCurrentTime();
-                IO.socket.emit('sendChatMessage', { 
-                        name: mainPlayer.name,
-                        ts: ts,
-                        text: $("#chatInput").val() });
+                let textInput = $("#chatInput").val()
+                if (textInput != '') {
+                    IO.socket.emit('sendChatMessage', { 
+                            name: mainPlayer.name,
+                            ts: ts,
+                            text: $("#chatInput").val() });
+                }
 
                 Chat.message = "";
                 Chat.isChatting = false;

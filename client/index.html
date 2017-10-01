@@ -33,7 +33,7 @@
     }
 
     #chatBody {
-        margin: auto;
+        position: relative;
     }
 
 	</style>
@@ -82,13 +82,13 @@
     <div id="canvasDiv" style="position: relative;">
         <canvas id="canvasBack" style="position: absolute; z-index: 0"></canvas>
         <canvas id="canvasFront" style="position: absolute; z-index: 1"></canvas>
-    </div>
 
-    <div id="chatBody" style="position: absolute; z-index: 2">
-        <ul id="messageList"></ul>
-        <form action="javascript:void(0);">
-        <input id="chatInput" autocomplete="off" disabled>
-        </form>
+        <div id="chatBody" style="position: absolute; z-index: 2">
+            <ul id="chatList" style="list-style-type: none;"></ul>
+            <form action="javascript:void(0);">
+            <input id="chatInput" autocomplete="off" style="opacity: 0.4;" disabled>
+            </form>
+        </div>
     </div>
 
     <!-- If Socket.IO is used with Express, then the /socket.io/ path will

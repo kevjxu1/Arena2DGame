@@ -32,6 +32,7 @@ var IO = {
             clearForm();
             Input.addEventListeners();
             Canvas.initCanvas();
+            Chat.setup();
             runApp();
         });
 
@@ -103,9 +104,26 @@ var IO = {
 
         // msg: { name, ts, text }
         IO.socket.on('receiveChatMessage', function(msg) {
-            console.log('name: ' + msg.name);
-            console.log('ts: ' + msg.ts);
-            console.log('text: ' + msg.text);
+            let chatLine = Chat.formatMessage(msg.name, msg.ts, msg.text);
+            let liDocElem = document.createElement('LI');
+            liDocElem.style.color = msg.color;
+            let textnode = document.createTextNode(chatLine);
+            liDocElem.append(textnode);
+            console.log(chatLine);
+            let chatList = document.getElementById('chatList');
+            chatList.appendChild(liDocElem);
+
+            // if too many items to hold, remove the first
+            while (chatList.childElementCount > MAX_CHAT_COUNT) {
+                chatList.removeChild(chatList.childNodes[0]);
+            }
+            console.log('bot: ' + chatBody.style.bottom);
+            console.log('top: ' + chatBody.style.top);
+            let chatInput = document.getElementById('chatInput');
+            chatInput.style.bottom = (SCREEN_HEIGHT - 20) + 'px';
+            //chatInput.style.top = 0;
+
+
         });
  
     }
