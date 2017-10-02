@@ -51,6 +51,11 @@ var IO = {
                 mainPlayer.shootRadius = msg.shootRadius;
         });
 
+        IO.socket.on('updatePlayerReloadtime', function(msg) {
+            if (mainPlayer)
+                mainPlayer.reloadTime = msg.reloadTime;
+        });
+
         IO.socket.on('updatePlayerPowerup', function(msg) {
             mainPlayer.powerup = msg.powerup;
             switch(mainPlayer.powerup) {
@@ -98,8 +103,10 @@ var IO = {
             let id = msg.id;
             let x = msg.x;
             let y = msg.y;
-            projectiles[id].x = x;
-            projectiles[id].y = y;
+            if (projectiles[id]) {
+                projectiles[id].x = x;
+                projectiles[id].y = y;
+            }
         });
 
         IO.socket.on('addProjectile', function(msg) {

@@ -89,7 +89,9 @@ module.exports.socketSetup = {
             let proj = new Projectile({ 
                     x: msg.x, y: msg.y, dir: msg.dir,
                     playerId: msg.playerId, color: msg.color,
-                    radius: msg.radius });
+                    radius: 1 + players[socket.id].radius 
+                            * defaults.PROJECTILE_TO_PLAYER_RADIUS });
+
             let projId = new Date().valueOf() + '-' +
                     proj.x.toString() + '-' + proj.y.toString();
             projectiles[projId] = proj;
@@ -183,15 +185,20 @@ function getL2Distance(p1, p2) {
 //////////////////////////////////////////////////////////////////////
 
 // player radius and shootRadius increases/decreases in proportion to its hp
-function resizePlayers() {
+function updatePlayersStats() {
     for (let id in players) {
         let p = players[id];
         p.radius = Math.max(defaults.DEFAULT_PLAYER_RADIUS, 
                 Math.floor(p.hp) * defaults.PLAYER_RADIUS_PER_HP);
         p.shootRadius = Math.max(defaults.DEFAULT_PROJECTILE_RADIUS,
                 Math.floor(p.hp) * defaults.PROJECTILE_RADIUS_PER_HP);
+        p.reloadTime = Math.max(defaults.DEFAULT_PLAYER_RELOADTIME,
+                200 + 100 * Math.floor(p.hp));
+
         sockets[id].emit('updatePlayerRadius', { radius: p.radius });
         sockets[id].emit('updatePlayerShootRadius', { shootRadius: p.shootRadius });
+        sockets[id].emit('updatePlayerReloadtime', { reloadTime: p.reloadTime });
+
     }
 }
 
@@ -221,7 +228,10 @@ function updateHits() {
 				// reward hitter with some HP gain
 				let hitterId = proj.playerId;
                 if (players[hitterId]) {
-                    players[hitterId].hp += 0.4;
+                    //players[hitterId].hp += 0.4;
+                    let bonusHpGain = Math.max(0, (Math.floor(player.hp) - Math.floor(players[hitterId].hp)) * 0.4);
+                    players[hitterId].hp += (0.4 + bonusHpGain);
+                    
                     sockets[hitterId].emit('updatePlayerHp', { hp: players[hitterId].hp });
                 }
 				
@@ -385,7 +395,7 @@ function runGame() {
         updateVisibleOthers();
         updateHits();
         deleteOutOfRangeProjectiles();
-        resizePlayers();
+        updatePlayersStats();
         //updatePowerupPickups();
     }
     setInterval(gameLoop, 50);
