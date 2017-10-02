@@ -41,6 +41,16 @@ var IO = {
             mainPlayer.y = msg.y;
         });
 
+        IO.socket.on('updatePlayerRadius', function(msg) {
+            if (mainPlayer)
+                mainPlayer.radius = msg.radius;
+        });
+
+        IO.socket.on('updatePlayerShootRadius', function(msg) {
+            if (mainPlayer)
+                mainPlayer.shootRadius = msg.shootRadius;
+        });
+
         IO.socket.on('updatePlayerPowerup', function(msg) {
             mainPlayer.powerup = msg.powerup;
             switch(mainPlayer.powerup) {

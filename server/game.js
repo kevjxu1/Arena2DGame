@@ -8,6 +8,7 @@ var sockets = {};
 var projectiles = {};
 //var powerups = {};
 
+
 // we may want map bounds to dynamically adjust (in case of overcrowding) 
 var mapWidth = defaults.DEFAULT_MAP_WIDTH;
 var mapHeight = defaults.DEFAULT_MAP_HEIGHT;
@@ -87,7 +88,8 @@ module.exports.socketSetup = {
             }
             let proj = new Projectile({ 
                     x: msg.x, y: msg.y, dir: msg.dir,
-                    playerId: msg.playerId, color: msg.color });
+                    playerId: msg.playerId, color: msg.color,
+                    radius: msg.radius });
             let projId = new Date().valueOf() + '-' +
                     proj.x.toString() + '-' + proj.y.toString();
             projectiles[projId] = proj;
@@ -180,6 +182,18 @@ function getL2Distance(p1, p2) {
 
 //////////////////////////////////////////////////////////////////////
 
+// player radius and shootRadius increases/decreases in proportion to its hp
+function resizePlayers() {
+    for (let id in players) {
+        let p = players[id];
+        p.radius = Math.max(defaults.DEFAULT_PLAYER_RADIUS, 
+                Math.floor(p.hp) * defaults.PLAYER_RADIUS_PER_HP);
+        p.shootRadius = Math.max(defaults.DEFAULT_PROJECTILE_RADIUS,
+                Math.floor(p.hp) * defaults.PROJECTILE_RADIUS_PER_HP);
+        sockets[id].emit('updatePlayerRadius', { radius: p.radius });
+        sockets[id].emit('updatePlayerShootRadius', { shootRadius: p.shootRadius });
+    }
+}
 
 function updateHits() {
     // if a projectile hits player, projectile dies, player loses hitpoints
@@ -371,6 +385,7 @@ function runGame() {
         updateVisibleOthers();
         updateHits();
         deleteOutOfRangeProjectiles();
+        resizePlayers();
         //updatePowerupPickups();
     }
     setInterval(gameLoop, 50);

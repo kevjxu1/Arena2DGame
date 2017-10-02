@@ -3,7 +3,7 @@ var defaults = require('./defaults.js');
 
 class Player {
     // params is an object of optional parameters:
-    // id, name, color, radius, speed, vision, x, y, angle, moveDir,
+    // id, name, color, radius, speed, vision, x, y, angle, moveDir, shootRadius
     // reloadTime, hp
     constructor(params) {
     
@@ -36,6 +36,8 @@ class Player {
         this.reloadTime = params.reloadTime || defaults.DEFAULT_PLAYER_RELOADTIME;
 
         this.hp = params.hp || defaults.DEFAULT_PLAYER_HP;
+        this.shootRadius = params.shootRadius 
+                || defaults.DEFAULT_PROJECTILE_RADIUS
     }
 }
 

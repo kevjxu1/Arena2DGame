@@ -96,7 +96,8 @@ var Input = {
                     x: mainPlayer.x, y: mainPlayer.y, 
                     dir: mainPlayer.angle,
                     playerId: mainPlayer.id,
-                    color: mainPlayer.color });
+                    color: mainPlayer.color,
+                    radius: mainPlayer.shootRadius });
         }
         //else if (e.which == 2) {}  // middle mouse button
         //else if (e.which == 3) {  // right mouse button
