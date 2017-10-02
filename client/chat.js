@@ -17,7 +17,15 @@ var Chat = {
         let chatBody = document.getElementById('chatBody');
         let chatInput = document.getElementById('chatInput');
         chatBody.style.bottom = -SCREEN_HEIGHT + 305 + 'px';
-        
+
+        // fill chat with empty lines to move input bar down
+        let chatList = document.getElementById('chatList');
+        while (chatList.childElementCount < MAX_CHAT_COUNT) {
+            let liDocElem = document.createElement('LI');
+            let textnode = document.createTextNode('.');
+            liDocElem.append(textnode);
+            chatList.appendChild(liDocElem);
+        }
     },
 
     // TODO: break the line at some str length
