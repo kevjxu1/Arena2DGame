@@ -73,6 +73,7 @@ function showRespawnForm() {
         let nameInput = $('#nameInput').val();
         let colorInput = $('.colorInput:checked').val();
         IO.socket.emit('addPlayer', { name: nameInput, color: colorInput, respawn: true });
+        IO.bindEvents();
         $('#respawnForm').hide();
         $('#canvasDiv').show();
     });
