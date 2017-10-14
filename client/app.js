@@ -115,6 +115,9 @@ $(document).ready(function() {
 ////////////////////////////////////////////////////
 
 function gameLoop(contextFront) {
+    SCREEN_WIDTH = window.innerWidth * 0.95;
+    SCREEN_HEIGHT = window.innerHeight * 0.95;
+
     Canvas.clearScreen(contextFront);
     Canvas.drawGrid(contextFront, mainPlayer);
     Canvas.drawVisibleOthers(contextFront, visibleOthers, mainPlayer);
