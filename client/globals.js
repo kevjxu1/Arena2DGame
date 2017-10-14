@@ -12,8 +12,8 @@ var mapWidth,
 // name constants for encoding of move directions
 var dirs;
 
-const SCREEN_WIDTH = window.innerWidth * 0.95;
-const SCREEN_HEIGHT = window.innerHeight * 0.95;
+var SCREEN_WIDTH = window.innerWidth * 0.95;
+var SCREEN_HEIGHT = window.innerHeight * 0.95;
 //SCREEN_WIDTH= 1000,
 //SCREEN_HEIGHT= 700,
 
